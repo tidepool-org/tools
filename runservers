@@ -30,7 +30,7 @@ tp_killall() {
 tp_start_server() {   # expects servername, start name
     echo "Starting $1"
     cd $1
-    node $2 & >server.log
+    node $2 & 2>&1 > server.log
     cd ..
     export TP_PIDS="$TP_PIDS $!"
 }
