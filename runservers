@@ -46,7 +46,7 @@ tp_start_server() {   # expects servername, start name
     cd $1
     # use the first line if you want individual logs, the 2nd if you want to aggregate them.
     #node $2 2>&1 > ../$1.log &
-    node $2 2>&1 > ../server.log &
+    node $2 2>&1 >> ../server.log &
     cd ..
     export TP_PIDS="$TP_PIDS $!"
     sleep 1
