@@ -30,7 +30,9 @@ tp_killall() {
 tp_start_server() {   # expects servername, start name
     echo "Starting $1"
     cd $1
-    node $2 & 2>&1 > server.log
+    # use the first line if you want individual logs, the 2nd if you want to aggregate them.
+    #node $2 2>&1 > ../$1.log &
+    node $2 2>&1 > ../server.log &
     cd ..
     export TP_PIDS="$TP_PIDS $!"
 }
@@ -45,7 +47,7 @@ tp_common() {
 
 tp_mongo() {
     echo "Starting mongod"
-    mongod &
+    mongod > server.log 2>&1 &
     export TP_PIDS="$TP_PIDS $!"
 }
 
