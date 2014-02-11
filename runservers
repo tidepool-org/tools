@@ -7,11 +7,25 @@
 #     message-api/
 #     seagull/
 #     styx/
+#     tools/           # containing this file
+#     user-api/
 #
 # It also expects mongod to be on the execution path.
+# With that setup, if your current directory is tidepool, then
+# you can just type:
+#     . tools/runservers
 # After it runs, the process IDs are stored in TP_PIDS, and 
 # the command tp_kill will kill all those IDs.
 # tp_killall will just kill all running mongo and node processes.
+
+# This sets things up with the router on port 8009. So to get status from the user-api, for example, do this:
+# $ curl -f -S --get http://localhost:8009/auth/status
+# {"up":["mongo"],"down":[]}  [10:25 PM][~/tidepool][]
+#
+# But it takes a few seconds to get things up and hooked together through service discovery. If you go too fast, you'll see:
+# $ curl -f -S --get http://localhost:8009/auth/status
+# curl: (22) The requested URL returned error: 404 Not Found
+
 
 
 tp_warmup() {
@@ -35,6 +49,7 @@ tp_start_server() {   # expects servername, start name
     node $2 2>&1 > ../server.log &
     cd ..
     export TP_PIDS="$TP_PIDS $!"
+    sleep 1
 }
 
 # Everyone
@@ -102,17 +117,17 @@ tp_message_api() {
 
 # styx
 tp_styx() {
-    export PORT=8009
+    export HTTP_PORT=8009
     export RULES="\
     {\
-      \"localhost\": [{\"type\": \"pathPrefix\", \"prefix\": \"/auth\", \"rule\": {\"type\": \"random\", \"service\": \"user-api-local\"}},
+      \"localhost:8009\": [{\"type\": \"pathPrefix\", \"prefix\": \"/auth\", \"rule\": {\"type\": \"random\", \"service\": \"user-api-local\"}},
                       {\"type\": \"pathPrefix\", \"prefix\": \"/group\", \"rule\": {\"type\": \"random\", \"service\": \"armada-local\"}},
                       {\"type\": \"pathPrefix\", \"prefix\": \"/message\", \"rule\": {\"type\": \"random\", \"service\": \"message-api-local\"}},
                       {\"type\": \"pathPrefix\", \"prefix\": \"/metadata\", \"rule\": {\"type\": \"random\", \"service\": \"seagull-local\"}}]\
     }"
     export DISCOVERY="\
     {\
-      \"host\": \"localhost\"\
+      \"host\": \"localhost:8000\"\
     }"
 
     tp_start_server styx server.js
