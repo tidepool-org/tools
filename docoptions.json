@@ -1,0 +1,52 @@
+{
+  "formats": {
+    "Copy": [{
+      "pattern": "\\s*(?P<text>.*)",
+      "formatter": "%(text)s\n"
+    }],
+    "General": "Copy",
+    "_": "Copy", 
+    "Function": [
+      {
+        "pattern": "(?P<funcname>[A-Za-z0-9$_]+)\\s*\\((?P<args>[^\\)]*)\\)",
+        "formatter": "### %(funcname)s\n* ```%(funcname)s (%(args)s)```\n"
+      }
+    ],
+    "_default": [{
+      "pattern": "(?P<text>.*)",
+      "formatter": "%(blockid)s: %(text)s\n"
+    }],
+    "Setup": [{
+      "pattern": "(?P<text>.*)",
+      "formatter": "\n## Setup\n```%(text)s```\n\n"
+    }],
+    "Heading": [{
+      "pattern": "\\s*(?P<text>[^ ].*)",
+      "formatter": "\n## %(text)s\n\n"
+    }],
+    "Params": [{
+      "pattern": "(?P<parm>[A-Za-z0-9$_]+)\\s*--\\s*(?P<desc>.*)",
+      "formatter": "  * ```%(parm)s``` -- %(desc)s\n"
+    }],
+    "Desc": [{
+      "pattern": "\\s*(?P<text>.*)",
+      "formatter": "*%(text)s*\n"
+    }],
+    "Args": [
+      {
+        "pattern": "(?P<parm>[A-Za-z0-9$_]+)\\s*--\\s*(?P<desc>.*)",
+        "formatter": "    * ```%(parm)s``` -- %(desc)s\n"
+      },
+      {
+        "pattern": "(?P<funcname>[A-Za-z0-9$_]+)\\s*\\((?P<args>[^\\)]*)\\)",
+        "formatter": "    * ```%(funcname)s (%(args)s)```\n"
+      }
+    ],
+    "CallbackArgs": [
+      {
+        "pattern": "(?P<parm>[A-Za-z0-9$_]+)\\s*--\\s*(?P<desc>.*)",
+        "formatter": "        * ```%(parm)s``` -- %(desc)s\n"
+      }
+    ]
+  }
+}

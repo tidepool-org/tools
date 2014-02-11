@@ -1,0 +1,127 @@
+# This file should be run with source
+# It starts all the services for Tidepool on localhost. 
+# It expects to be run from a top-level directory with checkouts of various repositories at the next level down. So something like:
+# tidepool/
+#     armada/
+#     hakken/
+#     message-api/
+#     seagull/
+#     styx/
+#
+# It also expects mongod to be on the execution path.
+# After it runs, the process IDs are stored in TP_PIDS, and 
+# the command tp_kill will kill all those IDs.
+# tp_killall will just kill all running mongo and node processes.
+
+
+tp_warmup() {
+    export TP_PIDS=
+}
+
+tp_kill() {
+    kill $TP_PIDS
+}
+
+tp_killall() {
+    killall node
+    killall mongod
+}
+
+tp_start_server() {   # expects servername, start name
+    echo "Starting $1"
+    cd $1
+    node $2 & >server.log
+    cd ..
+    export TP_PIDS="$TP_PIDS $!"
+}
+
+# Everyone
+tp_common() {
+    export API_SECRET="This is a local API secret for everyone. BsscSHqSHiwrBMJsEGqbvXiuIUPAjQXU"
+    export SERVER_SECRET="This needs to be the same secret everywhere. YaHut75NsK1f9UKUXuWqxNN0RUwHFBCy"
+    export DISCOVERY_HOST=localhost:8000
+    export PUBLISH_HOST=localhost
+}
+
+tp_mongo() {
+    echo "Starting mongod"
+    mongod &
+    export TP_PIDS="$TP_PIDS $!"
+}
+
+# hakken
+tp_hakken() {
+    export ANNOUNCE_HOST=localhost
+    export PORT=8000
+    export DISCOVERY_HEARTBEAT_INTERVAL=10000
+
+    tp_start_server hakken coordinator.js
+}
+
+# user-api
+tp_user-api() {
+    export PORT=9107
+    export SERVICE_NAME=user-api-local
+    export SALT_DEPLOY=ADihSEI7tOQQP9xfXMO9HfRpXKu1NpIJ
+
+    tp_start_server user-api lib/index.js
+}
+
+# seagull
+tp_seagull() {
+    export PORT=9120
+    export SERVICE_NAME=seagull-local
+    export USER_API_SERVICE=user-api-local
+    export SALT_DEPLOY=KEWRWBe5yyMnW4SxosfZ2EkbZHkyqJ5f
+
+    tp_start_server seagull lib/index.js
+}
+
+# armada
+tp_armada() {
+    export PORT=9118
+    export SERVICE_NAME=armada-local
+    export USER_API_SERVICE=user-api-local
+    export SALT_DEPLOY=xLyg8dAEwUUF7JnkgO08jo8stRY0caV5
+
+    tp_start_server armada lib/index.js
+}
+
+# message-api
+tp_message_api() {
+    export PORT=9119
+    export SERVICE_NAME=message-api-local
+    export USER_API_SERVICE=user-api-local
+    export SALT_DEPLOY=JPX9TAh6VEcta4TnaQMudx4R1G6ie9Wi
+    export SERVER_NAME=message-api
+
+    tp_start_server message-api lib/index.js
+}
+
+# styx
+tp_styx() {
+    export PORT=8009
+    export RULES="\
+    {\
+      \"localhost\": [{\"type\": \"pathPrefix\", \"prefix\": \"/auth\", \"rule\": {\"type\": \"random\", \"service\": \"user-api-local\"}},
+                      {\"type\": \"pathPrefix\", \"prefix\": \"/group\", \"rule\": {\"type\": \"random\", \"service\": \"armada-local\"}},
+                      {\"type\": \"pathPrefix\", \"prefix\": \"/message\", \"rule\": {\"type\": \"random\", \"service\": \"message-api-local\"}},
+                      {\"type\": \"pathPrefix\", \"prefix\": \"/metadata\", \"rule\": {\"type\": \"random\", \"service\": \"seagull-local\"}}]\
+    }"
+    export DISCOVERY="\
+    {\
+      \"host\": \"localhost\"\
+    }"
+
+    tp_start_server styx server.js
+}
+
+tp_warmup
+tp_mongo
+tp_common
+tp_hakken
+tp_user-api
+tp_seagull
+tp_armada
+tp_message_api
+tp_styx
