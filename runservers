@@ -115,6 +115,26 @@ tp_message_api() {
     tp_start_server message-api lib/index.js
 }
 
+# pool-whisperer
+tp_pool-whisperer() {
+    export PORT=9121
+    export SERVICE_NAME=pool-whisperer-local
+    export USER_API_SERVICE=user-api-local
+    export SEAGULL_SERVICE=seagull-local
+
+    tp_start_server pool-whisperer server.js
+}
+
+# jellyfish
+tp_jellyfish() {
+    export PORT=9122
+    export SERVICE_NAME=jellyfish-local
+    export USER_API_SERVICE=user-api-local
+    export SEAGULL_SERVICE=seagull-local
+
+    tp_start_server jellyfish app.js
+}
+
 # styx
 tp_styx() {
     export HTTP_PORT=8009
@@ -130,6 +150,7 @@ tp_styx() {
                              }\
                            },\
                            {\"type\": \"pathPrefix\", \"prefix\": \"/auth\", \"rule\": {\"type\": \"random\", \"service\": \"user-api-local\"}},\
+                           {\"type\": \"pathPrefix\", \"prefix\": \"/data\", \"rule\": {\"type\": \"random\", \"service\": \"pool-whisperer-local\"}},\
                            {\"type\": \"pathPrefix\", \"prefix\": \"/group\", \"rule\": {\"type\": \"random\", \"service\": \"armada-local\"}},\
                            {\"type\": \"pathPrefix\", \"prefix\": \"/message\", \"rule\": {\"type\": \"random\", \"service\": \"message-api-local\"}},\
                            {\"type\": \"pathPrefix\", \"prefix\": \"/metadata\", \"rule\": {\"type\": \"random\", \"service\": \"seagull-local\"}}]\
@@ -150,4 +171,6 @@ tp_user-api
 tp_seagull
 tp_armada
 tp_message_api
+tp_pool-whisperer
+tp_jellyfish
 tp_styx
