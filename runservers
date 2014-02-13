@@ -41,34 +41,23 @@ tp_killall() {
     killall mongod
 }
 
-
-export STRIP="-E"
-export COMMENTS="^#"
-export SERVER_BASE=$(pwd)
 tp_start_server() {   # expects servername, start name
     echo "Starting $1"
-    (
-    CONFIG=$SERVER_BASE/common.env
-    EXTRA=""
-    if [[ -f "$SERVER_BASE/$1.env" ]] ; then
-      EXTRA="$SERVER_BASE/$1.env"
-    fi
-    cd node_modules/$1
+    cd $1
     # use the first line if you want individual logs, the 2nd if you want to aggregate them.
     #node $2 2>&1 > ../$1.log &
-    NODEBIN=$(which node)
-    echo $CONFIG $EXTRA
-    CMD=$2
-    echo $CMD
-    env $(cat $CONFIG $EXTRA | grep -v '#') $NODEBIN $CMD 2>&1 >> ../server.log &
-    )
+    node $2 2>&1 >> ../server.log &
+    cd ..
     export TP_PIDS="$TP_PIDS $!"
     sleep 1
 }
 
 # Everyone
 tp_common() {
-    . <(cat $SERVER_BASE/common.env)
+    export API_SECRET="This is a local API secret for everyone. BsscSHqSHiwrBMJsEGqbvXiuIUPAjQXU"
+    export SERVER_SECRET="This needs to be the same secret everywhere. YaHut75NsK1f9UKUXuWqxNN0RUwHFBCy"
+    export DISCOVERY_HOST=localhost:8000
+    export PUBLISH_HOST=localhost
 }
 
 tp_mongo() {
@@ -79,26 +68,50 @@ tp_mongo() {
 
 # hakken
 tp_hakken() {
+    export ANNOUNCE_HOST=localhost
+    export PORT=8000
+    export DISCOVERY_HEARTBEAT_INTERVAL=10000
+
     tp_start_server hakken coordinator.js
 }
 
 # user-api
 tp_user-api() {
+    export PORT=9107
+    export SERVICE_NAME=user-api-local
+    export SALT_DEPLOY=ADihSEI7tOQQP9xfXMO9HfRpXKu1NpIJ
+
     tp_start_server user-api lib/index.js
 }
 
 # seagull
 tp_seagull() {
+    export PORT=9120
+    export SERVICE_NAME=seagull-local
+    export USER_API_SERVICE=user-api-local
+    export SALT_DEPLOY=KEWRWBe5yyMnW4SxosfZ2EkbZHkyqJ5f
+
     tp_start_server seagull lib/index.js
 }
 
 # armada
 tp_armada() {
+    export PORT=9118
+    export SERVICE_NAME=armada-local
+    export USER_API_SERVICE=user-api-local
+    export SALT_DEPLOY=xLyg8dAEwUUF7JnkgO08jo8stRY0caV5
+
     tp_start_server armada lib/index.js
 }
 
 # message-api
 tp_message_api() {
+    export PORT=9119
+    export SERVICE_NAME=message-api-local
+    export USER_API_SERVICE=user-api-local
+    export SALT_DEPLOY=JPX9TAh6VEcta4TnaQMudx4R1G6ie9Wi
+    export SERVER_NAME=message-api
+
     tp_start_server message-api lib/index.js
 }
 
