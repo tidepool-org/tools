@@ -17,12 +17,12 @@
   },
   "homepage": "https://github.com/tidepool-org/tools",
   "dependencies": {
-    "hakken": "git://github.com/tidepool-org/hakken.git",
-    "user-api": "git://github.com/tidepool-org/user-api.git",
-    "seagull": "git://github.com/tidepool-org/seagull.git",
+    "hakken": "git://github.com/tidepool-org/hakken.git#master",
+    "user-api": "git://github.com/tidepool-org/user-api.git#master",
+    "seagull": "git://github.com/tidepool-org/seagull.git#master",
     "group-api": "git://github.com/tidepool-org/armada.git#master",
-    "message-api": "git://github.com/tidepool-org/message-api.git",
-    "styx": "git://github.com/tidepool-org/styx.git",
-    "jellyfish": "git+ssh://git@github.com:tidepool-org/jellyfish.git"
+    "message-api": "git://github.com/tidepool-org/message-api.git#master",
+    "styx": "git://github.com/tidepool-org/styx.git#master",
+    "jellyfish": "git+ssh://git@github.com:tidepool-org/jellyfish.git#master"
   }
 }
