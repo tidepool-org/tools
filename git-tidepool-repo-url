@@ -1,6 +1,7 @@
 #!/bin/bash
 
 NAME=$1
+BRANCH=${2-'master'}
 # echo "git@github.com:tidepool-org/$NAME.git"
-echo "git://github.com/tidepool-org/$NAME.git"
+echo "git://github.com/tidepool-org/$NAME.git#$BRANCH"
 

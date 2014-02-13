@@ -20,7 +20,7 @@
     "hakken": "git://github.com/tidepool-org/hakken.git",
     "user-api": "git://github.com/tidepool-org/user-api.git",
     "seagull": "git://github.com/tidepool-org/seagull.git",
-    "group-api": "git://github.com/tidepool-org/armada.git",
+    "group-api": "git://github.com/tidepool-org/armada.git#master",
     "message-api": "git://github.com/tidepool-org/message-api.git",
     "styx": "git://github.com/tidepool-org/styx.git",
     "jellyfish": "git+ssh://git@github.com:tidepool-org/jellyfish.git"
