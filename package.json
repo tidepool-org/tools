@@ -1,0 +1,28 @@
+{
+  "name": "sketch-tidepool-platform",
+  "version": "0.0.0",
+  "description": "tools =====",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/tidepool-org/tools.git"
+  },
+  "author": "Tidepool contributors",
+  "license": "GPL-2",
+  "bugs": {
+    "url": "https://github.com/tidepool-org/tools/issues"
+  },
+  "homepage": "https://github.com/tidepool-org/tools",
+  "dependencies": {
+    "hakken": "git://github.com/tidepool-org/hakken.git",
+    "user-api": "git://github.com/tidepool-org/user-api.git",
+    "seagull": "git://github.com/tidepool-org/seagull.git",
+    "group-api": "git://github.com/tidepool-org/armada.git",
+    "message-api": "git://github.com/tidepool-org/message-api.git",
+    "styx": "git://github.com/tidepool-org/styx.git",
+    "jellyfish": "git+ssh://git@github.com:tidepool-org/jellyfish.git"
+  }
+}
