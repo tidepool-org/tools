@@ -1,5 +1,5 @@
 {
-  "localhost:8009": [{
+  "localhost:5100": [{
       "type": "cors",
       "headers": {
         "access-control-allow-origin": "*",
