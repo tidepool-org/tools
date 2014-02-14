@@ -27,9 +27,20 @@ the docs.
 This is a bash shell script to run a set of servers on localhost. We'll keep
 updating it as we grow.
 
+The script must be sourced into your current shell.
+
 ```bash
+# from parent directory containing all projects a siblings, run
+. tools/runservers
 ```
+
 # Usage
+
+Simple version: just run `./bin/start.sh` from inside this directory.
+Use `npm install` to install everything from scratch, use the other
+tools, including `./bin/clone-all.sh` or `./git-npm-sibling-link` or
+`./bin/link-all.sh` to run your local development versions using
+`./bin/start.sh`.
 
 ```bash
 $ npm install # this installs all packages from their respective
@@ -56,6 +67,7 @@ path as the second argument.
 $ ./git-npm-sibling-link
 usage ./git-npm-sibling-link <package> [/full/non/sibling/path]
 ```
+
 ```bash
 $ pwd
 /home/bewest/src/tidepool/node-tidepool-servers
