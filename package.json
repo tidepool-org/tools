@@ -25,6 +25,7 @@
     "styx": "git://github.com/tidepool-org/styx.git#master",
     "jellyfish": "git+ssh://git@github.com:tidepool-org/jellyfish.git#master",
     "pool-whisperer": "git://github.com/tidepool-org/pool-whisperer.git#master",
-    "sandcastle": "git://github.com/tidepool-org/sandcastle.git#master"
+    "sandcastle": "git://github.com/tidepool-org/sandcastle.git#master",
+    "nodemon": "~1.0.14"
   }
 }
