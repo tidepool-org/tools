@@ -43,7 +43,7 @@ tp_killall() {
 
 tp_start_server() {   # expects servername, start name
     echo "Starting $1"
-    cd $1
+    cd $1 || return
     # use the first line if you want individual logs, the 2nd if you want to aggregate them.
     #node $2 2>&1 > ../$1.log &
     node $2 2>&1 >> ../server.log &
@@ -138,23 +138,7 @@ tp_jellyfish() {
 # styx
 tp_styx() {
     export HTTP_PORT=8009
-    export RULES="\
-    {\
-      \"localhost:8009\": [{ \"type\": \"cors\",\
-                             \"headers\": {\
-                               \"access-control-allow-origin\": \"*\",\
-			       \"access-control-allow-headers\": \"authorization, content-type, x-tidepool-session-token\",\
-                               \"access-control-allow-methods\": \"GET, POST, PUT\",\
-                               \"access-control-expose-headers\": \"x-tidepool-session-token\",\
-                               \"access-control-max-age\": 0
-                             }\
-                           },\
-                           {\"type\": \"pathPrefix\", \"prefix\": \"/auth\", \"rule\": {\"type\": \"random\", \"service\": \"user-api-local\"}},\
-                           {\"type\": \"pathPrefix\", \"prefix\": \"/data\", \"rule\": {\"type\": \"random\", \"service\": \"pool-whisperer-local\"}},\
-                           {\"type\": \"pathPrefix\", \"prefix\": \"/group\", \"rule\": {\"type\": \"random\", \"service\": \"armada-local\"}},\
-                           {\"type\": \"pathPrefix\", \"prefix\": \"/message\", \"rule\": {\"type\": \"random\", \"service\": \"message-api-local\"}},\
-                           {\"type\": \"pathPrefix\", \"prefix\": \"/metadata\", \"rule\": {\"type\": \"random\", \"service\": \"seagull-local\"}}]\
-    }"
+    export RULES=`cat styx_rules.json`
     export DISCOVERY="\
     {\
       \"host\": \"localhost:8000\"\
@@ -166,11 +150,11 @@ tp_styx() {
 tp_warmup
 tp_mongo
 tp_common
-tp_hakken
-tp_user-api
-tp_seagull
-tp_armada
-tp_message_api
-tp_pool-whisperer
-tp_jellyfish
-tp_styx
+tp_hakken || return
+tp_user-api || return
+tp_seagull || return
+tp_armada || return
+tp_message_api || return
+tp_pool-whisperer || return
+tp_jellyfish || return
+tp_styx || return
