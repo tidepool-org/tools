@@ -8,4 +8,5 @@ message_api: message-api.sh
 pool_whisperer: pool-whisperer.sh
 jellyfish: jellyfish.sh
 sandcastle: sandcastle.sh
+blip: blip.sh
 

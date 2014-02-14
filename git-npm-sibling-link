@@ -1,0 +1,13 @@
+#!/bin/bash
+
+PACKAGE=$1
+SIBLING=${2-"../${PACKAGE}"}
+echo setting up npm to use $PACKAGE from $SIBLING
+( cd $SIBLING;
+  pwd
+  npm version
+  sudo npm link
+)
+pwd
+npm link $PACKAGE
+
