@@ -2,6 +2,10 @@
 
 PACKAGE=$1
 SIBLING=${2-"../${PACKAGE}"}
+if [[ -z "$PACKAGE" ]] ; then
+  echo "usage $0 <package>"
+  exit 1;
+fi
 echo setting up npm to use $PACKAGE from $SIBLING
 ( cd $SIBLING;
   pwd
