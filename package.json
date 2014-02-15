@@ -27,7 +27,8 @@
     "pool-whisperer": "git://github.com/tidepool-org/pool-whisperer.git#master",
     "sandcastle": "git://github.com/tidepool-org/sandcastle.git#master",
     "nodemon": "~1.0.14",
-    "blip": "git://github.com/tidepool-org/blip.git#master"
+    "blip": "git://github.com/tidepool-org/blip.git#master",
+    "foreman": "0.0.26"
   },
   "devDependencies": {
     "connect": "~2.12.0",
