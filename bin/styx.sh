@@ -12,4 +12,4 @@ export DISCOVERY="\
 {\
   \"host\": \"localhost:8000\"\
 }"
-env $(echo "$ENVSTR") $NODE ./node_modules/styx/server.js
+env $(echo "$ENVSTR") RULES="$RULES" DISCOVERY="$DISCOVERY" $NODE ./node_modules/styx/server.js | tee server.log
