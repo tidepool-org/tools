@@ -1,0 +1,12 @@
+#!/bin/bash
+
+function load_env ( ) {
+  env=$@
+  cat $env | grep -v '#'
+}
+
+function write_pid ( ) {
+  NAME=$1
+  PROC=$2
+  echo $PROC > run/$NAME.pid
+}
