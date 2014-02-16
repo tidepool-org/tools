@@ -13,4 +13,4 @@ export DISCOVERY="\
   \"host\": \"localhost:8000\"\
 }"
 sleep 5
-env $(echo "$ENVSTR") RULES="$RULES" DISCOVERY="$DISCOVERY" $NODE ./node_modules/styx/server.js | tee -a server.log
+env $(echo "$ENVSTR") RULES="$RULES" DISCOVERY="$DISCOVERY" $NODE -d 5 ./node_modules/styx/server.js | tee -a server.log
