@@ -48,7 +48,9 @@ tp_start_server() {   # expects servername, start name
     #node $2 2>&1 > ../$1.log &
     node $2 2>&1 >> ../server.log &
     cd ..
-    export TP_PIDS="$TP_PIDS $!"
+    PIDDY=$!
+    echo "Started $1, pid ${PIDDY}"
+    export TP_PIDS="$TP_PIDS $PIDDY"
     sleep 1
 }
 
@@ -58,6 +60,9 @@ tp_common() {
     export SERVER_SECRET="This needs to be the same secret everywhere. YaHut75NsK1f9UKUXuWqxNN0RUwHFBCy"
     export DISCOVERY_HOST=localhost:8000
     export PUBLISH_HOST=localhost
+    export USER_API_SERVICE="{ \"type\": \"static\", \"hosts\": [{ \"protocol\": \"http\", \"host\": \"localhost:9107\" }] }"
+    export SEAGULL_SERVICE="{ \"type\": \"static\", \"hosts\": [{ \"protocol\": \"http\", \"host\": \"localhost:9120\" }] }"
+    export SANDCASTLE_SERVICE="{ \"type\": \"static\", \"hosts\": [{ \"protocol\": \"http\", \"host\": \"localhost:9123\" }] }"
 }
 
 tp_mongo() {
@@ -71,6 +76,7 @@ tp_hakken() {
     export ANNOUNCE_HOST=localhost
     export PORT=8000
     export DISCOVERY_HEARTBEAT_INTERVAL=10000
+    export LOG_HEARTBEATS=false
 
     tp_start_server hakken coordinator.js
 }
@@ -88,7 +94,6 @@ tp_user-api() {
 tp_seagull() {
     export PORT=9120
     export SERVICE_NAME=seagull-local
-    export USER_API_SERVICE=user-api-local
     export SALT_DEPLOY=KEWRWBe5yyMnW4SxosfZ2EkbZHkyqJ5f
 
     tp_start_server seagull lib/index.js
@@ -98,7 +103,6 @@ tp_seagull() {
 tp_armada() {
     export PORT=9118
     export SERVICE_NAME=armada-local
-    export USER_API_SERVICE=user-api-local
     export SALT_DEPLOY=xLyg8dAEwUUF7JnkgO08jo8stRY0caV5
 
     tp_start_server armada lib/index.js
@@ -108,7 +112,6 @@ tp_armada() {
 tp_message_api() {
     export PORT=9119
     export SERVICE_NAME=message-api-local
-    export USER_API_SERVICE=user-api-local
     export SALT_DEPLOY=JPX9TAh6VEcta4TnaQMudx4R1G6ie9Wi
     export SERVER_NAME=message-api
 
@@ -119,8 +122,6 @@ tp_message_api() {
 tp_pool-whisperer() {
     export PORT=9121
     export SERVICE_NAME=pool-whisperer-local
-    export USER_API_SERVICE=user-api-local
-    export SEAGULL_SERVICE=seagull-local
 
     tp_start_server pool-whisperer server.js
 }
@@ -129,8 +130,6 @@ tp_pool-whisperer() {
 tp_jellyfish() {
     export PORT=9122
     export SERVICE_NAME=jellyfish-local
-    export USER_API_SERVICE=user-api-local
-    export SEAGULL_SERVICE=seagull-local
 
     tp_start_server jellyfish app.js
 }
@@ -138,13 +137,34 @@ tp_jellyfish() {
 # styx
 tp_styx() {
     export HTTP_PORT=8009
-    export RULES=`cat styx_rules.json`
+    export RULES=`cat tools/styx_rules.json`
     export DISCOVERY="\
     {\
       \"host\": \"localhost:8000\"\
     }"
 
     tp_start_server styx server.js
+}
+
+# sandcastle
+tp_sandcastle() {
+    export PORT=9123
+    export COORDINATOR=${DISCOVERY_HOST}
+    export HAKKEN_PUBLISH=sandcastle-devel
+    export SANDBOX_HOSTNAME=${PUBLISH_HOST}
+    export SANDBOX_SCHEME=http
+
+    tp_start_server sandcastle server.js
+}
+
+# blip
+tp_blip() {
+    export PORT=3000
+    export MOCK=false
+    export API_HOST="http://localhost:8009"
+    export UPLOAD_API="http://localhost:9122"
+
+    tp_start_server blip develop.js
 }
 
 tp_warmup
@@ -156,5 +176,7 @@ tp_seagull || return
 tp_armada || return
 tp_message_api || return
 tp_pool-whisperer || return
-tp_jellyfish || return
 tp_styx || return
+tp_sandcastle || return
+tp_jellyfish || return
+tp_blip || return
