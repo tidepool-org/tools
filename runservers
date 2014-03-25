@@ -3,8 +3,11 @@
 # It expects to be run from a top-level directory with checkouts of various repositories at the next level down. So something like:
 # tidepool/
 #     armada/
+#     blip/
 #     hakken/
+#     jellyfish/
 #     message-api/
+#     pool-whisperer/
 #     seagull/
 #     styx/
 #     tools/           # containing this file
@@ -60,9 +63,10 @@ tp_common() {
     export SERVER_SECRET="This needs to be the same secret everywhere. YaHut75NsK1f9UKUXuWqxNN0RUwHFBCy"
     export DISCOVERY_HOST=localhost:8000
     export PUBLISH_HOST=localhost
+    export METRICS_API_SERVICE="{ \"type\": \"static\", \"hosts\": [{ \"protocol\": \"http\", \"host\": \"localhost:9191\" }] }"
     export USER_API_SERVICE="{ \"type\": \"static\", \"hosts\": [{ \"protocol\": \"http\", \"host\": \"localhost:9107\" }] }"
+    export ARMADA_SERVICE="{ \"type\": \"static\", \"hosts\": [{ \"protocol\": \"http\", \"host\": \"localhost:9118\" }] }"
     export SEAGULL_SERVICE="{ \"type\": \"static\", \"hosts\": [{ \"protocol\": \"http\", \"host\": \"localhost:9120\" }] }"
-    export SANDCASTLE_SERVICE="{ \"type\": \"static\", \"hosts\": [{ \"protocol\": \"http\", \"host\": \"localhost:9123\" }] }"
 }
 
 tp_mongo() {
@@ -88,6 +92,16 @@ tp_user-api() {
     export SALT_DEPLOY=ADihSEI7tOQQP9xfXMO9HfRpXKu1NpIJ
 
     tp_start_server user-api lib/index.js
+}
+
+# highwater
+tp_highwater() {
+    export PORT=9191
+    export SERVICE_NAME=highwater
+    export SALT_DEPLOY=ADihSEI7tOQQP9xfXMO9HfRpXKu1NpIJ
+    export METRICS_APIKEY=28814957ee8160309f522a0bd0f2824de585befb
+
+    tp_start_server highwater lib/index.js
 }
 
 # seagull
@@ -146,17 +160,6 @@ tp_styx() {
     tp_start_server styx server.js
 }
 
-# sandcastle
-tp_sandcastle() {
-    export PORT=9123
-    export COORDINATOR=${DISCOVERY_HOST}
-    export HAKKEN_PUBLISH=sandcastle-devel
-    export SANDBOX_HOSTNAME=${PUBLISH_HOST}
-    export SANDBOX_SCHEME=http
-
-    tp_start_server sandcastle server.js
-}
-
 # blip
 tp_blip() {
     export PORT=3000
@@ -165,6 +168,7 @@ tp_blip() {
     export UPLOAD_API="http://localhost:9122"
 
     tp_start_server blip develop.js
+    echo "Blip started at http://localhost:$PORT"
 }
 
 tp_warmup
@@ -172,11 +176,12 @@ tp_mongo
 tp_common
 tp_hakken || return
 tp_user-api || return
+# highwater is not yet functional but will follow soon
+#tp_highwater || return
 tp_seagull || return
 tp_armada || return
 tp_message_api || return
 tp_pool-whisperer || return
 tp_styx || return
-tp_sandcastle || return
 tp_jellyfish || return
 tp_blip || return
