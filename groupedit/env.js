@@ -30,7 +30,7 @@ function maybeReadJSONFile(filename, fallback)
   return fallback;
 }
 
-var configfile = maybeReadJSONFile('./local_config.json', {});
+var configfile = maybeReadJSONFile('config/config.json', {});
 
 function getConfig(name, fallback) {
   if (configfile[name]) {

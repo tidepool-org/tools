@@ -23,8 +23,7 @@
   "bin": {
     "tidepool-groupedit": "lib/tidepool-groupedit.js"
   },
-  "devDependencies": {
-  },
+  "devDependencies": {},
   "keywords": [],
   "dependencies": {
     "commandline-parser": "0.4.0",
@@ -34,6 +33,7 @@
     "hakken": "0.1.4",
     "user-api-client": "0.1.4",
     "seagull-client": "0.0.1",
-    "async": "0.4.0"
+    "async": "0.4.0",
+    "request": "2.34.0"
   }
 }
