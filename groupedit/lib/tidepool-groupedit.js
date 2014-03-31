@@ -176,6 +176,12 @@ function setupCommandline() {
       optional : true
   });
 
+  parser.addArgument('status', {
+      flags : ['s','status'], 
+      desc : "check and print status of the servers", 
+      optional : true
+  });
+
   return parser;
 };
 
@@ -203,7 +209,7 @@ function setup() {
     username: username,
     groupname: groupname,
     members: args,
-    flags: {add: parser.get('add'), del: parser.get('del')}
+    flags: {add: parser.get('add'), del: parser.get('del'), status: parser.get('status')}
   }
 }
 
@@ -226,6 +232,7 @@ function getApis() {
   // var armadaApiClient = require('armada-client').client(config.armadaApi, armadaApiWatch);
 
   return {
+    userHost: userApiWatch,
     user: userApiClient,
     // seagull: seagullApiClient,
     seagullHost: seagullApiWatch,
@@ -244,9 +251,68 @@ function main() {
 
   async.waterfall([
     apis.user.withServerToken,  // calls callback with err, token
+    function getUserStatus(token, callback) {
+      if (parms.flags.status) {
+        console.log('User status:');
+        requestTo(apis.userHost, '/status')
+          .withToken(token)
+          .whenStatus(200, function(err, body) { return body; })
+          .go(function(err, status) {
+            if (err) {
+              console.log(err);
+              process.exit(1);
+            } else {
+              // if we didn't have an error, or the error statusCode wasn't 404, just pass it on
+              console.log(status);
+              callback(null, status);
+            }
+          });
+      }
+    },
+    function getSeagullStatus(token, callback) {
+      if (parms.flags.status) {
+        console.log('Seagull status:');
+        requestTo(apis.seagullHost, '/status')
+          .withToken(token)
+          .whenStatus(200, function(err, body) { return body; })
+          .go(function(err, status) {
+            if (err) {
+              console.log(err);
+              process.exit(1);
+            } else {
+              // if we didn't have an error, or the error statusCode wasn't 404, just pass it on
+              console.log(status);
+              callback(null, status);
+            }
+          });
+      }
+    },
+    function getArmadaStatus(token, callback) {
+      if (parms.flags.status) {
+        console.log('Armada status:');
+        requestTo(apis.armadaHost, '/status')
+          .withToken(token)
+          .whenStatus(200, function(err, body) { return body; })
+          .go(function(err, status) {
+            if (err) {
+              console.log(err);
+              process.exit(1);
+            } else {
+              // if we didn't have an error, or the error statusCode wasn't 404, just pass it on
+              console.log(status);
+              callback(null, status);
+            }
+          });
+      }
+    },
     function getUserIDfromUserAPI(token, callback) {
       apis.user.getUserInfo(parms.username, function(err, userinfo) {
-        callback(err, token, userinfo);
+        if (userinfo) {
+          callback(err, token, userinfo);
+        } else {
+          console.log('Unable to find user information for %s', parms.username);
+          process.exit(1);
+        }
       });
     },
     function getAllUserIDs(token, userinfo, callback) {
