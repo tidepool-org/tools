@@ -461,7 +461,13 @@ function main() {
       }
     ], 
     function(err, token, userinfo, groupinfo) {
-      console.log('Finished.');
+      if (err) {
+        console.log(err);
+        console.log('Finished with errors.');
+        process.exit(1);
+      } else {
+        console.log('Finished.');
+      }
     });
   });
 }
