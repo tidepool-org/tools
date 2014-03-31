@@ -26,14 +26,14 @@
   "devDependencies": {},
   "keywords": [],
   "dependencies": {
-    "commandline-parser": "0.4.0",
-    "lodash": "2.4.1",
     "amoeba": "0.0.8",
-    "tidepool-seagull-client": "0.0.2",
-    "hakken": "0.1.4",
-    "user-api-client": "0.1.4",
-    "seagull-client": "0.0.1",
     "async": "0.4.0",
-    "request": "2.34.0"
+    "commandline-parser": "0.4.0",
+    "hakken": "0.1.4",
+    "lodash": "2.4.1",
+    "request": "2.34.0",
+    "seagull-client": "0.0.1",
+    "tidepool-seagull-client": "0.0.2",
+    "user-api-client": "0.1.7"
   }
 }
