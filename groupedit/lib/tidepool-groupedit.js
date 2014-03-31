@@ -194,7 +194,7 @@ function setup() {
     process.exit(1);
   }
   var args = parser.getArguments();
-  if (args.length < 1) {
+  if (args.length < 1 && (parser.get('add') || parser.get('del'))) {
     console.log('You must specify at least one group member to add or remove from the group.');
     parser.printHelp();
     process.exit(1);
@@ -211,6 +211,11 @@ function getApis() {
   var userApiWatch = hakkenClient.watchFromConfig(config.userApi.serviceSpec);
   userApiWatch.start();
   var userApiClient = require('user-api-client').client(config.userApi, userApiWatch);
+  if (!userApiClient.getUserInfo) {
+    console.log(userApiClient);
+    console.log('The userApiClient is missing a key component, which is probably because SERVER_SECRET is wrong.');
+    process.exit(1);
+  }
 
   var seagullApiWatch = hakkenClient.watchFromConfig(config.seagullApi.serviceSpec);
   seagullApiWatch.start();
