@@ -213,32 +213,49 @@ function setup() {
   }
 }
 
-function getApis() {
-  var userApiWatch = hakkenClient.watchFromConfig(config.userApi.serviceSpec);
-  userApiWatch.start();
-  var userApiClient = require('user-api-client').client(config.userApi, userApiWatch);
-  if (!userApiClient.getUserInfo) {
-    console.log(userApiClient);
-    console.log('The userApiClient is missing a key component, which is probably because SERVER_SECRET is wrong.');
-    process.exit(1);
-  }
+function getApis(gotApisCB) {
+  var apis = {};
+  async.waterfall([
+    function setupUserApi(callback) {
+      var userApiWatch = hakkenClient.watchFromConfig(config.userApi.serviceSpec);
+      userApiWatch.start(function (err) {
+        apis.userHost = userApiWatch;
+        callback(err);
+      });
+    },
+    function setupSeagullApi(callback) {
+      var seagullApiWatch = hakkenClient.watchFromConfig(config.seagullApi.serviceSpec);
+      seagullApiWatch.start(function (err) {
+        apis.seagullHost = seagullApiWatch;
+        callback(err);
+      });
+    },
+    function setupArmadaApi(callback) {
+      var armadaApiWatch = hakkenClient.watchFromConfig(config.armadaApi.serviceSpec);
+      armadaApiWatch.start(function (err) {
+        apis.armadaHost = armadaApiWatch;
+        callback(err);
+      });
+    }
+    ],
+    function finishDiscovery(err) {
+      if (err) {
+        console.log('Failed to complete discovery properly');
+        console.log(err);
+        process.exit(1);
+      }
 
-  var seagullApiWatch = hakkenClient.watchFromConfig(config.seagullApi.serviceSpec);
-  seagullApiWatch.start();
-  // var seagullApiClient = require('tidepool-seagull-client')(seagullApiWatch);
+      apis.user = require('user-api-client').client(config.userApi, apis.userHost);
+      if (!apis.user.getUserInfo) {
+        console.log(apis.user);
+        console.log('The userApiClient is missing a key component, which is probably because SERVER_SECRET is wrong.');
+        process.exit(1);
+      };
 
-  var armadaApiWatch = hakkenClient.watchFromConfig(config.armadaApi.serviceSpec);
-  armadaApiWatch.start();
-  // var armadaApiClient = require('armada-client').client(config.armadaApi, armadaApiWatch);
+      gotApisCB(apis);
+    }
+  );
 
-  return {
-    userHost: userApiWatch,
-    user: userApiClient,
-    // seagull: seagullApiClient,
-    seagullHost: seagullApiWatch,
-    armadaHost: armadaApiWatch
-    // armada: armadaApiClient
-  };
 }
 
 
@@ -247,204 +264,205 @@ function main() {
   var parms = setup();
 
   // get our APIs from hakken -- user, seagull, armada
-  var apis = getApis();
+  getApis(function gotApisCB(apis) {
 
-  async.waterfall([
-    apis.user.withServerToken,  // calls callback with err, token
-    function getUserStatus(token, callback) {
-      if (parms.flags.status) {
-        console.log('User status:');
-        requestTo(apis.userHost, '/status')
-          .withToken(token)
-          .whenStatus(200, function(err, body) { return body; })
-          .go(function(err, status) {
-            if (err) {
-              console.log(err);
-              process.exit(1);
-            } else {
-              // if we didn't have an error, or the error statusCode wasn't 404, just pass it on
-              console.log(status);
-              callback(null, status);
-            }
-          });
-      }
-    },
-    function getSeagullStatus(token, callback) {
-      if (parms.flags.status) {
-        console.log('Seagull status:');
-        requestTo(apis.seagullHost, '/status')
-          .withToken(token)
-          .whenStatus(200, function(err, body) { return body; })
-          .go(function(err, status) {
-            if (err) {
-              console.log(err);
-              process.exit(1);
-            } else {
-              // if we didn't have an error, or the error statusCode wasn't 404, just pass it on
-              console.log(status);
-              callback(null, status);
-            }
-          });
-      }
-    },
-    function getArmadaStatus(token, callback) {
-      if (parms.flags.status) {
-        console.log('Armada status:');
-        requestTo(apis.armadaHost, '/status')
-          .withToken(token)
-          .whenStatus(200, function(err, body) { return body; })
-          .go(function(err, status) {
-            if (err) {
-              console.log(err);
-              process.exit(1);
-            } else {
-              // if we didn't have an error, or the error statusCode wasn't 404, just pass it on
-              console.log(status);
-              callback(null, status);
-            }
-          });
-      }
-    },
-    function getUserIDfromUserAPI(token, callback) {
-      apis.user.getUserInfo(parms.username, function(err, userinfo) {
-        if (userinfo) {
-          callback(err, token, userinfo);
-        } else {
-          console.log('Unable to find user information for %s', parms.username);
-          process.exit(1);
+    async.waterfall([
+      apis.user.withServerToken,  // calls callback with err, token
+      function getUserStatus(token, callback) {
+        if (parms.flags.status) {
+          console.log('User status:');
+          requestTo(apis.userHost, '/status')
+            .withToken(token)
+            .whenStatus(200, function(err, body) { return body; })
+            .go(function(err, status) {
+              if (err) {
+                console.log(err);
+                process.exit(1);
+              } else {
+                // if we didn't have an error, or the error statusCode wasn't 404, just pass it on
+                console.log(status);
+                callback(null, status);
+              }
+            });
         }
-      });
-    },
-    function getAllUserIDs(token, userinfo, callback) {
-      var getOneUserID = function (user, gotUserCB) {
-        apis.user.getUserInfo(user, function(err, userinfo) {
-          if (err || userinfo == null) {
-            gotUserCB(null, null);
+      },
+      function getSeagullStatus(token, callback) {
+        if (parms.flags.status) {
+          console.log('Seagull status:');
+          requestTo(apis.seagullHost, '/status')
+            .withToken(token)
+            .whenStatus(200, function(err, body) { return body; })
+            .go(function(err, status) {
+              if (err) {
+                console.log(err);
+                process.exit(1);
+              } else {
+                // if we didn't have an error, or the error statusCode wasn't 404, just pass it on
+                console.log(status);
+                callback(null, status);
+              }
+            });
+        }
+      },
+      function getArmadaStatus(token, callback) {
+        if (parms.flags.status) {
+          console.log('Armada status:');
+          requestTo(apis.armadaHost, '/status')
+            .withToken(token)
+            .whenStatus(200, function(err, body) { return body; })
+            .go(function(err, status) {
+              if (err) {
+                console.log(err);
+                process.exit(1);
+              } else {
+                // if we didn't have an error, or the error statusCode wasn't 404, just pass it on
+                console.log(status);
+                callback(null, status);
+              }
+            });
+        }
+      },
+      function getUserIDfromUserAPI(token, callback) {
+        apis.user.getUserInfo(parms.username, function(err, userinfo) {
+          if (userinfo) {
+            callback(err, token, userinfo);
           } else {
-            gotUserCB(null, userinfo.userid);
-          }
-        });
-      }
-      async.map(parms.members, getOneUserID, function(err, results) {
-        parms.newmembers = _.compact(results);
-        callback(null, token, userinfo);
-      });
-    },
-    function getGroupsfromSeagull(token, userinfo, callback) {
-      requestTo(apis.seagullHost, userinfo.userid + '/groups')
-        .withToken(token)
-        .whenStatus(200, parseJSON)
-        .go(function(err, groupinfo) {
-          if (err && err.statusCode === 404) {
-            console.log('There was no groups object for that user; aborting.');
+            console.log('Unable to find user information for %s', parms.username);
             process.exit(1);
-          } else {
-            // if we didn't have an error, or the error statusCode wasn't 404, just pass it on
-            callback(err, token, userinfo, groupinfo);
           }
         });
-    },
-    function maybeCreateGroupInArmada(token, userinfo, groupinfo, callback) {
-      if (!groupinfo[parms.groupname]) {
-        if (parms.flags.del) {
-          console.log('Cannot delete someone from a group that does not exist.');
-          process.exit(1);
+      },
+      function getAllUserIDs(token, userinfo, callback) {
+        var getOneUserID = function (user, gotUserCB) {
+          apis.user.getUserInfo(user, function(err, userinfo) {
+            if (err || userinfo == null) {
+              gotUserCB(null, null);
+            } else {
+              gotUserCB(null, userinfo.userid);
+            }
+          });
         }
-        requestTo(apis.armadaHost, '')    // create group has no command
-          .withMethod('POST')
+        async.map(parms.members, getOneUserID, function(err, results) {
+          parms.newmembers = _.compact(results);
+          callback(null, token, userinfo);
+        });
+      },
+      function getGroupsfromSeagull(token, userinfo, callback) {
+        requestTo(apis.seagullHost, userinfo.userid + '/groups')
           .withToken(token)
-          .withJSON({group: {members: parms.newmembers}})
-          .whenStatus(201, function(res, body) { return body; })
-          .go(function(err, newgroup) {
-            if (err) {
-              console.log(err);
-              console.log('Failed to create a new group; aborting.');
+          .whenStatus(200, parseJSON)
+          .go(function(err, groupinfo) {
+            if (err && err.statusCode === 404) {
+              console.log('There was no groups object for that user; aborting.');
               process.exit(1);
             } else {
-              // if we didn't have an error, just pass it on
-              groupinfo[parms.groupname] = newgroup.id;
-              console.log('Created a new group with id ', newgroup.id);
+              // if we didn't have an error, or the error statusCode wasn't 404, just pass it on
               callback(err, token, userinfo, groupinfo);
             }
           });
-      } else {
-        callback(null, token, userinfo, groupinfo);
-      }
-    },
-    function modifyArmadaGroup(token, userinfo, groupinfo, callback) {
-      var addOneUserToGroup = function(userid, addedUserCB) {
-        requestTo(apis.armadaHost, groupinfo[parms.groupname] + '/user')
+      },
+      function maybeCreateGroupInArmada(token, userinfo, groupinfo, callback) {
+        if (!groupinfo[parms.groupname]) {
+          if (parms.flags.del) {
+            console.log('Cannot delete someone from a group that does not exist.');
+            process.exit(1);
+          }
+          requestTo(apis.armadaHost, '')    // create group has no command
+            .withMethod('POST')
+            .withToken(token)
+            .withJSON({group: {members: parms.newmembers}})
+            .whenStatus(201, function(res, body) { return body; })
+            .go(function(err, newgroup) {
+              if (err) {
+                console.log(err);
+                console.log('Failed to create a new group; aborting.');
+                process.exit(1);
+              } else {
+                // if we didn't have an error, just pass it on
+                groupinfo[parms.groupname] = newgroup.id;
+                console.log('Created a new group with id ', newgroup.id);
+                callback(err, token, userinfo, groupinfo);
+              }
+            });
+        } else {
+          callback(null, token, userinfo, groupinfo);
+        }
+      },
+      function modifyArmadaGroup(token, userinfo, groupinfo, callback) {
+        var addOneUserToGroup = function(userid, addedUserCB) {
+          requestTo(apis.armadaHost, groupinfo[parms.groupname] + '/user')
+            .withMethod('PUT')
+            .withToken(token)
+            .withJSON({userid: userid})
+            .go(function(err, result) {
+              if (err) {
+                addedUserCB(err, null);
+              } else {
+                addedUserCB(null, result);
+              }
+          });
+        };
+        var removeOneUserFromGroup = function(userid, removedUserCB) {
+          requestTo(apis.armadaHost, groupinfo[parms.groupname] + '/user')
+            .withMethod('DELETE')
+            .withToken(token)
+            .withJSON({userid: userid})
+            .go(function(err, result) {
+              if (err) {
+                removedUserCB(err, null);
+              } else {
+                removedUserCB(null, result);
+              }
+          });
+        };
+        if (parms.flags.add) {
+          async.map(parms.newmembers, addOneUserToGroup, function(err, results) {
+            callback(null, token, userinfo, groupinfo);
+          });
+        } else if (parms.flags.del) {
+          async.map(parms.newmembers, removeOneUserFromGroup, function(err, results) {
+            callback(null, token, userinfo, groupinfo);
+          });
+        } else {       
+          callback(null, token, userinfo, groupinfo);
+        };
+      },
+      function saveGroupsToSeagull(token, userinfo, groupinfo, callback) {
+        requestTo(apis.seagullHost, userinfo.userid + '/groups')
           .withMethod('PUT')
           .withToken(token)
-          .withJSON({userid: userid})
-          .go(function(err, result) {
+          .withJSON(groupinfo)
+          .whenStatus(200, function(res, body) { return body; })
+          .go(function(err, groupinfo) {
             if (err) {
-              addedUserCB(err, null);
+              console.log('Tried to update groups but failed; aborting.');
+              process.exit(1);
             } else {
-              addedUserCB(null, result);
+              // if we didn't have an error, or the error statusCode wasn't 404, just pass it on
+              callback(err, token, userinfo, groupinfo);
             }
-        });
-      };
-      var removeOneUserFromGroup = function(userid, removedUserCB) {
-        requestTo(apis.armadaHost, groupinfo[parms.groupname] + '/user')
-          .withMethod('DELETE')
+          });
+      },
+      function getGroupMembersFromArmada(token, userinfo, groupinfo, callback) {
+        requestTo(apis.armadaHost, groupinfo[parms.groupname] + '/members')    // create group has no command
+          .withMethod('GET')
           .withToken(token)
-          .withJSON({userid: userid})
-          .go(function(err, result) {
+          .whenStatus(200, function(res, body) { return body; })
+          .go(function(err, newgroup) {
             if (err) {
-              removedUserCB(err, null);
+              console.log(err);
+              console.log('Failed to retrieve the group we just created; aborting.');
+              process.exit(1);
             } else {
-              removedUserCB(null, result);
+              console.log('Group membership now includes these user IDs:', newgroup);
+              callback(err, token, userinfo, groupinfo);
             }
-        });
-      };
-      if (parms.flags.add) {
-        async.map(parms.newmembers, addOneUserToGroup, function(err, results) {
-          callback(null, token, userinfo, groupinfo);
-        });
-      } else if (parms.flags.del) {
-        async.map(parms.newmembers, removeOneUserFromGroup, function(err, results) {
-          callback(null, token, userinfo, groupinfo);
-        });
-      } else {       
-        callback(null, token, userinfo, groupinfo);
-      };
-    },
-    function saveGroupsToSeagull(token, userinfo, groupinfo, callback) {
-      requestTo(apis.seagullHost, userinfo.userid + '/groups')
-        .withMethod('PUT')
-        .withToken(token)
-        .withJSON(groupinfo)
-        .whenStatus(200, function(res, body) { return body; })
-        .go(function(err, groupinfo) {
-          if (err) {
-            console.log('Tried to update groups but failed; aborting.');
-            process.exit(1);
-          } else {
-            // if we didn't have an error, or the error statusCode wasn't 404, just pass it on
-            callback(err, token, userinfo, groupinfo);
-          }
-        });
-    },
-    function getGroupMembersFromArmada(token, userinfo, groupinfo, callback) {
-      requestTo(apis.armadaHost, groupinfo[parms.groupname] + '/members')    // create group has no command
-        .withMethod('GET')
-        .withToken(token)
-        .whenStatus(200, function(res, body) { return body; })
-        .go(function(err, newgroup) {
-          if (err) {
-            console.log(err);
-            console.log('Failed to retrieve the group we just created; aborting.');
-            process.exit(1);
-          } else {
-            console.log('Group membership now includes these user IDs:', newgroup);
-            callback(err, token, userinfo, groupinfo);
-          }
-        });
-    }
-  ], 
-  function(err, token, userinfo, groupinfo) {
-    console.log('Finished.');
+          });
+      }
+    ], 
+    function(err, token, userinfo, groupinfo) {
+      console.log('Finished.');
+    });
   });
 }
 
