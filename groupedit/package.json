@@ -1,0 +1,39 @@
+{
+  "name": "tidepool-groupedit",
+  "description": "Tool to edit groups for tidepool users",
+  "version": "0.5.0",
+  "homepage": "https://github.com/tidepool-org/tools",
+  "author": {
+    "name": "Kent Quirk",
+    "email": "kent@tidepool.org",
+    "url": "http://www.tidepool.org"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:tidepool-org/tools.git"
+  },
+  "bugs": {
+    "url": "https://github.com/tidepool-org/tools/issues"
+  },
+  "license": "Tidepool",
+  "main": "lib/tidepool-groupedit",
+  "engines": {
+    "node": ">= 0.8.0"
+  },
+  "bin": {
+    "tidepool-groupedit": "lib/tidepool-groupedit.js"
+  },
+  "devDependencies": {
+  },
+  "keywords": [],
+  "dependencies": {
+    "commandline-parser": "0.4.0",
+    "lodash": "2.4.1",
+    "amoeba": "0.0.8",
+    "tidepool-seagull-client": "0.0.2",
+    "hakken": "0.1.4",
+    "user-api-client": "0.1.4",
+    "seagull-client": "0.0.1",
+    "async": "0.4.0"
+  }
+}
