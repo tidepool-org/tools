@@ -186,7 +186,6 @@ function setupCommandline() {
 };
 
 function setup() {
-  hakkenClient.start();
   var parser = setupCommandline();
   parser.exec();
 
@@ -216,10 +215,18 @@ function setup() {
 function getApis(gotApisCB) {
   var apis = {};
   async.waterfall([
+    function startHakken(callback) {
+      hakkenClient.start(function (err) {
+        callback(err);
+      });
+    },
     function setupUserApi(callback) {
       var userApiWatch = hakkenClient.watchFromConfig(config.userApi.serviceSpec);
       userApiWatch.start(function (err) {
         apis.userHost = userApiWatch;
+        if (err) {
+          console.log('setupUserApi');
+        }
         callback(err);
       });
     },
@@ -227,6 +234,9 @@ function getApis(gotApisCB) {
       var seagullApiWatch = hakkenClient.watchFromConfig(config.seagullApi.serviceSpec);
       seagullApiWatch.start(function (err) {
         apis.seagullHost = seagullApiWatch;
+        if (err) {
+          console.log('setupSeagullApi');
+        }
         callback(err);
       });
     },
@@ -234,6 +244,9 @@ function getApis(gotApisCB) {
       var armadaApiWatch = hakkenClient.watchFromConfig(config.armadaApi.serviceSpec);
       armadaApiWatch.start(function (err) {
         apis.armadaHost = armadaApiWatch;
+        if (err) {
+          console.log('setupArmadaApi');
+        }
         callback(err);
       });
     }
