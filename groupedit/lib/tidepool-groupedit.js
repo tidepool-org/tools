@@ -294,9 +294,11 @@ function main() {
               } else {
                 // if we didn't have an error, or the error statusCode wasn't 404, just pass it on
                 console.log(status);
-                callback(null, status);
+                callback(null, token);
               }
             });
+        } else {
+          callback(null, token);
         }
       },
       function getSeagullStatus(token, callback) {
@@ -312,9 +314,11 @@ function main() {
               } else {
                 // if we didn't have an error, or the error statusCode wasn't 404, just pass it on
                 console.log(status);
-                callback(null, status);
+                callback(null, token);
               }
             });
+        } else {
+          callback(null, token);
         }
       },
       function getArmadaStatus(token, callback) {
@@ -330,9 +334,11 @@ function main() {
               } else {
                 // if we didn't have an error, or the error statusCode wasn't 404, just pass it on
                 console.log(status);
-                callback(null, status);
+                callback(null, token);
               }
             });
+        } else {
+          callback(null, token);
         }
       },
       function getUserIDfromUserAPI(token, callback) {
