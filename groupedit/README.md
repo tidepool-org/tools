@@ -13,7 +13,8 @@ Install the module with: `npm install tidepool-groupedit`
     -g, --group set group name to modify (default is team)
     -a, --add   add members to the group
     -d, --del   delete members from the group
-
+    -s, --status check and print status of the servers
+    
     Typical usage:
 
         To list people in a group:

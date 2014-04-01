@@ -30,7 +30,10 @@ var request = require('request');
 var async = require('async');
 var Cmdline = require('commandline-parser').Parser;
 var config = require('../env');
-var hakkenClient = require('hakken')(config.discovery).client();
+// suppress hakken's rather verbose logging
+function nil() {}
+var log = {info:nil, debug:nil, warn:nil, error:nil};
+var hakkenClient = require('hakken')(config.discovery, log).client();
   
 
 var username = null;
