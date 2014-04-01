@@ -288,8 +288,6 @@ function getApis(gotApisCB) {
 
 }
 
-
-
 function main() {
   var parms = setup();
 
@@ -389,8 +387,9 @@ function main() {
           .whenStatus(200, parseJSON)
           .go(function(err, groupinfo) {
             if (err && err.statusCode === 404) {
-              console.log('There was no groups object for that user; aborting.');
-              process.exit(1);
+              // there was no groups object yet, so we'll use an empty one
+              groupinfo = {};
+              callback(null, token, userinfo, groupinfo)
             } else {
               // if we didn't have an error, or the error statusCode wasn't 404, just pass it on
               callback(err, token, userinfo, groupinfo);
