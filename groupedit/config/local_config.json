@@ -2,7 +2,7 @@
     "comment": "This is a sample local config that is compatible with runservers.",
     "SERVER_SECRET": "This needs to be the same secret everywhere. YaHut75NsK1f9UKUXuWqxNN0RUwHFBCy",
     "DISCOVERY_HOST": "localhost:8000",
-    "USER_API_SERVICE": "{ \"type\": \"static\", \"hosts\": [{ \"protocol\": \"http\", \"host\": \"localhost:9107\" }] }",
+    "USER_API_SERVICE": "{ \"type\": \"random\", \"service\": \"user-api-local\" }",
     "ARMADA_SERVICE": "{ \"type\": \"static\", \"hosts\": [{ \"protocol\": \"http\", \"host\": \"localhost:9118\" }] }",
     "SEAGULL_SERVICE": "{ \"type\": \"static\", \"hosts\": [{ \"protocol\": \"http\", \"host\": \"localhost:9120\" }] }"
 }
