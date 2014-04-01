@@ -30,7 +30,7 @@ function maybeReadJSONFile(filename, fallback)
   return fallback;
 }
 
-var configfile = maybeReadJSONFile('config/config.json', {});
+var configfile = null; 
 
 function getConfig(name, fallback) {
   if (configfile[name]) {
@@ -41,39 +41,44 @@ function getConfig(name, fallback) {
 }
 
 module.exports = (function() {
-  var env = {}; 
-  // Name of this server to pass to user-api when getting a server token
-  var serverName = getConfig('SERVER_NAME', 'groupedit');
-  // The secret to use when getting a server token from user-api
-  var serverSecret = getConfig('SERVER_SECRET');
+  return function (deploy) {
+    var env = {}; 
+    var depl = deploy || 'config';
+    var configfilename = 'config/' + depl + '.json';
+    configfile = maybeReadJSONFile(configfilename, {});
+    // Name of this server to pass to user-api when getting a server token
+    var serverName = getConfig('SERVER_NAME', 'groupedit');
+    // The secret to use when getting a server token from user-api
+    var serverSecret = getConfig('SERVER_SECRET');
 
-  env.userApi = {
-    // The config object to discover user-api.  This is just passed through to hakken.watchFromConfig()
-    serviceSpec: JSON.parse(getConfig('USER_API_SERVICE')),
-    serverName: serverName,
-    serverSecret: serverSecret
-  };
-
-  env.seagullApi = {
-    // The config object to discover user-api.  This is just passed through to hakken.watchFromConfig()
-    serviceSpec: JSON.parse(getConfig('SEAGULL_SERVICE')),
-    serverName: serverName,
-    serverSecret: serverSecret
-  };
-
-  env.armadaApi = {
-    // The config object to discover user-api.  This is just passed through to hakken.watchFromConfig()
-    serviceSpec: JSON.parse(getConfig('ARMADA_SERVICE')),
-    serverName: serverName,
-    serverSecret: serverSecret
-  };
-
-  // The host to contact for discovery
-  if (getConfig('DISCOVERY_HOST') != null) {
-    env.discovery = {
-      host: getConfig('DISCOVERY_HOST')
+    env.userApi = {
+      // The config object to discover user-api.  This is just passed through to hakken.watchFromConfig()
+      serviceSpec: JSON.parse(getConfig('USER_API_SERVICE')),
+      serverName: serverName,
+      serverSecret: serverSecret
     };
-  }
 
-  return env;
+    env.seagullApi = {
+      // The config object to discover user-api.  This is just passed through to hakken.watchFromConfig()
+      serviceSpec: JSON.parse(getConfig('SEAGULL_SERVICE')),
+      serverName: serverName,
+      serverSecret: serverSecret
+    };
+
+    env.armadaApi = {
+      // The config object to discover user-api.  This is just passed through to hakken.watchFromConfig()
+      serviceSpec: JSON.parse(getConfig('ARMADA_SERVICE')),
+      serverName: serverName,
+      serverSecret: serverSecret
+    };
+
+    // The host to contact for discovery
+    if (getConfig('DISCOVERY_HOST') != null) {
+      env.discovery = {
+        host: getConfig('DISCOVERY_HOST')
+      };
+    }
+
+    return env;
+  }
 })();

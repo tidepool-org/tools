@@ -11,16 +11,17 @@ Install the module with: `npm install tidepool-groupedit`
     -h, --help  help
     -u, --user  set username containing the group to modify
     -g, --group set group name to modify (default is team)
+    -c, --config set config name to use (default is 'config')
     -a, --add   add members to the group
     -d, --del   delete members from the group
     -s, --status check and print status of the servers
-    
+
     Typical usage:
 
         To list people in a group:
           tidepool-groupedit --group=patients --user=doctor@foo.com
-        To add people to a group:
-          tidepool-groupedit --add --group=invited --user=patient@foo.com doctor@bar.com
+        To add people to a group on staging:
+          tidepool-groupedit --add --group=invited --user=patient@foo.com doctor@bar.com --config=staging
         To list people in a group:
           tidepool-groupedit --del --group=careteam --user=patient@foo.com dontcare@bar.com badguy@unsafe.com
 

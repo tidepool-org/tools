@@ -29,15 +29,13 @@ var _ = require('lodash');
 var request = require('request');
 var async = require('async');
 var Cmdline = require('commandline-parser').Parser;
-var config = require('../env');
-// suppress hakken's rather verbose logging
-function nil() {}
-var log = {info:nil, debug:nil, warn:nil, error:nil};
-var hakkenClient = require('hakken')(config.discovery, log).client();
+var config = null;
+var hakkenClient = null;
   
 
 var username = null;
 var groupname = 'team';
+var deploy = null;  // basename of the configuration file within the config folder
 
 
 function randomIdentifier(n) {
@@ -167,6 +165,15 @@ function setupCommandline() {
       }
   });
 
+  parser.addArgument('config' ,{
+      flags : ['c','config'], 
+      desc : "set config name to use (default is 'config')", 
+      optional : true,
+      action : function(value, parser) {
+        deploy = value;
+      }
+  });
+
   parser.addArgument('add', {
       flags : ['a','add'], 
       desc : "add members to the group", 
@@ -207,6 +214,13 @@ function setup() {
     parser.printHelp();
     process.exit(1);
   }
+
+  config = require('../env')(deploy);
+  // suppress hakken's rather verbose logging
+  function nil() {}
+  var log = {info:nil, debug:nil, warn:nil, error:nil};
+  hakkenClient = require('hakken')(config.discovery, log).client();
+
   return {
     username: username,
     groupname: groupname,
