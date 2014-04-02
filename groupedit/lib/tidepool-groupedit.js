@@ -38,15 +38,6 @@ var groupname = 'team';
 var deploy = null;  // basename of the configuration file within the config folder
 
 
-function randomIdentifier(n) {
-  var validChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  var id = '';
-  for (var i = 0; i <10; i++) {
-    id += validChars[Math.floor(Math.random() * validChars.length)];
-  };
-  return id;
-}
-
 function parseJSON(res, body) {
   return JSON.parse(body);
 }
@@ -128,7 +119,7 @@ function requestTo(hostGetter, path) {
         }
       );
     }
-  }
+  };
 }
 
 
@@ -151,7 +142,7 @@ function setupCommandline() {
       flags : ['u','user'], 
       desc : "set username containing the group to modify", 
       optional : false,
-      action : function(value, parser) {
+      action : function(value) {
         username = value;
       }
   });
@@ -160,7 +151,7 @@ function setupCommandline() {
       flags : ['g','group'], 
       desc : "set group name to modify (default is team)", 
       optional : true,
-      action : function(value, parser) {
+      action : function(value) {
         groupname = value;
       }
   });
@@ -169,7 +160,7 @@ function setupCommandline() {
       flags : ['c','config'], 
       desc : "set config name to use (default is 'config')", 
       optional : true,
-      action : function(value, parser) {
+      action : function(value) {
         deploy = value;
       }
   });
@@ -193,7 +184,7 @@ function setupCommandline() {
   });
 
   return parser;
-};
+}
 
 function setup() {
   var parser = setupCommandline();
@@ -226,7 +217,7 @@ function setup() {
     groupname: groupname,
     members: args,
     flags: {add: parser.get('add'), del: parser.get('del'), status: parser.get('status')}
-  }
+  };
 }
 
 function getApis(gotApisCB) {
@@ -280,7 +271,7 @@ function getApis(gotApisCB) {
         console.log(apis.user);
         console.log('The userApiClient is missing a key component, which is probably because SERVER_SECRET is wrong.');
         process.exit(1);
-      };
+      }
 
       gotApisCB(apis);
     }
@@ -375,7 +366,7 @@ function main() {
               gotUserCB(null, userinfo.userid);
             }
           });
-        }
+        };
         async.map(parms.members, getOneUserID, function(err, results) {
           parms.newmembers = _.compact(results);
           callback(null, token, userinfo);
@@ -389,7 +380,7 @@ function main() {
             if (err && err.statusCode === 404) {
               // there was no groups object yet, so we'll use an empty one
               groupinfo = {};
-              callback(null, token, userinfo, groupinfo)
+              callback(null, token, userinfo, groupinfo);
             } else {
               // if we didn't have an error, or the error statusCode wasn't 404, just pass it on
               callback(err, token, userinfo, groupinfo);
@@ -451,16 +442,16 @@ function main() {
           });
         };
         if (parms.flags.add) {
-          async.map(parms.newmembers, addOneUserToGroup, function(err, results) {
+          async.map(parms.newmembers, addOneUserToGroup, function() {
             callback(null, token, userinfo, groupinfo);
           });
         } else if (parms.flags.del) {
-          async.map(parms.newmembers, removeOneUserFromGroup, function(err, results) {
+          async.map(parms.newmembers, removeOneUserFromGroup, function() {
             callback(null, token, userinfo, groupinfo);
           });
         } else {       
           callback(null, token, userinfo, groupinfo);
-        };
+        }
       },
       function saveGroupsToSeagull(token, userinfo, groupinfo, callback) {
         requestTo(apis.seagullHost, userinfo.userid + '/groups')
@@ -495,7 +486,7 @@ function main() {
           });
       }
     ], 
-    function(err, token, userinfo, groupinfo) {
+    function(err) {
       if (err) {
         console.log(err);
         console.log('Finished with errors.');
