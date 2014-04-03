@@ -261,8 +261,15 @@ function main() {
       function getPassword(callback) {
         if (parms.flags.input) {
           prompt.start();
-          prompt.get(['password'], function(err, result) {
-            parms.password = result.password;
+          var pr_opts = {
+            properties: { password: { hidden: true, type: 'string', description: 'Enter password:' } }
+          };
+          prompt.get(pr_opts, function(err, result) {
+            if (result) {
+              parms.password = result.password;
+            } else {
+              console.log('No password entered!');
+            }
             callback(null);
           });
         } else {
