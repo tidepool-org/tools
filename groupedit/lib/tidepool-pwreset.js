@@ -137,8 +137,10 @@ function setupCommandline() {
       '  tidepool-pwreset --user=doctor@foo.com --input',
       '',
       'You can use either an email address or a userid to identify a user.',
-      'Note that if you use --pw, the new password will be saved in the history',
-      'of your bash shell. This is almost always a bad idea.'].join('\n')
+      'If you do not specify a password, the matched user information will be',
+      'dumped so that you can verify that you have the right user.',
+      'Note that if you use --password, the new password will be saved in the history',
+      'of your bash shell. This is almost always a bad idea, so use --input.'].join('\n')
   });
 
   parser.addArgument('user' ,{
@@ -152,7 +154,7 @@ function setupCommandline() {
 
   parser.addArgument('password' ,{
       flags : ['p','password'], 
-      desc : "set the value of password to set (if omitted, user information is printed so you can verify the user first)", 
+      desc : "set the value of the new password", 
       optional : true,
       action : function(value) {
         password = value;
@@ -299,7 +301,6 @@ function main() {
         });
       },
       function updatePassword(token, userinfo, callback) {
-        console.log(parms.password);
         if (parms.password) {
           apis.user.updateUser(userinfo.userid, {password: parms.password}, function(err, newuserinfo) {
               callback(err, token, newuserinfo);
