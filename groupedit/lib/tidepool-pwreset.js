@@ -299,6 +299,7 @@ function main() {
         });
       },
       function updatePassword(token, userinfo, callback) {
+        console.log(parms.password);
         if (parms.password) {
           apis.user.updateUser(userinfo.userid, {password: parms.password}, function(err, newuserinfo) {
               callback(err, token, newuserinfo);
@@ -314,7 +315,11 @@ function main() {
         console.log('Finished with errors.');
         process.exit(1);
       } else {
-        console.log('Successfully set password for %s (%s).', userinfo.username, userinfo.userid);
+        if (parms.password) {
+          console.log('Successfully set password for %s (%s).', userinfo.username, userinfo.userid);
+        } else {
+          console.log(userinfo);
+        }
       }
     });
   });
