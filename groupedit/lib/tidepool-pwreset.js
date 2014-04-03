@@ -299,9 +299,13 @@ function main() {
         });
       },
       function updatePassword(token, userinfo, callback) {
-        apis.user.updateUser(userinfo.userid, {password: parms.password}, function(err, newuserinfo) {
-            callback(err, token, newuserinfo);
-        });
+        if (parms.password) {
+          apis.user.updateUser(userinfo.userid, {password: parms.password}, function(err, newuserinfo) {
+              callback(err, token, newuserinfo);
+          });
+        } else {
+          callback(null, token, userinfo);
+        }
       }
     ], 
     function(err, token, userinfo) {
