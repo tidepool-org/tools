@@ -34,6 +34,7 @@
     "request": "2.34.0",
     "seagull-client": "0.0.1",
     "tidepool-seagull-client": "0.0.2",
-    "user-api-client": "0.1.7"
+    "user-api-client": "0.1.8",
+    "prompt": "0.2.12"
   }
 }
