@@ -5,6 +5,7 @@
 #     armada/
 #     blip/
 #     hakken/
+#     highwater/
 #     jellyfish/
 #     message-api/
 #     pool-whisperer/
@@ -63,7 +64,7 @@ tp_common() {
     export SERVER_SECRET="This needs to be the same secret everywhere. YaHut75NsK1f9UKUXuWqxNN0RUwHFBCy"
     export DISCOVERY_HOST=localhost:8000
     export PUBLISH_HOST=localhost
-    export METRICS_API_SERVICE="{ \"type\": \"static\", \"hosts\": [{ \"protocol\": \"http\", \"host\": \"localhost:9191\" }] }"
+    export METRICS_SERVICE="{ \"type\": \"static\", \"hosts\": [{ \"protocol\": \"http\", \"host\": \"localhost:9191\" }] }"
     export USER_API_SERVICE="{ \"type\": \"static\", \"hosts\": [{ \"protocol\": \"http\", \"host\": \"localhost:9107\" }] }"
     export ARMADA_SERVICE="{ \"type\": \"static\", \"hosts\": [{ \"protocol\": \"http\", \"host\": \"localhost:9118\" }] }"
     export SEAGULL_SERVICE="{ \"type\": \"static\", \"hosts\": [{ \"protocol\": \"http\", \"host\": \"localhost:9120\" }] }"
@@ -98,8 +99,11 @@ tp_user-api() {
 tp_highwater() {
     export PORT=9191
     export SERVICE_NAME=highwater
-    export SALT_DEPLOY=ADihSEI7tOQQP9xfXMO9HfRpXKu1NpIJ
+    export SALT_DEPLOY=gf78fSEI7tOQQP9xfXMO9HfRyMnW4Sx88Q
+    # this is a testing key only; do not use in production.
     export METRICS_APIKEY=28814957ee8160309f522a0bd0f2824de585befb
+    # this will let you test direct to highwater at localhost:9191/noauth
+    export NOAUTH=true
 
     tp_start_server highwater lib/index.js
 }
@@ -176,8 +180,7 @@ tp_mongo
 tp_common
 tp_hakken || return
 tp_user-api || return
-# highwater is not yet functional but will follow soon
-#tp_highwater || return
+tp_highwater || return
 tp_seagull || return
 tp_armada || return
 tp_message_api || return
