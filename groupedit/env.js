@@ -29,8 +29,7 @@ function maybeReadJSONFile(filename, fallback) {
 }
 
 module.exports = function (deploy) {
-  var depl = deploy || 'config';
-  var configfilename = 'config/' + depl + '.json';
+  var configfilename = 'config/' + (deploy || 'config') + '.json';
   return _.merge(
     {
       "discovery": {

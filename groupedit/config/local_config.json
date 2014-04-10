@@ -7,6 +7,6 @@
     "serviceSpec": { "type": "static", "hosts": [{ "protocol": "http", "host": "localhost:9120" }] }
   },
   "userApi": {
-    "serviceSpec": { "type": "random", "service": "user-api-local" }
+    "serviceSpec": "user-api-local"
   }
 }
