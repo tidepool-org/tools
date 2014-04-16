@@ -148,6 +148,7 @@ tp_pool-whisperer() {
 tp_jellyfish() {
     export PORT=9122
     export SERVICE_NAME=jellyfish-local
+    export NODE_ENV=development
 
     tp_start_server jellyfish app.js
 }
