@@ -1,5 +1,5 @@
 # This file should be run with source
-# It starts all the services for Tidepool on localhost. 
+# It starts all the services for Tidepool on localhost.
 # It expects to be run from a top-level directory with checkouts of various repositories at the next level down. So something like:
 # tidepool/
 #     armada/
@@ -18,7 +18,7 @@
 # With that setup, if your current directory is tidepool, then
 # you can just type:
 #     . tools/runservers
-# After it runs, the process IDs are stored in TP_PIDS, and 
+# After it runs, the process IDs are stored in TP_PIDS, and
 # the command tp_kill will kill all those IDs.
 # tp_killall will just kill all running mongo and node processes.
 
@@ -175,6 +175,15 @@ tp_blip() {
     echo "Blip started at http://localhost:$PORT"
 }
 
+# clamshell
+ tp_clamshell() {
+    export PORT=3004
+    export API_HOST="http://localhost:8009"
+
+    tp_start_server clamshell clamshellServer.js
+    echo "Clamshell started at http://localhost:$PORT"
+ }
+
 tp_warmup
 tp_mongo
 tp_common
@@ -188,3 +197,4 @@ tp_pool-whisperer || return
 tp_styx || return
 tp_jellyfish || return
 tp_blip || return
+tp_clamshell || return
