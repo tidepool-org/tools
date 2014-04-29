@@ -68,6 +68,7 @@ tp_common() {
     export USER_API_SERVICE="{ \"type\": \"static\", \"hosts\": [{ \"protocol\": \"http\", \"host\": \"localhost:9107\" }] }"
     export ARMADA_SERVICE="{ \"type\": \"static\", \"hosts\": [{ \"protocol\": \"http\", \"host\": \"localhost:9118\" }] }"
     export SEAGULL_SERVICE="{ \"type\": \"static\", \"hosts\": [{ \"protocol\": \"http\", \"host\": \"localhost:9120\" }] }"
+    export GATEKEEPER_SERVICE="{ \"type\": \"static\", \"hosts\": [{ \"protocol\": \"http\", \"host\": \"localhost:9123\" }] }"
 }
 
 tp_mongo() {
@@ -153,6 +154,15 @@ tp_jellyfish() {
     tp_start_server jellyfish app.js
 }
 
+# gatekeeper
+tp_gatekeeper() {
+    export PORT=9123
+    export SERVICE_NAME=gatekeeper-local
+    export GATEKEEPER_SECRET="This secret is used to encrypt the groupId stored in the DB for gatekeeper"
+
+    tp_start_server gatekeeper index.js
+}
+
 # styx
 tp_styx() {
     export HTTP_PORT=8009
@@ -195,6 +205,7 @@ tp_seagull || return
 tp_armada || return
 tp_message_api || return
 tp_pool-whisperer || return
+tp_gatekeeper || return
 tp_styx || return
 tp_jellyfish || return
 tp_blip || return
