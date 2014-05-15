@@ -6,9 +6,11 @@ if [ -f runservers ]; then
 fi
 
 if [ ! -d tools ]; then
-  repos=( $(cat "tools/required_repos.txt") )  #  Stores contents of that file in an array.
   echo "You should be in the tools directory or its immediate parent directory to run this."
+  exit(1)
 fi
+
+repos=( $(cat "tools/required_repos.txt") )  #  Stores contents of that file in an array.
 
 update_one_tidepool_repo()
 {
@@ -33,5 +35,5 @@ update_one_tidepool_repo()
 }
 
 for elt in $(seq 0 $((${#repos[@]} - 1))); do
-    update_one_tidepool_repo ${repos[elt]}
+    update_one_tidepool_repo ${repos[$elt]}
 done
