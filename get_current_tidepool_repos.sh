@@ -7,7 +7,7 @@ fi
 
 if [ ! -d tools ]; then
   echo "You should be in the tools directory or its immediate parent directory to run this."
-  exit(1)
+  exit 1
 fi
 
 repos=( $(cat "tools/required_repos.txt") )  #  Stores contents of that file in an array.
