@@ -27,6 +27,7 @@ get_one_tidepool_repo()
         if [ -f bower.json ]; then
             bower install
         fi
+        cd ..
     fi
 }
 

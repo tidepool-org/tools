@@ -15,7 +15,7 @@ This is a script that will clone all the required repositories into a directory 
 This is a script that will fetch latest changes and update npm and bower for all the repositories listed in required_repos.txt.
 
 ## runservers
-This is a bash shell script to run a set of servers on localhost. We'll keep updating it as we grow.
+This is a script to run a set of servers on localhost. Note that it's not executable -- that's because you shouldn't run it directly -- use "source" (also known as ".") to run it, as in ```. tools/runservers``` We'll keep updating it as we grow.
 
 ## addLicense.py
 addLicense.py is a script to add license text to a set of source files by searching for special markers in those files. 
