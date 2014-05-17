@@ -9,7 +9,7 @@ Contains:
 This is just a list of the names of required repositories if you're going to run the Tidepool stack locally. It's used by the following two scripts.
 
 ## get_current_tidepool_repos.sh
-This is a script that will clone all the required repositories into a directory structure expected by runservers and the update script. It also runs npm install and bower install appropriately.
+This is a script that will clone all the required repositories into a directory structure expected by runservers and the update script. It also runs npm install and bower install appropriately. It first checks that you have several required tools installed.
 
 ## update_current_tidepool_repos.sh
 This is a script that will fetch latest changes and update npm and bower for all the repositories listed in required_repos.txt.
