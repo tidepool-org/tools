@@ -1,0 +1,23 @@
+{
+    "trello": {
+        "key": "TRELLO_KEY",
+        "secret": "TRELLO_SECRET",
+        "token": "TRELLO_TOKEN",
+        "orgid": "tidepoolorg",
+        "boards": {
+            "blip": {"exclude": ["About"]},
+            "platform": {"exclude": ["About"]}
+        }
+    },
+    "github": {
+        "token": "GITHUB_TOKEN",
+        "org": "tidepool-org",
+        "repos": [
+            "hub",
+            "blip",
+            "clamshell",
+            "tideline",
+            "user-api"
+        ]
+    }
+}
