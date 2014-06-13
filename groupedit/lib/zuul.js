@@ -75,7 +75,7 @@ function lookupUsernames(userIds, cb) {
 }
 
 function determineHandler() {
-  var newPermissions = null;
+  var newPermissions = {};
 
   function show(groupId, cb) {
     gatekeeper.usersInGroup(groupId, function(err, users){
@@ -104,7 +104,7 @@ function determineHandler() {
       // fall-through
     case 'remove':
       return function(groupId, cb) {
-        var userToAdd = args[3];
+        var userToAdd = args[2];
         if (userToAdd == null) {
           console.log('Must specify a 3rd argument with the `%s` action.', action);
           process.exit();

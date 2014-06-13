@@ -6,6 +6,9 @@
   "seagullApi": {
     "serviceSpec": { "type": "static", "hosts": [{ "protocol": "http", "host": "localhost:9120" }] }
   },
+  "gatekeeper": {
+    "serviceSpec": { "type": "static", "hosts": [{ "protocol": "http", "host": "localhost:9123" }] }
+  },
   "userApi": {
     "serviceSpec": { "type": "static", "hosts": [{ "protocol": "http", "host": "localhost:9107" }] }
   }
