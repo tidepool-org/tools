@@ -31,10 +31,11 @@
     "commandline-parser": "0.4.0",
     "hakken": "0.1.4",
     "lodash": "2.4.1",
+    "prompt": "0.2.12",
     "request": "2.34.0",
     "seagull-client": "0.0.1",
+    "tidepool-gatekeeper": "0.1.5",
     "tidepool-seagull-client": "0.0.2",
-    "user-api-client": "0.1.8",
-    "prompt": "0.2.12"
+    "user-api-client": "0.3.0"
   }
 }
