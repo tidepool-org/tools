@@ -10,12 +10,11 @@ var Cmdline = require('commandline-parser').Parser;
 
 var configName = null;
 
-var parser = new Cmdline.Parser(
+var parser = new Cmdline(
   {
     name: 'zuul',
     desc: 'A tool for adding and removing people to Tidepool groups directly using the API.',
     extra: [
-      'usage:',
       '  zuul <group_id> <action> [arg, ...]',
       'Typical usage:\n',
       'To list people in a group:',
@@ -90,9 +89,9 @@ function determineHandler() {
             }
 
             Object.keys(users).forEach(function(user){
-              console.log('User:\n%s\nPermissions:\n%j', usernames[user], users[user]);
+              console.log('User: %s\nPermissions: %j\n-----', usernames[user], users[user]);
             });
-          })
+          });
         });
       };
       break;
