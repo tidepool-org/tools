@@ -6,9 +6,11 @@
 
 var async = require('async');
 
+var Cmdline = require('commandline-parser').Parser;
+
 var configName = null;
 
-var parser = new Cmdline(
+var parser = new Cmdline.Parser(
   {
     name: 'zuul',
     desc: 'A tool for adding and removing people to Tidepool groups directly using the API.',
@@ -28,7 +30,7 @@ var parser = new Cmdline(
   }
 );
 
-parser.addArgument('vebose' ,{
+parser.addArgument('verbose' ,{
   flags : ['v','verbose'],
   desc : "verbose logging",
   optional : true
@@ -45,6 +47,10 @@ parser.addArgument('config' ,{
 
 parser.exec();
 
+if (parser.get('help')) {
+  return;
+}
+
 var args = parser.getArguments();
 
 if (args.length < 2) {
@@ -52,6 +58,22 @@ if (args.length < 2) {
 }
 
 var handler, userApi, gatekeeper;
+
+function lookupUsernames(userIds, cb) {
+  async.map(userIds, userApi.getUserInfo.bind(userApi), function(err, names){
+    if (err != null){
+      return cb(err);
+    }
+
+    var retVal = {};
+
+    for (var i = 0; i < userIds.length; ++i) {
+      retVal[userIds[i]] = names[i].username;
+    }
+
+    cb(null, retVal);
+  });
+}
 
 function determineHandler() {
   switch(args[1]) {
@@ -62,10 +84,16 @@ function determineHandler() {
             return cb(err);
           }
 
-          Object.keys(users).forEach(function(user){
-            console.log('User:\n%s\nPermissions:\n%s', user, users[user]);
-          });
-        })
+          lookupUsernames(Object.keys(users), function(err, usernames){
+            if (err != null) {
+              return cb(err);
+            }
+
+            Object.keys(users).forEach(function(user){
+              console.log('User:\n%s\nPermissions:\n%j', usernames[user], users[user]);
+            });
+          })
+        });
       };
       break;
     case 'add':
@@ -109,7 +137,7 @@ function init(cb) {
         }
 
         var httpClient = require('amoeba').httpClient();
-        userApi = require('user-api-client')(config.userApi, userApiWatch);
+        userApi = require('user-api-client').client(config.userApi, userApiWatch);
         gatekeeper = require('tidepool-gatekeeper').client(
           httpClient, userApi.withServerToken.bind(userApi), gatekeeperWatch
         );
@@ -134,7 +162,7 @@ init(function(err){
   userApi.getUserInfo(groupId, function(err, userInfo) {
     noErr(err);
 
-    handler(userInfo.userId);
+    handler(userInfo.userid, noErr);
   });
 });
 
