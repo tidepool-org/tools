@@ -75,38 +75,57 @@ function lookupUsernames(userIds, cb) {
 }
 
 function determineHandler() {
-  switch(args[1]) {
+  var newPermissions = null;
+
+  function show(groupId, cb) {
+    gatekeeper.usersInGroup(groupId, function(err, users){
+      if (err != null) {
+        return cb(err);
+      }
+
+      lookupUsernames(Object.keys(users), function(err, usernames){
+        if (err != null) {
+          return cb(err);
+        }
+
+        Object.keys(users).forEach(function(user){
+          console.log('User: %s\nPermissions: %j\n-----', usernames[user], users[user]);
+        });
+      });
+    });
+  }
+
+  var action = args[1];
+  switch(action) {
     case 'show':
+      return show;
+    case 'add':
+      newPermissions = {view: {}};
+      // fall-through
+    case 'remove':
       return function(groupId, cb) {
-        gatekeeper.usersInGroup(groupId, function(err, users){
+        var userToAdd = args[3];
+        if (userToAdd == null) {
+          console.log('Must specify a 3rd argument with the `%s` action.', action);
+          process.exit();
+        }
+
+        userApi.getUserInfo(userToAdd, function(err, userInfo){
           if (err != null) {
             return cb(err);
           }
 
-          lookupUsernames(Object.keys(users), function(err, usernames){
+          gatekeeper.setPermissions(userInfo.userid, groupId, newPermissions, function(err) {
             if (err != null) {
               return cb(err);
             }
 
-            Object.keys(users).forEach(function(user){
-              console.log('User: %s\nPermissions: %j\n-----', usernames[user], users[user]);
-            });
+            show(groupId, cb);
           });
-        });
+        })
       };
-      break;
-    case 'add':
-      return function(groupId, cb) {
-
-      };
-      break;
-    case 'remove':
-      return function(groupId, cb) {
-
-      };
-      break;
     default:
-      console.log('Unknown verb[%s]', args[1]);
+      console.log('Unknown verb[%s]', action);
       parser.printHelp();
       process.exit(1);
   }
