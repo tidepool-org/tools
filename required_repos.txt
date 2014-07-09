@@ -4,7 +4,7 @@ highwater
 seagull
 armada
 message-api
-pool-whisperer
+tide-whisperer
 gatekeeper
 styx
 jellyfish
