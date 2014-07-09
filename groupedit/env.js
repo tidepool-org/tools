@@ -41,6 +41,9 @@ module.exports = function (deploy) {
       "seagullApi": {
         "serviceSpec": { "type": "required" }
       },
+      "gatekeeper": {
+        "serviceSpec": { "type": "required" }
+      },
       "userApi": {
         "serviceSpec": { "type": "required" },
         "serverName": "groupedit",
