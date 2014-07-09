@@ -104,25 +104,32 @@ function determineHandler() {
       // fall-through
     case 'remove':
       return function(groupId, cb) {
-        var userToAdd = args[2];
-        if (userToAdd == null) {
+        if (args.length < 3) {
           console.log('Must specify a 3rd argument with the `%s` action.', action);
           process.exit();
         }
 
-        userApi.getUserInfo(userToAdd, function(err, userInfo){
-          if (err != null) {
-            return cb(err);
+        for (var i = 2; i < args.length; ++i) {
+          var userToAdd = args[i];
+          if (userToAdd == null) {
+            console.log('Got a null argument on command line at index[%s]!?', i)
+            continue;
           }
 
-          gatekeeper.setPermissions(userInfo.userid, groupId, newPermissions, function(err) {
+          userApi.getUserInfo(userToAdd, function(err, userInfo){
             if (err != null) {
               return cb(err);
             }
 
-            show(groupId, cb);
-          });
-        })
+            gatekeeper.setPermissions(userInfo.userid, groupId, newPermissions, function(err) {
+              if (err != null) {
+                return cb(err);
+              }
+
+              show(groupId, cb);
+            });
+          })
+        }
       };
     default:
       console.log('Unknown verb[%s]', action);
