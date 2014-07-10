@@ -112,27 +112,35 @@ function determineHandler() {
           process.exit();
         }
 
-        for (var i = 2; i < args.length; ++i) {
-          var userToAdd = args[i];
-          if (userToAdd == null) {
-            console.log('Got a null argument on command line at index[%s]!?', i);
-            continue;
-          }
-
-          userApi.getUserInfo(userToAdd, function(err, userInfo){
-            if (err != null) {
-              return cb(err);
+        async.map(
+          args.slice(2),
+          function(userToAdd, cb) {
+            if (userToAdd == null) {
+              console.log('Got a null argument on command line at index[%s]!?', i);
+              return cb();
             }
 
-            gatekeeper.setPermissions(userInfo.userid, groupId, newPermissions, function(err) {
+            userApi.getUserInfo(userToAdd, function(err, userInfo){
               if (err != null) {
                 return cb(err);
               }
 
-              show(groupId, cb);
+              gatekeeper.setPermissions(userInfo.userid, groupId, newPermissions, function(err) {
+                if (err != null) {
+                  return cb(err);
+                }
+
+                cb()
+              });
             });
-          });
-        }
+          },
+          function(err) {
+            if (err != null) {
+              return cb(err);
+            }
+            show(groupId, cb);
+          }
+        );
       };
     default:
       console.log('Unknown verb[%s]', action);
