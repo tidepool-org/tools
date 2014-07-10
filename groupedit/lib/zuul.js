@@ -13,7 +13,7 @@ var configName = null;
 var parser = new Cmdline(
   {
     name: 'zuul',
-    desc: 'A tool for adding and removing people to Tidepool groups directly using the API.',
+    desc: 'A tool for manipulating Tidepool groups directly using the API.',
     extra: [
       '  zuul <group_id> <action> [arg, ...]',
       'Typical usage:\n',
@@ -54,6 +54,7 @@ var args = parser.getArguments();
 
 if (args.length < 2) {
   parser.printHelp();
+  return;
 }
 
 var handler, userApi, gatekeeper;
@@ -112,7 +113,7 @@ function determineHandler() {
         for (var i = 2; i < args.length; ++i) {
           var userToAdd = args[i];
           if (userToAdd == null) {
-            console.log('Got a null argument on command line at index[%s]!?', i)
+            console.log('Got a null argument on command line at index[%s]!?', i);
             continue;
           }
 
@@ -128,7 +129,7 @@ function determineHandler() {
 
               show(groupId, cb);
             });
-          })
+          });
         }
       };
     default:
