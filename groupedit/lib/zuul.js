@@ -68,7 +68,9 @@ function lookupUsernames(userIds, cb) {
     var retVal = {};
 
     for (var i = 0; i < userIds.length; ++i) {
-      retVal[userIds[i]] = names[i].username;
+      if (names[i] != null) {
+        retVal[userIds[i]] = names[i].username;
+      }
     }
 
     cb(null, retVal);
