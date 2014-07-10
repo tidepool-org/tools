@@ -3,32 +3,31 @@
 Cmd-line way to set up groups for a user
 
 ## Getting Started
-Install the module with: `npm install tidepool-groupedit`
+Install the module with: `npm install`
 
 ## Documentation
-    A server-side tool for adding and removing people to Tidepool groups.
+    A tool for manipulating Tidepool groups directly using gatekeeper.
 
-    -h, --help  help
-    -u, --user  set username containing the group to modify
-    -g, --group set group name to modify (default is team)
-    -c, --config set config name to use (default is 'config')
-    -a, --add   add members to the group
-    -d, --del   delete members from the group
-    -s, --status check and print status of the servers
+    -h, --help    help
+    -v, --verbose verbose logging
+    -c, --config  set config name to use (default is 'config')
+
+    zuul <group_id> <action> [arg, ...]
 
     Typical usage:
 
         To list people in a group:
-          tidepool-groupedit --group=patients --user=doctor@foo.com
-        To add people to a group on staging:
-          tidepool-groupedit --add --group=invited --user=patient@foo.com doctor@bar.com --config=staging
-        To list people in a group:
-          tidepool-groupedit --del --group=careteam --user=patient@foo.com dontcare@bar.com badguy@unsafe.com
+            `zuul doctor@foo.com show`
+        To add people to a group:
+            `zuul doctor@bar.com add patient@foo.com`
+        To remove people from a group:
+            `zuul dontcare@bear.com remove 12f4ebff81`
 
-        You can use either an email address or the userid to identify a user.
+        You can use either an email address or a userid to identify both a group and a user.
 
 ## Release History
 
+* 0.6.0 -- 10 Jul 2014 -- update to use gatekeeper, by Eric Tschetter
 * 0.5.0 -- 30 Mar 2014 -- initial version, by Kent Quirk
 
 ## License
