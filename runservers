@@ -185,8 +185,16 @@ tp_styx() {
     {\
       \"host\": \"localhost:8000\"\
     }"
+    export HTTPS_PORT=8010
+    export HTTPS_CONFIG="\
+    {\
+      \"key\": \"../tools/keys/sslKey.pem\",\
+      \"cert\": \"../tools/keys/sslCert.pem\"\
+    }"
 
     tp_start_server styx server.js
+    unset HTTPS_PORT
+    unset HTTPS_CONFIG
 }
 
 # blip
