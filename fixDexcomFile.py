@@ -127,7 +127,6 @@ def main(argv=None):
                     help="Delete the range of records specified.")
 
     args = parser.parse_args()
-    print args
     adjust = timedelta()
     if args.add or args.sub:
         adjust = calculateTimeAdjustment(args.add, args.sub)
@@ -139,14 +138,15 @@ def main(argv=None):
         f = parseDate(args.first[0])
         f.update(parseTime(args.first[1]))
         first = datetime(**f)
-        print first
+        print "First time is %s" % first
     else:
         print "First time not specified -- starting at beginning of file."
+
     if (args.last):
         l = parseDate(args.last[0])
         l.update(parseTime(args.last[1]))
         last = datetime(**l)
-        print last
+        print "Last time is %s" % last
     else:
         print "Last time not specified -- processing through end of file."
 
@@ -171,6 +171,8 @@ def main(argv=None):
 
     if args.output:
         writeDexcomFile(args.output, hdr, data)
+    else:
+        print "No output specified; no data was written."
 
     return 0
 
