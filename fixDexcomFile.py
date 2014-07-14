@@ -107,7 +107,7 @@ def main(argv=None):
     parser.add_argument("--output", "-o", dest="output", nargs='?', type=argparse.FileType('w'), 
                     default=None, const=None, metavar="OUTPUT", 
                     help="Specify the output file (use - for stdout). "
-                    "It can be the same as the input file but this is not advised. "
+                    "It should not be the same as the input file."
                     "If output is not specified, statistics are printed but nothing happens.")
     parser.add_argument("--first", "-f", dest="first", default=None, nargs=2,
                     help="Date/time of first time to adjust. "
