@@ -124,10 +124,16 @@ def deep_glob(start, pat):
     matches = []
     for path, dirnames, filenames in os.walk(start):
         # print path, dirnames, filenames
+        # exclude directories that start with .
         dirnames[:] = [d for d in dirnames if not d.startswith('.')]
         # print dirnames
-        for filename in fnmatch.filter(filenames, pat):
-            matches.append(os.path.join(path, filename))
+        # handle files that match a directory name
+        splitpath = path.split('/')
+        if pat in splitpath:
+            matches.extend([os.path.join(path, filename) for filename in filenames])
+        else:
+            for filename in fnmatch.filter(filenames, pat):
+                matches.append(os.path.join(path, filename))
     return matches
 
 # reads .gitignore if it exists and gets a list of files to exclude
@@ -163,8 +169,12 @@ def process_pats(pats):
 # Does the real work -- generate a set of excludes and includes, and 
 # subtract one from the other.
 def get_filelist(pats):
+    # print get_exclude_patterns();
+    # print process_pats(['node_modules']);
     excludes = process_pats(get_exclude_patterns())
+    print len(excludes)
     includes = process_pats(pats)
+    print len(includes)
     result = includes.difference(excludes)
     # print result
     return result
@@ -203,7 +213,7 @@ def main(argv=None):
         args.dryrun = True
 
     if not args.files:
-        args.files = ['*.js', '*.py', '*.coffee', 'LICENSE']
+        args.files = ['*.js', '*.py', '*.less', '*.go', 'LICENSE']
     files = get_filelist(args.files)
     for f in files:
         if os.path.isfile(f):
