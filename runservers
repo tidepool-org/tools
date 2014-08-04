@@ -218,11 +218,6 @@ tp_blip() {
     grunt parse-config
     cd ..
 
-    cd clamshell || return
-    node_modules/.bin/grunt build-dev
-    node_modules/.bin/grunt parse-config
-    cd ..
-
     tp_start_server clamshell clamshellServer.js
     echo "Clamshell started at http://localhost:$PORT"
  }
