@@ -105,13 +105,13 @@ tp_hakken() {
     tp_start_server hakken coordinator.js
 }
 
-# user-api
-tp_user-api() {
+# shoreline
+tp_shoreline() {
     export PORT=9107
     export SERVICE_NAME=user-api-local
     export SALT_DEPLOY=ADihSEI7tOQQP9xfXMO9HfRpXKu1NpIJ
 
-    tp_start_server user-api lib/index.js
+    tp_go_server shoreline
 }
 
 # highwater
@@ -228,7 +228,7 @@ tp_warmup
 tp_mongo
 tp_common
 tp_hakken || return
-tp_user-api || return
+tp_shoreline || return
 tp_highwater || return
 tp_seagull || return
 tp_armada || return
