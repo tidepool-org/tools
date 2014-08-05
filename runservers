@@ -84,7 +84,6 @@ tp_common() {
     export PUBLISH_HOST=localhost
     export METRICS_SERVICE="{ \"type\": \"static\", \"hosts\": [{ \"protocol\": \"http\", \"host\": \"localhost:9191\" }] }"
     export USER_API_SERVICE="{ \"type\": \"static\", \"hosts\": [{ \"protocol\": \"http\", \"host\": \"localhost:9107\" }] }"
-    export ARMADA_SERVICE="{ \"type\": \"static\", \"hosts\": [{ \"protocol\": \"http\", \"host\": \"localhost:9118\" }] }"
     export SEAGULL_SERVICE="{ \"type\": \"static\", \"hosts\": [{ \"protocol\": \"http\", \"host\": \"localhost:9120\" }] }"
     export GATEKEEPER_SERVICE="{ \"type\": \"static\", \"hosts\": [{ \"protocol\": \"http\", \"host\": \"localhost:9123\" }] }"
 }
@@ -134,15 +133,6 @@ tp_seagull() {
     export SALT_DEPLOY=KEWRWBe5yyMnW4SxosfZ2EkbZHkyqJ5f
 
     tp_start_server seagull lib/index.js
-}
-
-# armada
-tp_armada() {
-    export PORT=9118
-    export SERVICE_NAME=armada-local
-    export SALT_DEPLOY=xLyg8dAEwUUF7JnkgO08jo8stRY0caV5
-
-    tp_start_server armada lib/index.js
 }
 
 # message-api
@@ -231,7 +221,6 @@ tp_hakken || return
 tp_shoreline || return
 tp_highwater || return
 tp_seagull || return
-tp_armada || return
 tp_message_api || return
 tp_tide-whisperer || return
 tp_gatekeeper || return

@@ -2,7 +2,6 @@ hakken
 shoreline
 highwater
 seagull
-armada
 message-api
 tide-whisperer
 gatekeeper
