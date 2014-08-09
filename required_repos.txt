@@ -2,7 +2,6 @@ hakken
 user-api
 highwater
 seagull
-armada
 message-api
 tide-whisperer
 gatekeeper
