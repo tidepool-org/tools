@@ -39,11 +39,6 @@ tp_kill() {
     kill $1 $TP_PIDS
 }
 
-tp_killall() {
-    killall node
-    killall mongod
-}
-
 tp_start_server() {   # expects servername, start name
     echo "Starting $1"
     cd $1 || return
