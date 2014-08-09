@@ -35,6 +35,10 @@ tp_warmup() {
     export TP_PIDS=
 }
 
+# This can be used to kill the most recently launched set of tasks. Note that it
+# accepts a parameter to kill so you can say tp_kill -9 if you want to try
+# to make the tasks go away with extreme prejudice (in case they don't shut
+# down normally). 
 tp_kill() {
     kill $1 $TP_PIDS
 }
