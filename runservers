@@ -163,7 +163,7 @@ tp_tide-whisperer() {
 tp_jellyfish() {
     export PORT=9122
     export SERVICE_NAME=jellyfish-local
-    export NODE_ENV=production
+    export SERVE_STATIC=dist
 
     if [ "$SKIP_BUILD" != "true" ]; then
       echo "Building Jellyfish..."
