@@ -127,12 +127,16 @@ tp_hakken() {
 
 # shoreline
 tp_shoreline() {
-    export PORT=9107
-    export SERVICE_NAME=shoreline-local
-    export SALT_DEPLOY=ADihSEI7tOQQP9xfXMO9HfRpXKu1NpIJ
-
     tp_go_server shoreline
 }
+
+# user-api
+# tp_user-api() {
+#    export PORT=9107
+#    export SERVICE_NAME=user-api-local
+#    export SALT_DEPLOY=ADihSEI7tOQQP9xfXMO9HfRpXKu1NpIJ
+#    tp_start_server user-api lib/index.js
+#}
 
 # highwater
 tp_highwater() {
@@ -259,6 +263,7 @@ tp_mongo
 tp_common
 tp_hakken || return
 tp_shoreline || return
+# tp_user-api || return
 tp_highwater || return
 tp_seagull || return
 tp_message_api || return
