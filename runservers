@@ -1,10 +1,9 @@
 # This file should be run with 'source' (also known as '.' on linux/macs).
 #
 # It starts all the services for Tidepool on localhost.
-# It expects to be run from a top-level directory with checkouts of various 
+# It expects to be run from a top-level directory with checkouts of various
 # repositories at the next level down. So something like:
 # tidepool/
-#     armada/
 #     blip/
 #     ...
 #     tools/
@@ -17,15 +16,23 @@
 # you can just type:
 #     . tools/runservers
 # After it runs, the process IDs are stored in TP_PIDS, and
-# the command tp_kill will kill all those IDs.
-# tp_killall will just kill all running mongo and node processes.
+# the command tp_kill will kill all those IDs at once.
+#
+# The process ID for each task is also stored in TP_taskname (like TP_seagull).
+#
+# You can kill and restart a particular task with
+#     tp_restart taskname
+# If you just want to kill it and not restart, just use normal bash commands:
+#     kill $TP_seagull
+# To start a task again, use tp_taskname:
+#     tp_seagull
 
 # This sets things up with the router (styx) on port 8009. So to get status from 
 # the shoreline, for example, do this:
 # $ curl -f -S --get http://localhost:8009/auth/status
 # {"up":["mongo"],"down":[]}  [10:25 PM][~/tidepool][]
 #
-# It takes a few seconds to get things up and hooked together through service discovery. 
+# It takes a few seconds to get things up and hooked together through service discovery.
 # If you go too fast, you'll see:
 # $ curl -f -S --get http://localhost:8009/auth/status
 # curl: (22) The requested URL returned error: 404 Not Found
@@ -36,13 +43,23 @@ tp_warmup() {
     export TP_PIDS=
 }
 
+# This can be used to kill the most recently launched set of tasks. Note that it
+# accepts a parameter to kill so you can say tp_kill -9 if you want to try
+# to make the tasks go away with extreme prejudice (in case they don't shut
+# down normally).
 tp_kill() {
-    kill $TP_PIDS
+    kill $1 $TP_PIDS
 }
 
-tp_killall() {
-    killall node
-    killall mongod
+# kills and restarts one of the tasks by name -- ex: tp_restart jellyfish
+tp_restart() {
+    NAME=TP_${1/-/}    # remove any dashes from the name
+    eval TASK=\$${NAME} # and retrieve its PID
+    echo "arg $1 -- name $NAME -- task $TASK"
+    echo "Restarting $1 -- task  $TASK"
+    kill  $TASK
+    sleep 1
+    tp_$1
 }
 
 tp_start_server() {   # expects servername, start name
@@ -55,6 +72,8 @@ tp_start_server() {   # expects servername, start name
     PIDDY=$!
     echo "Started $1, pid ${PIDDY}"
     export TP_PIDS="$TP_PIDS $PIDDY"
+    NAME=TP_${1/-/}    # remove any dashes from the name
+    export $NAME=$PIDDY
     sleep 1
 }
 
@@ -70,6 +89,8 @@ tp_go_server() {
 	PIDDY=$!
 	echo "Started $1, pid ${PIDDY}"
 	export TP_PIDS="$TP_PIDS $PIDDY"
+    NAME=TP_${1/-/}    # remove any dashes from the name
+    export $NAME=$PIDDY
 	sleep 1
     fi
     cd ..
@@ -120,6 +141,7 @@ tp_highwater() {
     export SALT_DEPLOY=gf78fSEI7tOQQP9xfXMO9HfRyMnW4Sx88Q
     # this is a testing key only; do not use in production.
     export METRICS_APIKEY=28814957ee8160309f522a0bd0f2824de585befb
+    export METRICS_UCSF_APIKEY=28814957ee8160309f522a0bd0f2824de585befb
     # this will let you test direct to highwater at localhost:9191/noauth
     export NOAUTH=true
 
@@ -154,7 +176,14 @@ tp_tide-whisperer() {
 tp_jellyfish() {
     export PORT=9122
     export SERVICE_NAME=jellyfish-local
-    export NODE_ENV=development
+    export SERVE_STATIC=dist
+
+    if [ "$SKIP_BUILD" != "true" ]; then
+      echo "Building Jellyfish..."
+      cd jellyfish || return
+      npm run build > /dev/null
+      cd ..
+    fi
 
     tp_start_server jellyfish app.js
 }
@@ -195,20 +224,31 @@ tp_blip() {
     export API_HOST="http://localhost:8009"
     export UPLOAD_API="http://localhost:9122"
 
-    tp_start_server blip develop.js
+    if [ "$SKIP_BUILD" != "true" ]; then
+      echo "Building Blip..."
+      cd blip || return
+      npm run build > /dev/null
+      cd ..
+    fi
+
+    tp_start_server blip server.js
     echo "Blip started at http://localhost:$PORT"
 }
 
 # clamshell
  tp_clamshell() {
     export PORT=3004
+    export MOCK=false
     export API_HOST="http://localhost:8009"
-    cd clamshell || return
-    grunt build-dev
-    grunt parse-config
-    cd ..
 
-    tp_start_server clamshell clamshellServer.js
+    if [ "$SKIP_BUILD" != "true" ]; then
+      echo "Building Clamshell..."
+      cd clamshell || return
+      npm run build > /dev/null
+      cd ..
+    fi
+
+    tp_start_server clamshell server.js
     echo "Clamshell started at http://localhost:$PORT"
  }
 

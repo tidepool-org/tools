@@ -11,5 +11,6 @@
   },
   "userApi": {
     "serviceSpec": { "type": "static", "hosts": [{ "protocol": "http", "host": "localhost:9107" }] }
-  }
+  },
+  "saltwater": "gf78fSEI7tOQQP9xfXMO9HfRyMnW4Sx88Q"
 }

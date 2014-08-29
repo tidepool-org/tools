@@ -47,7 +47,8 @@ module.exports = function (deploy) {
       "userApi": {
         "serviceSpec": { "type": "required" },
         "serverName": "groupedit",
-        "serverSecret": "This needs to be the same secret everywhere. YaHut75NsK1f9UKUXuWqxNN0RUwHFBCy"
+        "serverSecret": "This needs to be the same secret everywhere. YaHut75NsK1f9UKUXuWqxNN0RUwHFBCy",
+        "saltwater": "This should be the highwater salt."
       }
     },
     maybeReadJSONFile(configfilename, {})

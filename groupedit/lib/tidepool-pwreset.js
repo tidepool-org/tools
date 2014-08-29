@@ -28,6 +28,7 @@ var util = require('util');
 var _ = require('lodash');
 var request = require('request');
 var async = require('async');
+var crypto = require('crypto-js');
 var Cmdline = require('commandline-parser').Parser;
 var prompt = require('prompt');
 var config = null;
@@ -38,6 +39,13 @@ var username = null;
 var password = null;
 var deploy = null;  // basename of the configuration file within the config folder
 
+
+function highwaterHash(id, salt) {
+    var hash = crypto.algo.SHA1.create();
+    hash.update(salt);
+    hash.update(id);
+    return hash.finalize().toString().substr(0, 10);
+}
 
 function parseJSON(res, body) {
   return JSON.parse(body);
@@ -327,6 +335,7 @@ function main() {
           console.log('Successfully set password for %s (%s).', userinfo.username, userinfo.userid);
         } else {
           console.log(userinfo);
+          console.log("Highwater hash: ", highwaterHash(userinfo.userid, config.saltwater));
         }
       }
     });
