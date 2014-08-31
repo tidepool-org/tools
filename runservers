@@ -27,9 +27,8 @@
 # To start a task again, use tp_taskname:
 #     tp_seagull
 
-
-# This sets things up with the router (styx) on port 8009. So to get status from
-# the user-api, for example, do this:
+# This sets things up with the router (styx) on port 8009. So to get status from 
+# the shoreline, for example, do this:
 # $ curl -f -S --get http://localhost:8009/auth/status
 # {"up":["mongo"],"down":[]}  [10:25 PM][~/tidepool][]
 #
@@ -47,7 +46,7 @@ tp_warmup() {
 # This can be used to kill the most recently launched set of tasks. Note that it
 # accepts a parameter to kill so you can say tp_kill -9 if you want to try
 # to make the tasks go away with extreme prejudice (in case they don't shut
-# down normally). 
+# down normally).
 tp_kill() {
     kill $1 $TP_PIDS
 }
@@ -126,12 +125,16 @@ tp_hakken() {
     tp_start_server hakken coordinator.js
 }
 
+# shoreline
+tp_shoreline() {
+    tp_go_server shoreline
+}
+
 # user-api
 tp_user-api() {
     export PORT=9107
     export SERVICE_NAME=user-api-local
     export SALT_DEPLOY=ADihSEI7tOQQP9xfXMO9HfRpXKu1NpIJ
-
     tp_start_server user-api lib/index.js
 }
 
@@ -259,7 +262,9 @@ tp_warmup
 tp_mongo
 tp_common
 tp_hakken || return
-tp_user-api || return
+tp_shoreline || return
+# If your are having issues with shoreline please log an issue but you switch and use the user-api for local dev
+# tp_user-api || return
 tp_highwater || return
 tp_seagull || return
 tp_message_api || return
