@@ -37,8 +37,8 @@ cli.main(function (args, options) {
       .withMethod('POST')
       .withToken(token)
       .withJson(dataToPost)
-      .whenStatusPassNull(200)
-      .go(function (err) {
+      .whenStatusPassBody(200)
+      .go(function (err, body) {
             if (err != null) {
               if (err.statusCode == null) {
                 console.log(err.stack);
@@ -47,6 +47,7 @@ cli.main(function (args, options) {
               }
             } else {
               console.log('Data uploaded successfully');
+              console.log(body);
             }
           });
   });
