@@ -1,6 +1,7 @@
 hakken
 shoreline
 user-api
+hydrophone
 highwater
 seagull
 message-api
