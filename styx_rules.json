@@ -12,6 +12,7 @@
 	  },
 	  { "type": "pathPrefix", "prefix": "/auth", "rule": { "type": "staticService", "hosts": [{ "protocol": "http", "host": "localhost:9107"}]}},
 	  { "type": "pathPrefix", "prefix": "/data", "rule": { "type": "staticService", "hosts": [{ "protocol": "http", "host": "localhost:9127"}]}},
+	  { "type": "pathPrefix", "prefix": "/confirm", "rule": { "type": "staticService", "hosts": [{ "protocol": "http", "host": "localhost:9157"}]}},
 	  { "type": "pathPrefix", "prefix": "/message", "rule": { "type": "staticService", "hosts": [{ "protocol": "http", "host": "localhost:9119"}]}},
 	  { "type": "pathPrefix", "prefix": "/metadata", "rule": { "type": "staticService", "hosts": [{ "protocol": "http", "host": "localhost:9120"}]}},
 	  { "type": "pathPrefix", "prefix": "/metrics", "rule": { "type": "staticService", "hosts": [{ "protocol": "http", "host": "localhost:9191"}]}},

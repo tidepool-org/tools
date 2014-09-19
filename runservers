@@ -269,11 +269,11 @@ tp_mongo
 tp_common
 tp_hakken || return
 tp_shoreline || return
-tp_hydrophone || return
 # If your are having issues with shoreline please log an issue but you switch and use the user-api for local dev
 # tp_user-api || return
 tp_highwater || return
 tp_seagull || return
+tp_hydrophone || return
 tp_message_api || return
 tp_tide-whisperer || return
 tp_gatekeeper || return
