@@ -37,7 +37,7 @@ get_one_tidepool_repo()
     if [ -d "$1" ]; then
         echo "Skipping $1 because there is already a directory by that name."
     else
-        git clone git@github.com:tidepool-org/$1.git
+        git clone https://github.com/tidepool-org/$1.git
         cd $1
         if [ -f package.json ]; then
             npm install
