@@ -17,6 +17,10 @@ do
     vcs=${dep[1]}
     url=${dep[2]}
     hash=${dep[3]}
+    # you can specify a branch as a fifth parameter if the hash is not 
+    # on master -- if you don't do this, then people who don't have that
+    # branch already checked out will fail to fetch the specified hash
+    branch=${dep[4]-master}
 
     if [ -z ${hash} ]
     then
@@ -49,7 +53,10 @@ do
     echo "Checking out revision ${hash}"
     case ${vcs} in
 	git)
-	    cd ${dir}; git checkout -q ${hash}
+	    cd ${dir}
+        git checkout --quiet ${branch}
+        git pull --quiet origin ${branch}
+        git checkout --quiet ${hash}
 	    ;;
 	bzr)
 	    cd ${dir}; bzr up -r ${hash}
