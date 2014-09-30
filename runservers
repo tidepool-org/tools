@@ -130,6 +130,12 @@ tp_shoreline() {
     tp_go_server shoreline
 }
 
+# hydrophone
+
+tp_hydrophone() {
+    tp_go_server hydrophone
+}
+
 # user-api
 tp_user-api() {
     export PORT=9107
@@ -267,6 +273,7 @@ tp_shoreline || return
 # tp_user-api || return
 tp_highwater || return
 tp_seagull || return
+tp_hydrophone || return
 tp_message_api || return
 tp_tide-whisperer || return
 tp_gatekeeper || return
