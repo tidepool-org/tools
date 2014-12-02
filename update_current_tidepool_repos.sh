@@ -17,7 +17,7 @@ update_one_tidepool_repo()
     echo "*** $1 ***"
     if [ ! -d "$1" ]; then
         echo "Cloning $1 because it seems to be missing."
-        git clone git@github.com:tidepool-org/$1.git
+        git clone https://github.com/tidepool-org/$1.git
     fi
 
     if [ -d "$1" ]; then
