@@ -1,4 +1,4 @@
-#! /bin/sh
+#! /bin/bash
 # This script depends on a list of current repositories found in tools/current_repos.txt
 # it checks a few requirements before running
 
