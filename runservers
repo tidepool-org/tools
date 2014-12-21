@@ -207,6 +207,11 @@ tp_gatekeeper() {
     tp_start_server gatekeeper index.js
 }
 
+# octopus
+tp_octopus() {
+    tp_go_server octopus
+}
+
 # styx
 tp_styx() {
     export HTTP_PORT=8009
@@ -276,6 +281,7 @@ tp_seagull || return
 tp_hydrophone || return
 tp_message_api || return
 tp_tide-whisperer || return
+tp_octopus || return
 tp_gatekeeper || return
 tp_styx || return
 tp_jellyfish || return
