@@ -136,14 +136,6 @@ tp_hydrophone() {
     tp_go_server hydrophone
 }
 
-# user-api
-tp_user-api() {
-    export PORT=9107
-    export SERVICE_NAME=user-api-local
-    export SALT_DEPLOY=ADihSEI7tOQQP9xfXMO9HfRpXKu1NpIJ
-    tp_start_server user-api lib/index.js
-}
-
 # highwater
 tp_highwater() {
     export PORT=9191
@@ -269,8 +261,6 @@ tp_mongo
 tp_common
 tp_hakken || return
 tp_shoreline || return
-# If your are having issues with shoreline please log an issue but you switch and use the user-api for local dev
-# tp_user-api || return
 tp_highwater || return
 tp_seagull || return
 tp_hydrophone || return
