@@ -26,8 +26,9 @@
 #     kill $TP_seagull
 # To start a task again, use tp_taskname:
 #     tp_seagull
+# You can check if tasks are still running with tp_check.
 
-# This sets things up with the router (styx) on port 8009. So to get status from 
+# This sets things up with the router (styx) on port 8009. So to get status from
 # the shoreline, for example, do this:
 # $ curl -f -S --get http://localhost:8009/auth/status
 # {"up":["mongo"],"down":[]}  [10:25 PM][~/tidepool][]
@@ -58,8 +59,22 @@ tp_restart() {
     echo "arg $1 -- name $NAME -- task $TASK"
     echo "Restarting $1 -- task  $TASK"
     kill  $TASK
+    # remove the task we just killed from the list of PIDs
+    export TP_PIDS=${TP_PIDS/ $TASK/}
     sleep 1
     tp_$1
+}
+
+tp_check() {
+    # generate a list of names from the environment, then iterate over them
+    # and see if all the tasks are running
+    set |egrep ^TP_ |tr -d "[0-9]='" |grep -v PIDS|while read pid; do
+        if kill -0 ${!pid} >/dev/null 2>&1; then
+            echo Found ${pid}
+        else
+            echo Did NOT find ${pid}
+        fi
+    done
 }
 
 tp_start_server() {   # expects servername, start name
