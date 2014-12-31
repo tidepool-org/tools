@@ -28,9 +28,6 @@ if [ ! -d tools ]; then
   exit 1
 fi
 
-repos=( $(cat "tools/required_repos.txt") )  #  Stores contents of that file in an array.
-
-
 get_one_tidepool_repo()
 {
     echo "*** $1 ***"
@@ -49,6 +46,7 @@ get_one_tidepool_repo()
     fi
 }
 
-for elt in $(seq 0 $((${#repos[@]} - 1))); do
-    get_one_tidepool_repo ${repos[$elt]}
+cat "tools/required_repos.txt" |while read repo; do
+    get_one_tidepool_repo $repo
 done
+
