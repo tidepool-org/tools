@@ -10,8 +10,6 @@ if [ ! -d tools ]; then
   exit 1
 fi
 
-repos=( $(cat "tools/required_repos.txt") )  #  Stores contents of that file in an array.
-
 update_one_tidepool_repo()
 {
     echo "*** $1 ***"
@@ -24,16 +22,17 @@ update_one_tidepool_repo()
         cd $1
         git fetch --prune --tags
         git pull
-        if [ -f package.json ]; then
+        if [ -e package.json ]; then
             npm install
         fi
-        if [ -f bower.json ]; then
-            bower install
+        if [ -e Comedeps ]; then
+            ../tools/come_deps.sh
         fi
         cd ..
     fi
 }
 
-for elt in $(seq 0 $((${#repos[@]} - 1))); do
-    update_one_tidepool_repo ${repos[$elt]}
+cat "tools/required_repos.txt" |while read repo; do
+    update_one_tidepool_repo $repo
 done
+
