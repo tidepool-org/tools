@@ -10,8 +10,6 @@ require()
 require git "Visit git-scm.com to get it."
 require node "Visit nodejs.org to get it."
 require npm "Visit npmjs.org to get it."
-require bower "Visit bower.io to get it."
-require grunt "Visit gruntjs.com to get it."
 require gulp "Visit gulpjs.com to get it."
 require mocha "Visit http://visionmedia.github.io/mocha/ to get it."
 require cc "On a Mac, install XCode and its command line tools."
@@ -38,9 +36,6 @@ get_one_tidepool_repo()
         cd $1
         if [ -f package.json ]; then
             npm install
-        fi
-        if [ -f bower.json ]; then
-            bower install
         fi
         cd ..
     fi
