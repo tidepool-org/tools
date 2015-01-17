@@ -1,3 +1,16 @@
+#!/bin/bash
+
+if [ /$1/ == /--nocolor/ ]; then
+    RED=''
+    GRN=''
+    NOCOL=''
+    shift
+else
+    RED='\x1b[22;31m'
+    GRN='\x1b[22;32m'
+    NOCOL='\x1b[0m'
+fi
+
 if [ /$1/ == // ]; then
     echo 'To check status, you need to specify local, devel, staging, or prod.'
     echo './checkStatus prod, for example'
@@ -38,12 +51,15 @@ checkStatus() {
     url=$2
     response=$(curl --write-out %{http_code} --insecure --silent --output /dev/null $url)
     now=$(date "+%H:%M:%S")
+
     if [ $response == "200" ]; then
+        COL=$GRN
         state='-good-'
     else
+        COL=$RED
         state='*FAIL*'
     fi
-    echo $now $state response $response -- $server
+    echo -e $now $COL$state$NOCOL response $COL $response $NOCOL -- $server
 }
 
 
