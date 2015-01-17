@@ -39,11 +39,11 @@ checkStatus() {
     response=$(curl --write-out %{http_code} --insecure --silent --output /dev/null $url)
     now=$(date "+%H:%M:%S")
     if [ $response == "200" ]; then
-        state='good'
+        state='-good-'
     else
-        state='****BAD****'
+        state='*FAIL*'
     fi
-    echo $now $state $server -- $styxpath/status gave $response
+    echo $now $state response $response -- $server
 }
 
 
