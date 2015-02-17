@@ -244,7 +244,7 @@ tp_blip() {
     export PORT=3000
     export MOCK=false
     export API_HOST="http://localhost:8009"
-    export UPLOAD_API="https://chrome.google.com/webstore/detail/tidepool-uploader/cabklgajffclbljkhmjphejemhpbghfb"
+    export UPLOAD_API="http://tidepool.org/uploader"
 
     if [ "$SKIP_BUILD" != "true" ]; then
       echo "Building Blip..."
