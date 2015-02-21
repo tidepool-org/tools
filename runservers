@@ -50,6 +50,8 @@ tp_warmup() {
 # down normally).
 tp_kill() {
     kill $1 $TP_PIDS
+    sleep 1
+    kill $TP_mongo
 }
 
 # kills and restarts one of the tasks by name -- ex: tp_restart jellyfish
@@ -127,7 +129,7 @@ tp_common() {
 tp_mongo() {
     echo "Starting mongod"
     mongod > server.log 2>&1 &
-    export TP_PIDS="$TP_PIDS $!"
+    export TP_mongo=$!
 }
 
 # hakken
