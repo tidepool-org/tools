@@ -177,7 +177,7 @@ tp_seagull() {
 }
 
 # message-api
-tp_message_api() {
+tp_messageapi() {
     export PORT=9119
     export SERVICE_NAME=message-api-local
     export SALT_DEPLOY=JPX9TAh6VEcta4TnaQMudx4R1G6ie9Wi
@@ -187,7 +187,7 @@ tp_message_api() {
 }
 
 # tide-whisperer
-tp_tide-whisperer() {
+tp_tidewhisperer() {
     tp_go_server tide-whisperer
 }
 
@@ -286,8 +286,8 @@ tp_shoreline || return
 tp_highwater || return
 tp_seagull || return
 tp_hydrophone || return
-tp_message_api || return
-tp_tide-whisperer || return
+tp_messageapi || return
+tp_tidewhisperer || return
 tp_octopus || return
 tp_gatekeeper || return
 tp_styx || return
