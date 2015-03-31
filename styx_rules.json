@@ -4,6 +4,7 @@
 	  { "type": "cors",
 	    "headers": {
 		"access-control-allow-origin": "*",
+		"access-control-allow-credentials": "true",
 		"access-control-allow-headers": "authorization, content-type, x-tidepool-session-token",
 		"access-control-allow-methods": "GET, POST, PUT",
 		"access-control-expose-headers": "x-tidepool-session-token",
@@ -11,6 +12,7 @@
 	    }
 	  },
 	  { "type": "pathPrefix", "prefix": "/auth", "rule": { "type": "staticService", "hosts": [{ "protocol": "http", "host": "localhost:9107"}]}},
+	  { "type": "pathPrefix", "prefix": "/oauth/v1", "rule": { "type": "staticService", "hosts": [{ "protocol": "http", "host": "localhost:9108"}]}},
 	  { "type": "pathPrefix", "prefix": "/data", "rule": { "type": "staticService", "hosts": [{ "protocol": "http", "host": "localhost:9127"}]}},
 	  { "type": "pathPrefix", "prefix": "/confirm", "rule": { "type": "staticService", "hosts": [{ "protocol": "http", "host": "localhost:9157"}]}},
 	  { "type": "pathPrefix", "prefix": "/message", "rule": { "type": "staticService", "hosts": [{ "protocol": "http", "host": "localhost:9119"}]}},
