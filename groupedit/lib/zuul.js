@@ -24,7 +24,8 @@ var parser = new Cmdline(
       'To remove people from a group:',
       '  zuul dontcare@bar.com remove 92c4ebff85',
       '',
-      'You can use either an email address or a userid to identify both a group and a user.'
+      'You can use either an email address or a userid to identify both a group and a user.',
+      'Valid actions are show, add, remove.'
     ].join('\n')
   }
 );

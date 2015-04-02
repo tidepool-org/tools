@@ -35,12 +35,6 @@ module.exports = function (deploy) {
       "discovery": {
         "host": "localhost:8000"
       },
-      "armadaApi": {
-        "serviceSpec": { "type": "required" }
-      },
-      "seagullApi": {
-        "serviceSpec": { "type": "required" }
-      },
       "gatekeeper": {
         "serviceSpec": { "type": "required" }
       },
@@ -48,8 +42,8 @@ module.exports = function (deploy) {
         "serviceSpec": { "type": "required" },
         "serverName": "groupedit",
         "serverSecret": "This needs to be the same secret everywhere. YaHut75NsK1f9UKUXuWqxNN0RUwHFBCy",
-        "saltwater": "This should be the highwater salt."
-      }
+      },
+      "saltwater": "This should be the highwater salt."
     },
     maybeReadJSONFile(configfilename, {})
   );
