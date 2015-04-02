@@ -35,6 +35,6 @@
     "prompt": "0.2.14",
     "request": "2.54.0",
     "tidepool-gatekeeper": "0.1.6",
-    "user-api-client": "0.3.0"
+    "user-api-client": "0.3.2"
   }
 }
