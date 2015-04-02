@@ -31,7 +31,7 @@
     "commandline-parser": "0.4.0",
     "crypto-js": "3.1.2-3",
     "hakken": "0.1.7",
-    "lodash": "2.4.1",
+    "lodash": "3.6.0",
     "prompt": "0.2.12",
     "request": "2.34.0",
     "tidepool-gatekeeper": "0.1.5",
