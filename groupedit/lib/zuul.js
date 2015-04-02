@@ -117,7 +117,7 @@ function determineHandler() {
           args.slice(2),
           function(userToAdd, cb) {
             if (userToAdd == null) {
-              console.log('Got a null argument on command line at index[%s]!?', i);
+              console.log('Got a null argument on command line!?');
               return cb();
             }
 
@@ -131,7 +131,7 @@ function determineHandler() {
                   return cb(err);
                 }
 
-                cb()
+                cb();
               });
             });
           },

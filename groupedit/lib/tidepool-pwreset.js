@@ -25,7 +25,6 @@
 'use strict';
 var url = require('url');
 var util = require('util');
-var _ = require('lodash');
 var request = require('request');
 var async = require('async');
 var crypto = require('crypto-js');
@@ -45,10 +44,6 @@ function highwaterHash(id, salt) {
     hash.update(salt);
     hash.update(id);
     return hash.finalize().toString().substr(0, 10);
-}
-
-function parseJSON(res, body) {
-  return JSON.parse(body);
 }
 
 function requestTo(hostGetter, path) {
