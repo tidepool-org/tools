@@ -29,7 +29,7 @@
     "amoeba": "0.1.1",
     "async": "0.4.0",
     "commandline-parser": "0.4.0",
-    "crypto-js": "3.1.2-3",
+    "crypto-js": "3.1.4",
     "hakken": "0.1.7",
     "lodash": "3.6.0",
     "prompt": "0.2.14",
