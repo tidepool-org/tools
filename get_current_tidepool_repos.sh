@@ -13,7 +13,7 @@ require npm "Visit npmjs.org to get it."
 require gulp "Use 'npm install --global gulp' to get it."
 require mocha "Use 'npm install --global mocha' to get it."
 require cc "On a Mac, install XCode and its command line tools."
-require mongod "Use [brew update] and 'brew install mongodb' to get it."
+require mongod "Visit mongodb.org/.  Or, on a Mac, use 'brew install mongodb'."
 require go "Visit golang.org to get it."
 require bzr "Visit http://bazaar.canonical.com/ to get it.  Or, on a Mac, just use brew install bzr"
 
