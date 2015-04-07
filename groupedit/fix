@@ -1,0 +1,45 @@
+sed 's/"hakken": "0.1.4"/"hakken": "0.1.7"/' <package.json >package.fix
+rm -f package.json
+mv package.fix package.json
+git add package.json
+git commit -m "Update hakken to 0.1.7"
+sed 's/"lodash": "2.4.1"/"lodash": "3.6.0"/' <package.json >package.fix
+rm -f package.json
+mv package.fix package.json
+git add package.json
+git commit -m "Update lodash to 3.6.0"
+sed 's/"prompt": "0.2.12"/"prompt": "0.2.14"/' <package.json >package.fix
+rm -f package.json
+mv package.fix package.json
+git add package.json
+git commit -m "Update prompt to 0.2.14"
+sed 's/"request": "2.34.0"/"request": "2.54.0"/' <package.json >package.fix
+rm -f package.json
+mv package.fix package.json
+git add package.json
+git commit -m "Update request to 2.54.0"
+sed 's/"tidepool-gatekeeper": "0.1.5"/"tidepool-gatekeeper": "0.1.6"/' <package.json >package.fix
+rm -f package.json
+mv package.fix package.json
+git add package.json
+git commit -m "Update tidepool-gatekeeper to 0.1.6"
+sed 's/"crypto-js": "3.1.2-3"/"crypto-js": "3.1.4"/' <package.json >package.fix
+rm -f package.json
+mv package.fix package.json
+git add package.json
+git commit -m "Update crypto-js to 3.1.4"
+sed 's/"amoeba": "0.1.1"/"amoeba": "0.1.4"/' <package.json >package.fix
+rm -f package.json
+mv package.fix package.json
+git add package.json
+git commit -m "Update amoeba to 0.1.4"
+sed 's/"user-api-client": "0.3.0"/"user-api-client": "0.3.2"/' <package.json >package.fix
+rm -f package.json
+mv package.fix package.json
+git add package.json
+git commit -m "Update user-api-client to 0.3.2"
+sed 's/"async": "0.4.0"/"async": "0.9.0"/' <package.json >package.fix
+rm -f package.json
+mv package.fix package.json
+git add package.json
+git commit -m "Update async to 0.9.0"

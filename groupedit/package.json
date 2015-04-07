@@ -18,10 +18,7 @@
   "license": "Tidepool",
   "main": "lib/tidepool-groupedit",
   "engines": {
-    "node": ">= 0.8.0"
-  },
-  "bin": {
-    "tidepool-groupedit": "lib/tidepool-groupedit.js"
+    "node": ">= 0.12.0"
   },
   "devDependencies": {},
   "keywords": [],
