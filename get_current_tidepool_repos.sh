@@ -41,7 +41,7 @@ get_one_tidepool_repo()
     fi
 }
 
-cat "tools/required_repos.txt" |while read repo; do
+for i in $(cat "tools/required_repos.txt"); do
     get_one_tidepool_repo $repo
 done
 

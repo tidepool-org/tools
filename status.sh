@@ -27,6 +27,7 @@ BAD='\x1b[22;31m'       # red
 GOOD='\x1b[22;32m'      # green
 NOCOL='\x1b[0m'
 PRINTALL="false"
+REPOLIST=$(find . -name ".git" -depth 2 |sed s/\.git// |sed s@\./@@ |sed s@/@@)
 
 while [ -n "$1" ]; do
     if [ /$1/ == /--nocolor/ ]; then
@@ -39,10 +40,15 @@ while [ -n "$1" ]; do
         PRINTALL="true"
     fi
 
+    if [ "$1" == "--required" ]; then
+        REPOLIST=$(cat "tools/required_repos.txt")
+    fi
+
     if [ "$1" == "-h" ]; then
         echo "status [args]"
         echo "-h prints this help"
         echo "--nocolor suppresses colorizing of results"
+        echo "--required examines only the repositories in required_repos.txt"
         echo "--all prints all items -- otherwise, only exceptions are printed"
         echo "   exceptions are not on master, not clean, or last tag not at head"
         exit
@@ -59,8 +65,7 @@ colorize() {
     fi
 }
 
-
-for i in $(find . -name ".git" -depth 2 |sed s/\.git// |sed s@\./@@ |sed s@/@@); do
+for i in $REPOLIST; do
     cd $i
     BRANCH=$(git branch |grep '*' |cut -c 3-99)
     STATUS=$(git status --porcelain |cut -c 1-2 |uniq |tr '\n' ' '|sed -e s/M/modified/ -e s/??/untracked/ -e s/UU/--uncompleted-merge--/ -e s/A/added/ -e s/D/deleted/ -e s/R/renamed/ -e s/C/copied/ -e s/U/updated/ |tr -d '\n')
