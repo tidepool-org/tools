@@ -65,20 +65,29 @@ colorize() {
     fi
 }
 
-for i in $REPOLIST; do
-    cd $i
-    BRANCH=$(git branch |grep '*' |cut -c 3-99)
-    STATUS=$(git status --porcelain |cut -c 1-2 |uniq |tr '\n' ' '|sed -e s/M/modified/ -e s/??/untracked/ -e s/UU/--uncompleted-merge--/ -e s/A/added/ -e s/D/deleted/ -e s/R/renamed/ -e s/C/copied/ -e s/U/updated/ |tr -d '\n')
-    LASTTAG=$(lasttag)
-    TAGLOG=$(gitlog1 $LASTTAG)
-    CURLOG=$(gitlog1)
-    UPTODATE=""
-    if [ "$TAGLOG" != "$CURLOG" ]; then
-        UPTODATE=$(colorize "Last tag not at head." "")
-    fi
-    if [ -n "$STATUS" -o "$BRANCH" != "master" -o $PRINTALL == "true" -o "$UPTODATE" != "" ]; then
-        echo -e "$i: [ $(colorize $BRANCH "master") ] $LASTTAG $STATUS $UPTODATE"
-    fi
-    cd ..
-done
+doall() {
+    for i in $REPOLIST; do
+        cd $i
+        BRANCH=$(git branch |grep '*' |cut -c 3-99)
+        STATUS=$(git status --porcelain |cut -c 1-2 |uniq |tr '\n' ' '|sed -e "s/ M/modified/" -e "s/??/untracked /" -e "s/UU/--uncompleted-merge-- /" -e "s/A/added /" -e "s/D/deleted /" -e "s/R/renamed /" -e "s/C/copied /" -e "s/U/updated /" |tr -d '\n')
+        LASTTAG=$(lasttag)
+        TAGLOG=$(gitlog1 $LASTTAG)
+        CURLOG=$(gitlog1)
+        UPTODATE=""
+        if [ "$TAGLOG" != "$CURLOG" ]; then
+            UPTODATE=$(colorize "(not at head)" "")
+        fi
+        if [ -z "$LASTTAG" ]; then
+            LASTTAG="--"
+        fi
+        if [ -z "$STATUS" ]; then
+            STATUS="--"
+        fi
+        if [ "$STATUS" != "--" -o "$BRANCH" != "master" -o $PRINTALL == "true" -o "$UPTODATE" != "" ]; then
+            echo -e "$i:@[ $(colorize $BRANCH "master") ]@$STATUS@$LASTTAG $UPTODATE"
+        fi
+        cd ..
+    done
+}
 
+doall |column -s @ -t
