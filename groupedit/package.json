@@ -1,7 +1,7 @@
 {
   "name": "tidepool-groupedit",
   "description": "Tool to edit groups for tidepool users",
-  "version": "0.5.1",
+  "version": "0.7.0",
   "homepage": "https://github.com/tidepool-org/tools",
   "author": {
     "name": "Kent Quirk",
