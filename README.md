@@ -14,16 +14,27 @@ This is a script that will clone all the required repositories into a directory 
 ## update_current_tidepool_repos.sh
 This is a script that will fetch latest changes and update npm and bower for all the repositories listed in required_repos.txt.
 
+## status.sh
+This is a script that returns a (colorized) status of the state of git for a collection of repositories (either the required ones only, or all the repositories that are siblings of this one). It's handy for keeping track of changes in flight.
+
 ## runservers
 This is a script to run a set of servers on localhost. Note that it's not executable -- that's because you shouldn't run it directly -- use "source" (also known as ".") to run it, as in ```. tools/runservers``` We'll keep updating it as we grow.
 
+## checkServerStatus.sh
+This is a script that pings all the running servers for a particular deploy (local, devel, staging, or prod). It prints out a colorized status for them all.
+
 ## addLicense.py
-addLicense.py is a script to add license text to a set of source files by searching for special markers in those files. 
-It's reasonably smart. 
+addLicense.py is a script to add license text to a set of source files by searching for special markers in those files.
+It's reasonably smart.
 Run it with the -h switch for full help.
 
+## groupedit
+
+Please see the README in the groupedit repository.
+
 ## extractDocs.py
-THIS IS EXPERIMENTAL
+THIS IS EXPERIMENTAL AND WAS NEVER FINISHED
+
 extractDocs.py is designed to allow a natural form of documentation to be placed in source files that can then be extracted and
 formatted appropriately for markdown files like the apiary documentation and also function-oriented docs like you'll find in
 the *-client libraries.
