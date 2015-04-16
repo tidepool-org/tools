@@ -163,6 +163,8 @@ tp_highwater() {
     export METRICS_UCSF_APIKEY=28814957ee8160309f522a0bd0f2824de585befb
     # this will let you test direct to highwater at localhost:9191/noauth
     export NOAUTH=true
+    export METRICS_UCSF_APIKEY=eaa4d4c8cf2043001435aa644d6dae2bf0c37e17
+    export METRICS_UCSF_WHITELIST=e6727f98d5,d0fd08fcc3
 
     tp_start_server highwater lib/index.js
 }
