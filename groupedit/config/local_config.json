@@ -1,11 +1,5 @@
 {
   "comment": "This is a sample local config that is compatible with runservers.",
-  "armadaApi": {
-    "serviceSpec": { "type": "static", "hosts": [{ "protocol": "http", "host": "localhost:9118" }] }
-  },
-  "seagullApi": {
-    "serviceSpec": { "type": "static", "hosts": [{ "protocol": "http", "host": "localhost:9120" }] }
-  },
   "gatekeeper": {
     "serviceSpec": { "type": "static", "hosts": [{ "protocol": "http", "host": "localhost:9123" }] }
   },

@@ -25,7 +25,6 @@
 'use strict';
 var url = require('url');
 var util = require('util');
-var _ = require('lodash');
 var request = require('request');
 var async = require('async');
 var crypto = require('crypto-js');
@@ -33,7 +32,7 @@ var Cmdline = require('commandline-parser').Parser;
 var prompt = require('prompt');
 var config = null;
 var hakkenClient = null;
-  
+
 
 var username = null;
 var password = null;
@@ -45,10 +44,6 @@ function highwaterHash(id, salt) {
     hash.update(salt);
     hash.update(id);
     return hash.finalize().toString().substr(0, 10);
-}
-
-function parseJSON(res, body) {
-  return JSON.parse(body);
 }
 
 function requestTo(hostGetter, path) {
@@ -152,8 +147,8 @@ function setupCommandline() {
   });
 
   parser.addArgument('user' ,{
-      flags : ['u','user'], 
-      desc : "set username or userid of the user whose password is to be set", 
+      flags : ['u','user'],
+      desc : "set username or userid of the user whose password is to be set",
       optional : false,
       action : function(value) {
         username = value;
@@ -161,8 +156,8 @@ function setupCommandline() {
   });
 
   parser.addArgument('password' ,{
-      flags : ['p','password'], 
-      desc : "set the value of the new password", 
+      flags : ['p','password'],
+      desc : "set the value of the new password",
       optional : true,
       action : function(value) {
         password = value;
@@ -170,14 +165,14 @@ function setupCommandline() {
   });
 
   parser.addArgument('input' ,{
-      flags : ['i','input'], 
-      desc : "set the value of password to the result of a prompt", 
+      flags : ['i','input'],
+      desc : "set the value of password to the result of a prompt",
       optional : true,
   });
 
   parser.addArgument('config' ,{
-      flags : ['c','config'], 
-      desc : "set config name to use (default is 'config')", 
+      flags : ['c','config'],
+      desc : "set config name to use (default is 'config')",
       optional : true,
       action : function(value) {
         deploy = value;
@@ -185,8 +180,8 @@ function setupCommandline() {
   });
 
   parser.addArgument('status', {
-      flags : ['s','status'], 
-      desc : "check and print status of the servers", 
+      flags : ['s','status'],
+      desc : "check and print status of the servers",
       optional : true
   });
 
@@ -324,7 +319,7 @@ function main() {
           callback(null, token, userinfo);
         }
       }
-    ], 
+    ],
     function(err, token, userinfo) {
       if (err) {
         console.log(err);

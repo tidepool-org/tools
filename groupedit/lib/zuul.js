@@ -24,7 +24,8 @@ var parser = new Cmdline(
       'To remove people from a group:',
       '  zuul dontcare@bar.com remove 92c4ebff85',
       '',
-      'You can use either an email address or a userid to identify both a group and a user.'
+      'You can use either an email address or a userid to identify both a group and a user.',
+      'Valid actions are show, add, remove.'
     ].join('\n')
   }
 );
@@ -116,7 +117,7 @@ function determineHandler() {
           args.slice(2),
           function(userToAdd, cb) {
             if (userToAdd == null) {
-              console.log('Got a null argument on command line at index[%s]!?', i);
+              console.log('Got a null argument on command line!?');
               return cb();
             }
 
@@ -130,7 +131,7 @@ function determineHandler() {
                   return cb(err);
                 }
 
-                cb()
+                cb();
               });
             });
           },
