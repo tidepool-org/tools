@@ -1,6 +1,5 @@
 hakken
 shoreline
-coastline
 hydrophone
 highwater
 seagull

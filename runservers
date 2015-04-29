@@ -147,11 +147,6 @@ tp_shoreline() {
     tp_go_server shoreline
 }
 
-# coastline
-tp_coastline() {
-    tp_go_server coastline
-}
-
 # hydrophone
 
 tp_hydrophone() {
@@ -308,7 +303,6 @@ tp_mongo
 tp_common
 tp_hakken || return
 tp_shoreline || return
-tp_coastline || return
 tp_highwater || return
 tp_seagull || return
 tp_hydrophone || return
