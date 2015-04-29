@@ -43,6 +43,10 @@ do
 		echo "Cloning bazaar repository[${url}] to dir[${dir}]"
 		bzr branch ${url} ${dir}
 		;;
+		hg)
+		echo "Cloning hg repository[${url}] to dir[${dir}]"
+		hg clone -r ${hash} ${url} ${dir}
+		;;
 	    *)
 		echo "Unknown vcs system[${vcs}].  Fix type or update script"
 		exit 4
@@ -61,6 +65,9 @@ do
 	    ;;
 	bzr)
 	    cd ${dir}; bzr up -r ${hash}
+	    ;;
+	hg)
+	    echo "hg vcs already has -r [${hash}]"
 	    ;;
 	*)
 	    echo "Unknown vcs system[${vcs}].  Fix type or update script"
