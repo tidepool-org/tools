@@ -216,6 +216,8 @@ tp_jellyfish() {
     export PORT=9122
     export SERVICE_NAME=jellyfish-local
     export SERVE_STATIC=dist
+    //so that we can validate the version of the uploader being used
+    export MINIMUM_UPLOADER_VERSION="0.99.0"
 
     if [ "$SKIP_BUILD" != "true" ]; then
       echo "Building Jellyfish..."
