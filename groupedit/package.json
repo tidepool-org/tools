@@ -15,7 +15,7 @@
   "bugs": {
     "url": "https://github.com/tidepool-org/tools/issues"
   },
-  "license": "Tidepool",
+  "license": "BSD-2-Clause",
   "main": "lib/tidepool-groupedit",
   "engines": {
     "node": ">= 0.12.0"
