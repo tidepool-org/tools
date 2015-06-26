@@ -14,6 +14,7 @@ import (
 	"github.com/howeyc/gopass"
 )
 
+// Represents the user running the audit on the accounts that they have access to via permissons
 type admin struct {
 	host   string
 	client *http.Client
@@ -25,6 +26,7 @@ type admin struct {
 	Accounts []*Account `json:"administeredAccounts"`
 }
 
+// Account details that we will audit
 type Account struct {
 	Id      string `json:"userid"`
 	Profile struct {
@@ -71,19 +73,6 @@ func main() {
 				},
 			},
 			Action: auditAccounts,
-		},
-		//e.g. create --af ./new-accounts.txt
-		{
-			Name:      "invite",
-			ShortName: "i",
-			Usage:     "create invites to blip for accounts that will be initilized",
-			Flags: []cli.Flag{
-				cli.StringFlag{
-					Name:  "af, accountsFile",
-					Usage: "the text file that has a list of all accounts that you wish to audit",
-				},
-			},
-			Action: createInvites,
 		},
 	}
 
@@ -280,12 +269,4 @@ func auditAccounts(c *cli.Context) {
 	//see when they last uploaded
 
 	return
-}
-
-func createInvites(c *cli.Context) {
-
-	if c.String("accountsFile") == "" {
-		log.Fatal("Please specify file (and path to it) that contains the list of accounts you wish to audit --accountsFile or -af flag.")
-	}
-
 }
