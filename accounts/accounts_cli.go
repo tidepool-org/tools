@@ -260,7 +260,7 @@ func auditAccounts(c *cli.Context) {
 	log.Println("building audit report ...")
 	jsonRpt, _ := json.MarshalIndent(&adminUser, "", "  ")
 
-	reportPath := fmt.Sprintf("./accountsAudit_%s.txt", time.Now().String())
+	reportPath := fmt.Sprintf("./accountsAudit_%s.txt", time.Now().UTC().Format(time.RFC3339))
 
 	f, _ := os.Create(reportPath)
 	defer f.Close()
