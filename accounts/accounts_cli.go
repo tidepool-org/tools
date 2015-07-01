@@ -8,6 +8,8 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
+	"sync"
 	"time"
 
 	"github.com/codegangsta/cli"
@@ -34,15 +36,17 @@ type Account struct {
 		Patient  struct {
 			Bday string `json:"birthday"`
 			Dday string `json:"diagnosisDate"`
-		} `json:"patientDetails"`
+		} `json:"patient"`
 	} `json:"patientProfile"`
 	Perms      interface{} `json:"permissons"`
 	LastUpload string      `json:"lastupload"`
 }
 
 var (
-	prodHost  = "https://api.tidepool.io"
-	localHost = "http://localhost:8009"
+	prodHost    = "https://api.tidepool.io"
+	stagingHost = "https://staging-api.tidepool.io"
+	develHost   = "https://devel-api.tidepool.io"
+	localHost   = "http://localhost:8009"
 )
 
 func main() {
@@ -53,7 +57,7 @@ func main() {
 	app.Usage = "Allows the bulk management of tidepool accounts"
 	app.Version = "0.0.1"
 	app.Author = "Jamie Bate"
-	app.Email = "jamie@tidepool.com"
+	app.Email = "jamie@tidepool.org"
 
 	app.Commands = []cli.Command{
 
@@ -63,6 +67,11 @@ func main() {
 			ShortName: "a",
 			Usage:     `audit all accounts that you have permisson to access`,
 			Flags: []cli.Flag{
+				cli.StringFlag{
+					Name:  "e, env",
+					Value: "local",
+					Usage: "the environment your running against. Options are local, devel, staging and prod",
+				},
 				cli.StringFlag{
 					Name:  "u, username",
 					Usage: "your tidepool username that has access to the accounts e.g. admin@tidepool.org",
@@ -119,8 +128,15 @@ func (a *admin) findLastUploaded(acc *Account) error {
 
 	switch res.StatusCode {
 	case 200:
-		data, _ := ioutil.ReadAll(res.Body)
+		data, err := ioutil.ReadAll(res.Body)
+
+		if err != nil {
+			log.Println("Error trying to read the last upload data", err.Error())
+			return nil
+		}
+
 		json.Unmarshal(data, &acc.LastUpload)
+		log.Println("Found last upload data ", string(data[:]))
 		return nil
 	default:
 		log.Printf("Failed finding last upload info [%d] for [%s]", res.StatusCode, acc.Profile.FullName)
@@ -198,14 +214,67 @@ func (a *admin) loadExistingReport(path string) error {
 	return nil
 }
 
+func (a *admin) accountDetails() {
+	var wg sync.WaitGroup
+
+	for _, account := range a.Accounts {
+		// Increment the WaitGroup counter.
+		wg.Add(1)
+		// Launch a goroutine to account data
+		go func(account *Account) {
+			// Decrement the counter when the goroutine completes.
+			defer wg.Done()
+			// Fetch the account data
+			a.findPublicInfo(account)
+		}(account)
+	}
+	// Wait for all fetches to complete.
+	wg.Wait()
+	return
+}
+func (a *admin) audit() {
+
+	var wg sync.WaitGroup
+
+	for _, account := range a.Accounts {
+		// Increment the WaitGroup counter.
+		wg.Add(1)
+		// Launch a goroutine to account data
+		go func(account *Account) {
+			// Decrement the counter when the goroutine completes.
+			defer wg.Done()
+			a.findLastUploaded(account)
+		}(account)
+	}
+	// Wait for all fetches to complete.
+	wg.Wait()
+	return
+}
+
+func setHost(targetEnv string) string {
+
+	targetEnv = strings.ToLower(targetEnv)
+
+	fmt.Println("Run audit against:", targetEnv)
+
+	if targetEnv == "devel" {
+		return develHost
+	} else if targetEnv == "prod" {
+		return prodHost
+	} else if targetEnv == "staging" {
+		return stagingHost
+	}
+	return localHost
+}
+
 // and audit will find all account linked
 func auditAccounts(c *cli.Context) {
-
-	adminUser := &admin{host: localHost, client: &http.Client{}}
 
 	if c.String("username") == "" {
 		log.Fatal("Please specify the username with the --username or -u flag.")
 	}
+
+	adminUser := &admin{host: setHost(c.String("env")), client: &http.Client{}}
 
 	fmt.Printf("Password: ")
 	pass := gopass.GetPasswdMasked()
@@ -225,21 +294,9 @@ func auditAccounts(c *cli.Context) {
 			log.Println(err.Error())
 			return
 		}
+		log.Println("get users info ...")
+		adminUser.accountDetails()
 
-		//find the accociated profiles
-		log.Println("running audit on accounts ...")
-		for i := range adminUser.Accounts {
-			err = adminUser.findPublicInfo(adminUser.Accounts[i])
-			if err != nil {
-				log.Println(err.Error())
-				return
-			}
-			err = adminUser.findLastUploaded(adminUser.Accounts[i])
-			if err != nil {
-				log.Println(err.Error())
-				return
-			}
-		}
 	} else {
 		//find the accociated profiles
 		log.Println("re-running audit on accounts ...")
@@ -249,18 +306,17 @@ func auditAccounts(c *cli.Context) {
 			log.Println(err.Error())
 			return
 		}
-		for i := range adminUser.Accounts {
-			err = adminUser.findLastUploaded(adminUser.Accounts[i])
-			if err != nil {
-				log.Println(err.Error())
-				return
-			}
-		}
 	}
+
+	log.Println("running audit on accounts ...")
+	start := time.Now()
+	adminUser.audit()
+	log.Printf("audit took [%f]secs", time.Now().Sub(start).Seconds())
+
 	log.Println("building audit report ...")
 	jsonRpt, _ := json.MarshalIndent(&adminUser, "", "  ")
 
-	reportPath := fmt.Sprintf("./accountsAudit_%s.txt", time.Now().UTC().Format(time.RFC3339))
+	reportPath := fmt.Sprintf("./audit_%s_accounts_%s_%s.txt", adminUser.User.Name, c.String("env"), time.Now().UTC().Format(time.RFC3339))
 
 	f, _ := os.Create(reportPath)
 	defer f.Close()
