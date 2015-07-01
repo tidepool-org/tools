@@ -61,7 +61,8 @@ func main() {
 
 	app.Commands = []cli.Command{
 
-		//e.g. audit --af ./accounts.txt
+		//e.g. audit -u admin@place.org -e prod
+		//e.g. audit -u admin@place.org -e prod -r ./audit_admin@place.org_accounts_prod_2015-07-01T03:00:58Z.txt
 		{
 			Name:      "audit",
 			ShortName: "a",
@@ -136,7 +137,6 @@ func (a *admin) findLastUploaded(acc *Account) error {
 		}
 
 		json.Unmarshal(data, &acc.LastUpload)
-		log.Println("Found last upload data ", string(data[:]))
 		return nil
 	default:
 		log.Printf("Failed finding last upload info [%d] for [%s]", res.StatusCode, acc.Profile.FullName)
