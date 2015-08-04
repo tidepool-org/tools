@@ -2,7 +2,7 @@
 
 # Environment
 if [ -z "${1:-}" ]; then
-  echo "ERROR: First argument must be environment: production, staging, development, local" >&2
+  echo "ERROR: First argument must be environment: production, staging, development, test, local" >&2
   exit 1
 else
   environment="${1}"
@@ -10,10 +10,12 @@ fi
 case "${environment}" in
   production|staging|development)
     ;;
+  test)
+    ;;
   local)
     ;;
   *)
-    echo "ERROR: First argument must be environment: production, staging, development, local" >&2
+    echo "ERROR: First argument must be environment: production, staging, development, test, local" >&2
     exit 1
 esac
 

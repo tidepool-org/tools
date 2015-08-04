@@ -9,7 +9,7 @@ fi
 
 # Environment
 if [ -z "${1:-}" ]; then
-  echo "ERROR: First argument must be environment: production, staging, development, local" >&2
+  echo "ERROR: First argument must be environment: production, staging, development, test, local" >&2
   exit 1
 else
   environment="${1}"
@@ -20,13 +20,18 @@ case "${environment}" in
     USERS_DATABASE="user"
     DEVICEDATA_DATABASE="data"
     ;;
+  test)
+    MONGO_OPTIONS="--quiet"
+    USERS_DATABASE="user"
+    DEVICEDATA_DATABASE="data"
+    ;;
   local)
     MONGO_OPTIONS="--quiet"
     USERS_DATABASE="user"
     DEVICEDATA_DATABASE="streams"
     ;;
   *)
-    echo "ERROR: First argument must be environment: production, staging, development, local" >&2
+    echo "ERROR: First argument must be environment: production, staging, development, test, local" >&2
     exit 1
 esac
 
