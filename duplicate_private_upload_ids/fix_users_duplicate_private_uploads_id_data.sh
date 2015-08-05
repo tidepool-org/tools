@@ -57,42 +57,69 @@ reset_users_private_uploads()
 assign_users_upload_ids()
 {
   unset upload_id
-  unset user_id
-  unset assign_user_id
-  unset username
-  unset assign_username
+  unset upload
+  unset private_uploads_id
+  unset primary_user_id
+  unset primary_username
+  unset primary_private_uploads_id
+  unset alternate_username
+  unset alternate_user_id
+  unset alternate_private_uploads_id
 
   upload_id="${1}"
 
-  user_id="$(mongo ${MONGO_OPTIONS} ${DEVICEDATA_DATABASE} --eval "db.deviceData.find({type: \"upload\", uploadId: \"${upload_id}\"}).forEach(function(f) { print(f.byUser); })")"
-  if [ ${#user_id} -lt 1 ]; then
-    echo "WARN: Ignoring upload id without upload type data or without user id: ${upload_id}" >&2
+  upload="$(mongo ${MONGO_OPTIONS} ${DEVICEDATA_DATABASE} --eval "db.deviceData.find({type: \"upload\", uploadId: \"${upload_id}\"}).forEach(function(f) { print((f._groupId ? f._groupId : f.groupId) + '|' + f.byUser); })")"
+  if [ ${#upload} -lt 1 ]; then
+    echo "WARN: Ignoring upload id without upload type data: ${upload_id}" >&2
     return
   fi
 
-  username="$(mongo ${MONGO_OPTIONS} ${USERS_DATABASE} --eval "db.users.find({userid: \"${user_id}\"}).forEach(function(f) { print(f.username); })")"
-  if [ ${#username} -lt 1 ]; then
-    echo "WARN: Ignoring upload id where upload user id does not contain username: ${upload_id} ${user_id}" >&2
+  IFS=\| read private_uploads_id primary_user_id <<< "${upload}"
+  if [ ${#private_uploads_id} -lt 1 ]; then
+    echo "WARN: Ignoring upload id without upload private uploads id: ${upload_id}" >&2
     return
-  elif [[ "${username}" =~ .*-home@replacebg\.org ]]; then
-    assign_username="$(printf "${username}" | sed 's/\(.*\)-home\(@replacebg\.org\)/\1\2/')"
-    assign_user_id="$(mongo ${MONGO_OPTIONS} ${USERS_DATABASE} --eval "db.users.find({username: \"${assign_username}\"}).forEach(function(f) { print(f.userid); })")"
-    if [ ${#user_id} -lt 1 ]; then
-      echo "WARN: Ignoring upload id where upload username does not contain user id: ${upload_id} ${assign_username}" >&2
+  fi
+  if [ ${#primary_user_id} -lt 1 ]; then
+    echo "WARN: Ignoring upload id without upload user id: ${upload_id}" >&2
+    return
+  fi
+
+  primary_username="$(mongo ${MONGO_OPTIONS} ${USERS_DATABASE} --eval "db.users.find({userid: \"${primary_user_id}\"}).forEach(function(f) { print(f.username); })")"
+  if [ ${#primary_username} -lt 1 ]; then
+    echo "WARN: Ignoring upload id where upload user id does not contain username: ${upload_id} ${primary_user_id}" >&2
+    return
+  fi
+  primary_private_uploads_id="$(grep "^${primary_username}|${primary_user_id}|" "${report_path}" | cut -d'|' -f5)"
+
+  if [[ "${primary_username}" =~ .*-home@replacebg\.org ]]; then
+    alternate_username="$(printf "${primary_username}" | sed 's/\(.*\)-home\(@replacebg\.org\)/\1\2/')"
+  elif [[ "${primary_username}" =~ .*@replacebg\.org ]]; then
+    alternate_username="$(printf "${primary_username}" | sed 's/\(.*\)\(@replacebg\.org\)/\1-home\2/')"
+  fi
+
+  if [ -z "${alternate_username:-}" ]; then
+    if [ "${primary_private_uploads_id}" != "${private_uploads_id}" ]; then
+      echo "ERROR: Ignoring upload id where upload private uploads id does not match user private uploads id: ${upload_id} ${user_id}"
+    else
+      echo "${directory}/assign_users_upload_ids.sh ${environment} ${primary_user_id} ${upload_id} # ${primary_username}"
+    fi
+  else
+    alternate_user_id="$(mongo ${MONGO_OPTIONS} ${USERS_DATABASE} --eval "db.users.find({username: \"${alternate_username}\"}).forEach(function(f) { print(f.userid); })")"
+    if [ ${#alternate_user_id} -lt 1 ]; then
+      echo "WARN: Ignoring upload id where upload username does not contain user id: ${upload_id} ${alternate_username}" >&2
       return
     fi
-  elif [[ "${username}" =~ .*@replacebg\.org ]]; then
-    assign_username="${username}"
-    assign_user_id="${user_id}"
-  else
-    echo "ERROR: Ignoring upload id where username not in ReplaceBG study: ${upload_id} ${user_id} ${username}" >&2
-    return
-  fi
+    alternate_private_uploads_id="$(grep "^${alternate_username}|${alternate_user_id}|" "${report_path}" | cut -d'|' -f5)"
 
-  if [ "${assign_user_id}" != "${user_id}" ]; then
-    echo "${directory}/assign_users_upload_ids.sh ${environment} ${assign_user_id} ${upload_id} # ${assign_username} <= ${username}"
-  else
-    echo "${directory}/assign_users_upload_ids.sh ${environment} ${assign_user_id} ${upload_id} # ${assign_username}"
+    if [ "${primary_private_uploads_id}" == "${private_uploads_id}" -a "${alternate_private_uploads_id}" == "${private_uploads_id}" ]; then
+      echo "ERROR: Ignoring upload id where more than one account could be associated with private uploads id: ${upload_id} ${primary_username} ${alternate_username}"
+    elif [ "${primary_private_uploads_id}" == "${private_uploads_id}" ]; then
+      echo "${directory}/assign_users_upload_ids.sh ${environment} ${primary_user_id} ${upload_id} # ${primary_username}"
+    elif [ "${alternate_private_uploads_id}" == "${private_uploads_id}" ]; then
+      echo "${directory}/assign_users_upload_ids.sh ${environment} ${alternate_user_id} ${upload_id} # ${alternate_username} <= ${primary_username}"
+    else
+      echo "ERROR: Ignoring upload id where no account could be associated with private uploads id: ${upload_id} ${primary_username} ${alternate_username}"
+    fi
   fi
 }
 
