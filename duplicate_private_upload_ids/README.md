@@ -38,4 +38,8 @@ $ ./fix_users_duplicate_private_uploads_id_data.sh ${ENVIRONMENT} users.out
 $ ./report_users.sh ${ENVIRONMENT} 2> users.fixed.err | tee users.fixed.out
 $ ./report_users_duplicate_private_uploads_id_empty.sh users.fixed.out
 $ ./report_users_duplicate_private_uploads_id_data.sh users.fixed.out
+
+# Other sanity checks (there should be no orphaned metadata or device data)
+$ ./report_orphaned_metadata.sh ${ENVIRONMENT} users.fixed.out
+$ ./report_orphaned_device_data.sh ${ENVIRONMENT} users.fixed.out
 ```
