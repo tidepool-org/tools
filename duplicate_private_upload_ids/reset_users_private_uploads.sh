@@ -60,7 +60,6 @@ reset_user_private_uploads()
   unset metadata_decrypted_private_uploads
   unset updated_metadata_decrypted
   unset updated_metadata_encrypted
-  unset final_metadata_decrypted_private_uploads
 
   IFS=\| read username user_id metadata_id metadata_hash <<< "${1}"
   if [ ${#username} -lt 1 -o ${#user_id} -ne 10 -o ${#metadata_id} -ne 10 -o ${#metadata_hash} -ne 24 ]; then
@@ -111,17 +110,7 @@ reset_user_private_uploads()
     return
   fi
 
-  final_metadata_decrypted_private_uploads="$(curl -s -H "x-tidepool-session-token: ${session_token}" -X GET "${SEAGULL_API}/${user_id}/private/uploads")"
-  if [ ${#final_metadata_decrypted_private_uploads} -lt 1 ]; then
-    echo "ERROR: New private uploads id not generated for user: ${user}" >&2
-    return
-  fi
-  if [ "${final_metadata_decrypted_private_uploads}" == "${metadata_decrypted_private_uploads}" ]; then
-    echo "ERROR: New private uploads id not reset for user: ${user}" >&2
-    return
-  fi
-
-  echo "${username} ${user_id} ${metadata_decrypted_private_uploads} ${final_metadata_decrypted_private_uploads}"
+  echo "${username} ${user_id} ${metadata_decrypted_private_uploads}"
 }
 
 reset_users_private_uploads()
