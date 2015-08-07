@@ -218,6 +218,8 @@ tp_jellyfish() {
     export SERVE_STATIC=dist
     //so that we can validate the version of the uploader being used
     export MINIMUM_UPLOADER_VERSION="0.99.0"
+    //the _schemaVersion that jellyfish will produce
+    export SCHEMA_VERSION=1
 
     if [ "$SKIP_BUILD" != "true" ]; then
       echo "Building Jellyfish..."
