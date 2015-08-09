@@ -144,12 +144,16 @@ tp_hakken() {
 
 # shoreline
 tp_shoreline() {
+    # Note: config for shoreline is contained in the repo
+    # see https://github.com/tidepool-org/shoreline/tree/master/config
     tp_go_server shoreline
 }
 
 # hydrophone
 
 tp_hydrophone() {
+    # Note: config for hydrophone is contained in the repo
+    # see https://github.com/tidepool-org/hydrophone/tree/master/config
     tp_go_server hydrophone
 }
 
@@ -208,6 +212,8 @@ tp_messageapi() {
 
 # tide-whisperer
 tp_tidewhisperer() {
+    # Note: config for tide-whisperer is contained in the repo
+    # see https://github.com/tidepool-org/tide-whisperer/tree/master/config
     tp_go_server tide-whisperer
 }
 
