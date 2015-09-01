@@ -226,6 +226,8 @@ tp_jellyfish() {
     export MINIMUM_UPLOADER_VERSION="0.99.0"
     # the _schemaVersion that jellyfish will produce
     export SCHEMA_VERSION=1
+    # Encryption salt for raw uploads
+    export SALT_DEPLOY=itNkczadZ1EeC9fUWR3LnbKFagtYYLOk
 
     if [ "$SKIP_BUILD" != "true" ]; then
       echo "Building Jellyfish..."
