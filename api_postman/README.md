@@ -8,5 +8,5 @@ A postman collection that targets the tidepool-api
 3. Import the `production.postman_environment` environment file used in the collection. To do this go to the `Manage Environments` button where you will be given the option to import the environment file.
 
 
-note: you can target other environments by copying the production env and then pointing it to the other env by updating the api endpoint and also user details.
+**note:** you can target other environments by copying the production env and then pointing it to the other env by updating the api endpoint and also user details.
 
