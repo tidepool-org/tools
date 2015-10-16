@@ -123,13 +123,12 @@
 			"tests": "",
 			"currentHelper": "normal",
 			"helperAttributes": {},
-			"time": 1444690925895,
+			"time": 1444955569928,
 			"name": "user signup profile",
 			"description": "",
 			"collectionId": "5037a36b-900b-13af-76d3-c614b548cb6e",
 			"responses": [],
-			"folder": "8b6f4ad7-18be-aa3b-4e28-b405cda6f2da",
-			"rawModeData": "{\"fullName\": \"<new-user-full-name>\"}"
+			"rawModeData": "{\"fullName\": \"{{signupFullName}}\"}"
 		},
 		{
 			"id": "313e30c1-c67a-b1d5-de20-62acab04aedd",
@@ -184,13 +183,12 @@
 			"tests": "",
 			"currentHelper": "normal",
 			"helperAttributes": {},
-			"time": 1444689312973,
+			"time": 1444955510493,
 			"name": "user signup",
 			"description": "",
 			"collectionId": "5037a36b-900b-13af-76d3-c614b548cb6e",
 			"responses": [],
-			"folder": "8b6f4ad7-18be-aa3b-4e28-b405cda6f2da",
-			"rawModeData": "{\"username\":\"<new-user-email>\", \"password\":\"<new-user-pw>\", \"emails\":[\"<new-user-email>\"]}"
+			"rawModeData": "{\"username\":\"{{signupEmail}}\", \"password\":\"{{signupPw}}\", \"emails\":[\"{{signupEmail}}\"]}"
 		},
 		{
 			"id": "59ed801b-8657-a6a0-7db5-af9d860bcb0a",
@@ -477,13 +475,13 @@
 			"tests": "",
 			"currentHelper": "basicAuth",
 			"helperAttributes": {
-				"username": "<your-account-email>",
-				"password": "<your-account-pw>",
+				"username": "{{loginEmail}}",
+				"password": "{{loginPw}}",
 				"saveToRequest": true,
 				"id": "basic",
 				"timestamp": 1426561539930
 			},
-			"time": 1444951664585,
+			"time": 1444955612088,
 			"name": "user login",
 			"description": "",
 			"collectionId": "5037a36b-900b-13af-76d3-c614b548cb6e",
