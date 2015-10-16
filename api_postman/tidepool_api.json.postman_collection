@@ -4,7 +4,6 @@
 	"description": "",
 	"order": [
 		"d47d8915-df7b-ce90-5f5b-13eebe80e07b",
-		"a5a57620-af52-e1bb-5095-9c20ebebcbed",
 		"68f12eec-ce47-196a-204c-afa6e636df86"
 	],
 	"folders": [
@@ -130,7 +129,7 @@
 			"collectionId": "5037a36b-900b-13af-76d3-c614b548cb6e",
 			"responses": [],
 			"folder": "8b6f4ad7-18be-aa3b-4e28-b405cda6f2da",
-			"rawModeData": "{\"fullName\": \"Jamie\"}"
+			"rawModeData": "{\"fullName\": \"<new-user-full-name>\"}"
 		},
 		{
 			"id": "313e30c1-c67a-b1d5-de20-62acab04aedd",
@@ -191,7 +190,7 @@
 			"collectionId": "5037a36b-900b-13af-76d3-c614b548cb6e",
 			"responses": [],
 			"folder": "8b6f4ad7-18be-aa3b-4e28-b405cda6f2da",
-			"rawModeData": "{\"username\":\"jamie+skipit@tidepool.org\", \"password\":\"blip4life\", \"emails\":[\"jamie+skipit@tidepool.org\"]}"
+			"rawModeData": "{\"username\":\"<new-user-email>\", \"password\":\"<new-user-pw>\", \"emails\":[\"<new-user-email>\"]}"
 		},
 		{
 			"id": "59ed801b-8657-a6a0-7db5-af9d860bcb0a",
@@ -215,23 +214,17 @@
 		{
 			"id": "68f12eec-ce47-196a-204c-afa6e636df86",
 			"headers": "x-tidepool-session-token: {{sessionToken}}\n",
-			"url": "{{api}}/auth/login",
+			"url": "{{api}}/auth/logout",
 			"preRequestScript": "",
 			"pathVariables": {},
-			"method": "GET",
+			"method": "POST",
 			"data": [],
 			"dataMode": "params",
 			"version": 2,
 			"tests": "",
-			"currentHelper": "basicAuth",
-			"helperAttributes": {
-				"username": "jamie@tidepool.org",
-				"password": "blip4life",
-				"saveToRequest": true,
-				"id": "basic",
-				"timestamp": 1426561539930
-			},
-			"time": 1444777880684,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1444954630923,
 			"name": "user logout",
 			"description": "",
 			"collectionId": "5037a36b-900b-13af-76d3-c614b548cb6e",
@@ -331,31 +324,6 @@
 			"helperAttributes": {},
 			"time": 1444776572639,
 			"name": "lost password",
-			"description": "",
-			"collectionId": "5037a36b-900b-13af-76d3-c614b548cb6e",
-			"responses": []
-		},
-		{
-			"id": "a5a57620-af52-e1bb-5095-9c20ebebcbed",
-			"headers": "x-tidepool-session-token: {{sessionToken}}\n",
-			"url": "{{api}}/auth/login",
-			"preRequestScript": "",
-			"pathVariables": {},
-			"method": "GET",
-			"data": [],
-			"dataMode": "params",
-			"version": 2,
-			"tests": "",
-			"currentHelper": "basicAuth",
-			"helperAttributes": {
-				"username": "jamie@tidepool.org",
-				"password": "blip4life",
-				"saveToRequest": true,
-				"id": "basic",
-				"timestamp": 1426561539930
-			},
-			"time": 1444777880684,
-			"name": "resfresh login",
 			"description": "",
 			"collectionId": "5037a36b-900b-13af-76d3-c614b548cb6e",
 			"responses": []
@@ -498,7 +466,7 @@
 		},
 		{
 			"id": "d47d8915-df7b-ce90-5f5b-13eebe80e07b",
-			"headers": "Authorization: Basic amFtaWVAdGlkZXBvb2wub3JnOmJsaXA0bGlmZQ==\n",
+			"headers": "Authorization: Basic aG93YXJkQGxvb2tmYW1pbHkub3JnOjJzZWVkOGE=\n",
 			"url": "{{api}}/auth/login",
 			"preRequestScript": "",
 			"pathVariables": {},
@@ -509,13 +477,13 @@
 			"tests": "",
 			"currentHelper": "basicAuth",
 			"helperAttributes": {
-				"username": "jamie@tidepool.org",
-				"password": "blip4life",
+				"username": "<your-account-email>",
+				"password": "<your-account-pw>",
 				"saveToRequest": true,
 				"id": "basic",
 				"timestamp": 1426561539930
 			},
-			"time": 1444689299870,
+			"time": 1444951664585,
 			"name": "user login",
 			"description": "",
 			"collectionId": "5037a36b-900b-13af-76d3-c614b548cb6e",
