@@ -14,9 +14,9 @@ else
   BASE64_OPTIONS="--wrap=0"
 fi
 
-# OLD_SALT_DEPLOY, NEW_SALT_DEPLOY environment variables must be exported outside of this script
-if [ -z "${OLD_SALT_DEPLOY:-}" -o -z "${NEW_SALT_DEPLOY:-}" ]; then
-  echo "ERROR: Required environment variables: OLD_SALT_DEPLOY, NEW_SALT_DEPLOY" >&2
+# OLD_SALT_DEPLOY environment variable must be exported outside of this script
+if [ -z "${OLD_SALT_DEPLOY:-}" ]; then
+  echo "ERROR: Required environment variable: OLD_SALT_DEPLOY" >&2
   exit 1
 fi
 
@@ -88,10 +88,12 @@ migrate_user_metadata()
     return
   fi
 
-  new_secret_key="$(printf "${metadata_hash}${NEW_SALT_DEPLOY}" | openssl dgst -sha256 -hex | sed 's/.* //')"
-  if [ ${#new_secret_key} -lt 1 ]; then
-    echo "ERROR: Failure to calculate new secret key for user: ${user}" >&2
-    return
+  if [ -n "${NEW_SALT_DEPLOY:-}" ]; then
+    new_secret_key="$(printf "${metadata_hash}${NEW_SALT_DEPLOY}" | openssl dgst -sha256 -hex | sed 's/.* //')"
+    if [ ${#new_secret_key} -lt 1 ]; then
+      echo "ERROR: Failure to calculate new secret key for user: ${user}" >&2
+      return
+    fi
   fi
 
   metadata_encrypted="$(mongo ${MONGO_OPTIONS} ${SEAGULL_DATABASE} --eval "db.seagull.find({_id: \"${metadata_id}\"}).forEach(function(f) { print(f.value); })")"
@@ -106,10 +108,15 @@ migrate_user_metadata()
     return
   fi
 
-  metadata_encrypted="$(printf "${metadata_decrypted}" | openssl enc -e -aes256 -k "${new_secret_key}" | base64 ${BASE64_OPTIONS})"
-  if [ ${#metadata_encrypted} -lt 1 ]; then
-    echo "ERROR: Invalid encrypted updated metadata for user: ${user}" >&2
-    return
+  if [ -n "${new_secret_key:-}" ]; then
+    metadata_encrypted="$(printf "${metadata_decrypted}" | openssl enc -e -aes256 -k "${new_secret_key}" | base64 ${BASE64_OPTIONS})"
+    if [ ${#metadata_encrypted} -lt 1 ]; then
+      echo "ERROR: Invalid encrypted updated metadata for user: ${user}" >&2
+      return
+    fi
+  else
+    metadata_encrypted="${metadata_decrypted//\\/\\\\}"
+    metadata_encrypted="${metadata_encrypted//\"/\\\"}"
   fi
 
   mongo ${MONGO_OPTIONS} ${SEAGULL_DATABASE} --eval "db.seagull.update({_id: \"${metadata_id}\"}, {_id: \"${metadata_id}\", value: \"${metadata_encrypted}\"})"
