@@ -15,7 +15,7 @@ $ read -s OLD_SALT_DEPLOY
 <enter seagull old SALT_DEPLOY here>
 $ export OLD_SALT_DEPLOY
 
-# Set seagull NEW_SALT_DEPLOY
+# Set seagull NEW_SALT_DEPLOY (if empty will not apply encryption)
 $ read -s NEW_SALT_DEPLOY
 <enter seagull new SALT_DEPLOY here>
 $ export NEW_SALT_DEPLOY
