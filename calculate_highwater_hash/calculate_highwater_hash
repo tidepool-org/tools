@@ -1,0 +1,42 @@
+#!/bin/bash -eu
+
+# Requires: openssl
+
+if [ -z "$(which openssl)" ]; then
+  echo "ERROR: Required tools: openssl" >&2
+  exit 1
+fi
+
+# SALT_DEPLOY environment variable must be exported outside of this script
+if [ -z "${SALT_DEPLOY:-}" ]; then
+  echo "ERROR: Required environment variables: SALT_DEPLOY" >&2
+  exit 1
+fi
+
+calculate_highwater_hash()
+{
+  unset user_id
+  unset highwater_hash
+
+  user_id="${1}"
+
+  highwater_hash="$(printf "${SALT_DEPLOY}${user_id}" | openssl dgst -sha1 -hex | sed 's/.* //')"
+  if [ ${#highwater_hash} -lt 1 ]; then
+    echo "ERROR: Failure to calculate highwater_hash for user_id: ${user_id}" >&2
+    return
+  fi
+
+  echo "${highwater_hash:0:10}"
+}
+
+# Loop through arguments (if any) or stdin
+if [ $# -gt 0 ]; then
+  while [ $# -gt 0 ]; do
+    calculate_highwater_hash "${1}"
+    shift
+  done
+else
+  while read line; do
+    calculate_highwater_hash "${line}"
+  done
+fi
