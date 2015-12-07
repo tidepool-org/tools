@@ -21,7 +21,7 @@ This is a script that returns a (colorized) status of the state of git for a col
 This is a script to run a set of servers on localhost. Note that it's not executable -- that's because you shouldn't run it directly -- use "source" (also known as ".") to run it, as in ```. tools/runservers``` We'll keep updating it as we grow.
 
 ## checkServerStatus.sh
-This is a script that pings all the running servers for a particular deploy (local, devel, staging, or prod). It prints out a colorized status for them all.
+This is a script that pings all the running servers for a particular deploy (local, dev, stg, or prd). It prints out a colorized status for them all.
 
 ## addLicense.py
 addLicense.py is a script to add license text to a set of source files by searching for special markers in those files.

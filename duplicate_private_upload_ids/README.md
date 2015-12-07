@@ -5,8 +5,8 @@ Note: Backup the Mongo database before executing these
 In a terminal on the mongo master node for the specified environment, execute the following commands:
 
 ```
-# Set ENVIRONMENT (prod|staging|devel|test|local)
-export ENVIRONMENT=prod
+# Set ENVIRONMENT (prd|stg|dev|test|local)
+export ENVIRONMENT=prd
 
 # Set environment SERVER_SECRET
 $ read -s SERVER_SECRET

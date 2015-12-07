@@ -22,26 +22,14 @@ fi
 
 # Environment
 if [ -z "${1:-}" ]; then
-  echo "ERROR: First argument must be environment: prod, staging, devel, test, local" >&2
+  echo "ERROR: First argument must be environment: prd, stg, dev, test, local" >&2
   exit 1
 else
   environment="${1}"
 fi
 case "${environment}" in
-  prod)
-    MONGO_OPTIONS="${MONGO_OPTIONS:-} -ssl --quiet"
-    USERS_DATABASE="user"
-    SEAGULL_DATABASE="seagull"
-    DEVICEDATA_DATABASE="data"
-    ;;
-  staging)
-    MONGO_OPTIONS="${MONGO_OPTIONS:-} -ssl --quiet"
-    USERS_DATABASE="user_staging"
-    SEAGULL_DATABASE="seagull_staging"
-    DEVICEDATA_DATABASE="data_staging"
-    ;;
-  devel)
-    MONGO_OPTIONS="${MONGO_OPTIONS:-} -ssl --quiet"
+  prd|stg|dev)
+    MONGO_OPTIONS="${MONGO_OPTIONS:-} --ssl --sslAllowInvalidCertificates --quiet"
     USERS_DATABASE="user"
     SEAGULL_DATABASE="seagull"
     DEVICEDATA_DATABASE="data"
@@ -59,7 +47,7 @@ case "${environment}" in
     DEVICEDATA_DATABASE="streams"
     ;;
   *)
-    echo "ERROR: First argument must be environment: prod, staging, devel, test, local" >&2
+    echo "ERROR: First argument must be environment: prd, stg, dev, test, local" >&2
     exit 1
 esac
 

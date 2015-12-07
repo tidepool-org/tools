@@ -7,8 +7,8 @@ Note: Backup the Mongo database before executing
 In a terminal on the Mongo master node for the specified environment, execute the following commands:
 
 ```
-# Set ENVIRONMENT (prod|staging|devel|test|local)
-export ENVIRONMENT=prod
+# Set ENVIRONMENT (prd|stg|dev|test|local)
+export ENVIRONMENT=prd
 
 # Set seagull OLD_SALT_DEPLOY
 $ read -s OLD_SALT_DEPLOY

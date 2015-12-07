@@ -12,8 +12,8 @@ else
 fi
 
 if [ /$1/ == // ]; then
-    echo 'To check status, you need to specify local, devel, staging, or prod.'
-    echo './checkStatus prod, for example'
+    echo 'To check status, you need to specify local, dev, stg, or prd.'
+    echo './checkStatus prd, for example'
     exit
 else
     if [ $1 == 'local' ]; then
@@ -23,25 +23,25 @@ else
         CLAMSHELL_URL='http://localhost:3004'
     fi
 
-    if [ $1 == 'devel' ]; then
-        API_URL='https://devel-api.tidepool.io'
-        UPLOAD_URL='https://devel-uploads.tidepool.io'
-        BLIP_URL='https://blip-devel.tidepool.io'
-        CLAMSHELL_URL='https://devel-clamshell.tidepool.io'
+    if [ $1 == 'dev' ]; then
+        API_URL='https://dev-api.tidepool.org'
+        UPLOAD_URL='https://dev-uploads.tidepool.org'
+        BLIP_URL='https://dev-blip.tidepool.org'
+        CLAMSHELL_URL='https://dev-notes.tidepool.org'
     fi
 
-    if [ $1 == 'staging' ]; then
-        API_URL='https://staging-api.tidepool.io'
-        UPLOAD_URL='https://staging-uploads.tidepool.io'
-        BLIP_URL='https://blip-staging.tidepool.io'
-        CLAMSHELL_URL='https://staging-clamshell.tidepool.io'
+    if [ $1 == 'stg' ]; then
+        API_URL='https://stg-api.tidepool.org'
+        UPLOAD_URL='https://stg-uploads.tidepool.org'
+        BLIP_URL='https://stg-blip.tidepool.org'
+        CLAMSHELL_URL='https://stg-notes.tidepool.org'
     fi
 
-    if [ $1 == 'prod' ]; then
-        API_URL='https://api.tidepool.io'
-        UPLOAD_URL='https://uploads.tidepool.io'
-        BLIP_URL='https://blip-ucsf-pilot.tidepool.io'
-        CLAMSHELL_URL='https://notes.tidepool.io'
+    if [ $1 == 'prd' ]; then
+        API_URL='https://api.tidepool.org'
+        UPLOAD_URL='https://uploads.tidepool.org'
+        BLIP_URL='https://blip.tidepool.org'
+        CLAMSHELL_URL='https://notes.tidepool.org'
     fi
 fi
 
@@ -88,4 +88,3 @@ checkStatusThroughStyx octopus query
 checkStatus jellyfish $UPLOAD_URL/status
 checkStatus blip $BLIP_URL/index.html
 checkStatus clamshell $CLAMSHELL_URL/index.html
-
