@@ -1,0 +1,3 @@
+tar -xzvf gatekeeper.tar.gz
+cd ./gatekeeper
+node index.js

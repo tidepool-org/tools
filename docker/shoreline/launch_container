@@ -1,0 +1,4 @@
+tar -xzvf shoreline.tar.gz
+cd shoreline
+sed -i -e 's/mongodb:\/\/localhost\/user/mongodb:\/\/tidepool-mongo\/user/g' config/server.json
+dist/shoreline

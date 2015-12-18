@@ -1,0 +1,3 @@
+tar -xzvf styx.tar.gz
+cd ./styx
+RULES=`cat ../styx_rules.json` node server.js

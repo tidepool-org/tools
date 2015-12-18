@@ -1,0 +1,3 @@
+tar -xzvf seagull.tar.gz
+cd ./seagull
+node lib/index.js
