@@ -28,8 +28,11 @@ tidepool-seagull:
     image: anderspitman/tidepool-seagull
     links: 
         - tidepool-mongo
+        - tidepool-shoreline
 
 tidepool-jellyfish:
     image: anderspitman/tidepool-jellyfish
     links: 
         - tidepool-mongo
+        - tidepool-shoreline
+        - tidepool-seagull
