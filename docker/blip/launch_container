@@ -1,0 +1,3 @@
+tar -xzvf blip.tar.gz
+cd ./blip
+node server.js

@@ -36,3 +36,11 @@ tidepool-jellyfish:
         - tidepool-mongo
         - tidepool-shoreline
         - tidepool-seagull
+
+tidepool-blip:
+    image: anderspitman/tidepool-blip
+    ports:
+        - "3000:3000"
+    links:
+        - tidepool-mongo
+        - tidepool-styx

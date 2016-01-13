@@ -3,7 +3,7 @@
 readonly USERNAME=anderspitman
 readonly DOCKER_BASE_DIR=.
 readonly CODE_BASE_DIR=../..
-readonly NODE_IMAGE_NAMES="styx jellyfish gatekeeper seagull"
+readonly NODE_IMAGE_NAMES="styx jellyfish gatekeeper seagull blip"
 readonly GO_IMAGE_NAMES="shoreline"
 
 
@@ -71,4 +71,4 @@ function build_image {
 }
 
 
-main
+#main
