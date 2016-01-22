@@ -10,5 +10,4 @@ gatekeeper
 styx
 jellyfish
 blip
-clamshell
 chrome-uploader
