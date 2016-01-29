@@ -291,23 +291,6 @@ tp_blip() {
     echo "Blip started at http://localhost:$PORT"
 }
 
-# clamshell
- tp_clamshell() {
-    export PORT=3004
-    export MOCK=false
-    export API_HOST="http://localhost:8009"
-
-    if [ "$SKIP_BUILD" != "true" ]; then
-      echo "Building Clamshell..."
-      cd clamshell || return
-      npm run build > /dev/null
-      cd ..
-    fi
-
-    tp_start_server clamshell server.js
-    echo "Clamshell started at http://localhost:$PORT"
- }
-
 # NOTE: If you modify this list, please also modify required_repos.txt.
 
 tp_warmup
@@ -325,4 +308,3 @@ tp_gatekeeper || return
 tp_styx || return
 tp_jellyfish || return
 tp_blip || return
-tp_clamshell || return
