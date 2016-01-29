@@ -20,28 +20,24 @@ else
         API_URL='http://localhost:8009'
         UPLOAD_URL='http://localhost:9122'
         BLIP_URL='http://localhost:3000'
-        CLAMSHELL_URL='http://localhost:3004'
     fi
 
     if [ $1 == 'dev' ]; then
         API_URL='https://dev-api.tidepool.org'
         UPLOAD_URL='https://dev-uploads.tidepool.org'
         BLIP_URL='https://dev-blip.tidepool.org'
-        CLAMSHELL_URL='https://dev-notes.tidepool.org'
     fi
 
     if [ $1 == 'stg' ]; then
         API_URL='https://stg-api.tidepool.org'
         UPLOAD_URL='https://stg-uploads.tidepool.org'
         BLIP_URL='https://stg-blip.tidepool.org'
-        CLAMSHELL_URL='https://stg-notes.tidepool.org'
     fi
 
     if [ $1 == 'prd' ]; then
         API_URL='https://api.tidepool.org'
         UPLOAD_URL='https://uploads.tidepool.org'
         BLIP_URL='https://blip.tidepool.org'
-        CLAMSHELL_URL='https://notes.tidepool.org'
     fi
 fi
 
@@ -87,4 +83,3 @@ checkStatusThroughStyx tide-whisperer data
 checkStatusThroughStyx octopus query
 checkStatus jellyfish $UPLOAD_URL/status
 checkStatus blip $BLIP_URL/index.html
-checkStatus clamshell $CLAMSHELL_URL/index.html
