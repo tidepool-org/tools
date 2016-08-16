@@ -30,21 +30,9 @@ fi
 case "${environment}" in
   prd|stg|dev)
     MONGO_OPTIONS="${MONGO_OPTIONS:-} --ssl --sslAllowInvalidCertificates --quiet"
-    USERS_DATABASE="user"
-    SEAGULL_DATABASE="seagull"
-    DEVICEDATA_DATABASE="data"
     ;;
-  test)
+  test|local)
     MONGO_OPTIONS="${MONGO_OPTIONS:-} --quiet"
-    USERS_DATABASE="user"
-    SEAGULL_DATABASE="seagull"
-    DEVICEDATA_DATABASE="data"
-    ;;
-  local)
-    MONGO_OPTIONS="${MONGO_OPTIONS:-} --quiet"
-    USERS_DATABASE="user"
-    SEAGULL_DATABASE="user"
-    DEVICEDATA_DATABASE="streams"
     ;;
   *)
     echo "ERROR: First argument must be environment: prd, stg, dev, test, local" >&2
@@ -85,7 +73,7 @@ reset_user_private_uploads()
     return
   fi
 
-  metadata_encrypted="$(mongo ${MONGO_OPTIONS} ${SEAGULL_DATABASE} --eval "db.seagull.find({_id: \"${metadata_id}\"}).forEach(function(f) { print(f.value); })")"
+  metadata_encrypted="$(mongo ${MONGO_OPTIONS} seagull --eval "db.seagull.find({_id: \"${metadata_id}\"}).forEach(function(f) { print(f.value); })")"
   if [ ${#metadata_encrypted} -lt 1 ]; then
     echo "WARN: Ignoring missing encrypted metadata for user: ${user}" >&2
     return
@@ -110,7 +98,7 @@ reset_user_private_uploads()
     return
   fi
 
-  mongo ${MONGO_OPTIONS} ${SEAGULL_DATABASE} --eval "db.seagull.update({_id: \"${metadata_id}\"}, {_id: \"${metadata_id}\", value: \"${updated_metadata_encrypted}\"})"
+  mongo ${MONGO_OPTIONS} seagull --eval "db.seagull.update({_id: \"${metadata_id}\"}, {_id: \"${metadata_id}\", value: \"${updated_metadata_encrypted}\"})"
   if [ $? -ne 0 ]; then
     echo "ERROR: Failure to update mongo for user: ${user}" >&2
     return
@@ -123,7 +111,7 @@ reset_users_private_uploads()
 {
   echo "PROCESSING: ${1}" >&2
 
-  users="$(mongo ${MONGO_OPTIONS} ${USERS_DATABASE} --eval "db.users.find({userid: \"${1}\"}).forEach(function(f) { print(f.username + '|' + f.userid + '|' + (f.private && f.private.meta ? f.private.meta.id : '') + '|' + (f.private && f.private.meta ? f.private.meta.hash : '')); })")"
+  users="$(mongo ${MONGO_OPTIONS} user --eval "db.users.find({userid: \"${1}\"}).forEach(function(f) { print(f.username + '|' + f.userid + '|' + (f.private && f.private.meta ? f.private.meta.id : '') + '|' + (f.private && f.private.meta ? f.private.meta.hash : '')); })")"
   if [ ${#users} -lt 1 ]; then
     echo "WARN: Unable to find user with id: ${1}" >&2
     sleep 0.05

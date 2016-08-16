@@ -17,15 +17,9 @@ fi
 case "${environment}" in
   prd|stg|dev)
     MONGO_OPTIONS="${MONGO_OPTIONS:-} --ssl --sslAllowInvalidCertificates --quiet"
-    SEAGULL_DATABASE="seagull"
     ;;
-  test)
+  test|local)
     MONGO_OPTIONS="${MONGO_OPTIONS:-} --quiet"
-    SEAGULL_DATABASE="seagull"
-    ;;
-  local)
-    MONGO_OPTIONS="${MONGO_OPTIONS:-} --quiet"
-    SEAGULL_DATABASE="user"
     ;;
   *)
     echo "ERROR: First argument must be environment: prd, stg, dev, test, local" >&2
@@ -45,7 +39,7 @@ report_orphaned_metadata()
   unset metadata_ids
   unset metadata_id
 
-  metadata_ids="$(mongo ${MONGO_OPTIONS} ${SEAGULL_DATABASE} --eval "printjson(db.seagull.distinct(\"_id\", {\"_id\": {\$exists: true}}))" | jq -r '.[]')"
+  metadata_ids="$(mongo ${MONGO_OPTIONS} seagull --eval "printjson(db.seagull.distinct(\"_id\", {\"_id\": {\$exists: true}}))" | jq -r '.[]')"
   if [ ${#metadata_ids} -gt 0 ]; then
     echo "${metadata_ids}" | while read -r metadata_id; do
       unset count

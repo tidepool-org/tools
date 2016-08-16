@@ -17,15 +17,9 @@ fi
 case "${environment}" in
   prd|stg|dev)
     MONGO_OPTIONS="${MONGO_OPTIONS:-} --ssl --sslAllowInvalidCertificates --quiet"
-    DEVICEDATA_DATABASE="data"
     ;;
-  test)
+  test|local)
     MONGO_OPTIONS="${MONGO_OPTIONS:-} --quiet"
-    DEVICEDATA_DATABASE="data"
-    ;;
-  local)
-    MONGO_OPTIONS="${MONGO_OPTIONS:-} --quiet"
-    DEVICEDATA_DATABASE="streams"
     ;;
   *)
     echo "ERROR: First argument must be environment: prd, stg, dev, test, local" >&2
@@ -48,7 +42,7 @@ report_orphaned_device_data_by_field()
 
   field="${1}"
 
-  private_uploads_ids="$(mongo ${MONGO_OPTIONS} ${DEVICEDATA_DATABASE} --eval "printjson(db.deviceData.distinct(\"${field}\", {\"${field}\": {\$exists: true}}))" | jq -r '.[]')"
+  private_uploads_ids="$(mongo ${MONGO_OPTIONS} data --eval "printjson(db.deviceData.distinct(\"${field}\", {\"${field}\": {\$exists: true}}))" | jq -r '.[]')"
   if [ ${#private_uploads_ids} -gt 0 ]; then
     echo "${private_uploads_ids}" | while read -r private_uploads_id; do
       unset count

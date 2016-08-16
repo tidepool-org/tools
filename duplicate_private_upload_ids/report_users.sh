@@ -67,21 +67,9 @@ fi
 case "${environment}" in
   prd|stg|dev)
     MONGO_OPTIONS="${MONGO_OPTIONS:-} --ssl --sslAllowInvalidCertificates --quiet"
-    USERS_DATABASE="user"
-    SEAGULL_DATABASE="seagull"
-    DEVICEDATA_DATABASE="data"
     ;;
-  test)
+  test|local)
     MONGO_OPTIONS="${MONGO_OPTIONS:-} --quiet"
-    USERS_DATABASE="user"
-    SEAGULL_DATABASE="seagull"
-    DEVICEDATA_DATABASE="data"
-    ;;
-  local)
-    MONGO_OPTIONS="${MONGO_OPTIONS:-} --quiet"
-    USERS_DATABASE="user"
-    SEAGULL_DATABASE="user"
-    DEVICEDATA_DATABASE="streams"
     ;;
   *)
     echo "ERROR: First argument must be environment: prd, stg, dev, test, local" >&2
@@ -118,7 +106,7 @@ report_user()
     return
   fi
 
-  metadata_encrypted="$(mongo ${MONGO_OPTIONS} ${SEAGULL_DATABASE} --eval "db.seagull.find({_id: \"${metadata_id}\"}).forEach(function(f) { print(f.value); })")"
+  metadata_encrypted="$(mongo ${MONGO_OPTIONS} seagull --eval "db.seagull.find({_id: \"${metadata_id}\"}).forEach(function(f) { print(f.value); })")"
   if [ ${#metadata_encrypted} -lt 1 ]; then
     echo "WARN: Ignoring missing encrypted metadata for user: ${user}" >&2
     return
@@ -134,12 +122,12 @@ report_user()
 
   read private_uploads_id private_uploads_hash <<< $(printf "${metadata_decrypted}" | jq -r ".private.uploads.id, .private.uploads.hash")
 
-  private_uploads_count="$(mongo ${MONGO_OPTIONS} ${DEVICEDATA_DATABASE} --eval "db.deviceData.find({\$or: [{_groupId: \"${private_uploads_id}\"}, {groupId: \"${private_uploads_id}\"}]}).count()")"
+  private_uploads_count="$(mongo ${MONGO_OPTIONS} data --eval "db.deviceData.find({\$or: [{_groupId: \"${private_uploads_id}\"}, {groupId: \"${private_uploads_id}\"}]}).count()")"
 
   if [ ${private_uploads_count} -gt 0 ]; then
-    private_uploads_no_device_id_count="$(mongo ${MONGO_OPTIONS} ${DEVICEDATA_DATABASE} --eval "db.deviceData.find({\$or: [{_groupId: \"${private_uploads_id}\"}, {groupId: \"${private_uploads_id}\"}], deviceId: {\$exists: false}}).count()")"
-    private_uploads_upload_ids="$(mongo ${MONGO_OPTIONS} ${DEVICEDATA_DATABASE} --eval "printjson(db.deviceData.distinct(\"uploadId\", {\$or: [{_groupId: \"${private_uploads_id}\"}, {groupId: \"${private_uploads_id}\"}]}))" | jq -s -c .[0])"
-    private_uploads_device_ids="$(mongo ${MONGO_OPTIONS} ${DEVICEDATA_DATABASE} --eval "printjson(db.deviceData.distinct(\"deviceId\", {\$or: [{_groupId: \"${private_uploads_id}\"}, {groupId: \"${private_uploads_id}\"}]}))" | jq -s -c .[0])"
+    private_uploads_no_device_id_count="$(mongo ${MONGO_OPTIONS} data --eval "db.deviceData.find({\$or: [{_groupId: \"${private_uploads_id}\"}, {groupId: \"${private_uploads_id}\"}], deviceId: {\$exists: false}}).count()")"
+    private_uploads_upload_ids="$(mongo ${MONGO_OPTIONS} data --eval "printjson(db.deviceData.distinct(\"uploadId\", {\$or: [{_groupId: \"${private_uploads_id}\"}, {groupId: \"${private_uploads_id}\"}]}))" | jq -s -c .[0])"
+    private_uploads_device_ids="$(mongo ${MONGO_OPTIONS} data --eval "printjson(db.deviceData.distinct(\"deviceId\", {\$or: [{_groupId: \"${private_uploads_id}\"}, {groupId: \"${private_uploads_id}\"}]}))" | jq -s -c .[0])"
   else
     private_uploads_no_device_id_count=0
     private_uploads_upload_ids=
@@ -151,7 +139,7 @@ report_user()
 
 report_users()
 {
-  users="$(mongo ${MONGO_OPTIONS} ${USERS_DATABASE} --eval "db.users.find(${USER_CLAUSE}).forEach(function(f) { print(f.username + '|' + f.userid + '|' + (f.private && f.private.meta ? f.private.meta.id : '') + '|' + (f.private && f.private.meta ? f.private.meta.hash : '')); })")"
+  users="$(mongo ${MONGO_OPTIONS} user --eval "db.users.find(${USER_CLAUSE}).forEach(function(f) { print(f.username + '|' + f.userid + '|' + (f.private && f.private.meta ? f.private.meta.id : '') + '|' + (f.private && f.private.meta ? f.private.meta.hash : '')); })")"
   if [ ${#users} -gt 0 ]; then
     echo "${users}" | while read -r user; do
       report_user "${user}"

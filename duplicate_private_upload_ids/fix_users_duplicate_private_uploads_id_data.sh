@@ -17,18 +17,9 @@ fi
 case "${environment}" in
   prd|stg|dev)
     MONGO_OPTIONS="${MONGO_OPTIONS:-} --ssl --sslAllowInvalidCertificates --quiet"
-    USERS_DATABASE="user"
-    DEVICEDATA_DATABASE="data"
     ;;
-  test)
+  test|local)
     MONGO_OPTIONS="${MONGO_OPTIONS:-} --quiet"
-    USERS_DATABASE="user"
-    DEVICEDATA_DATABASE="data"
-    ;;
-  local)
-    MONGO_OPTIONS="${MONGO_OPTIONS:-} --quiet"
-    USERS_DATABASE="user"
-    DEVICEDATA_DATABASE="streams"
     ;;
   *)
     echo "ERROR: First argument must be environment: prd, stg, dev, test, local" >&2
@@ -68,7 +59,7 @@ assign_users_upload_ids()
 
   upload_id="${1}"
 
-  upload="$(mongo ${MONGO_OPTIONS} ${DEVICEDATA_DATABASE} --eval "db.deviceData.find({type: \"upload\", uploadId: \"${upload_id}\"}).forEach(function(f) { print((f._groupId ? f._groupId : f.groupId) + '|' + f.byUser); })")"
+  upload="$(mongo ${MONGO_OPTIONS} data --eval "db.deviceData.find({type: \"upload\", uploadId: \"${upload_id}\"}).forEach(function(f) { print((f._groupId ? f._groupId : f.groupId) + '|' + f.byUser); })")"
   if [ ${#upload} -lt 1 ]; then
     echo "WARN: Ignoring upload id without upload type data: ${upload_id}" >&2
     return
@@ -84,7 +75,7 @@ assign_users_upload_ids()
     return
   fi
 
-  primary_username="$(mongo ${MONGO_OPTIONS} ${USERS_DATABASE} --eval "db.users.find({userid: \"${primary_user_id}\"}).forEach(function(f) { print(f.username); })")"
+  primary_username="$(mongo ${MONGO_OPTIONS} user --eval "db.users.find({userid: \"${primary_user_id}\"}).forEach(function(f) { print(f.username); })")"
   if [ ${#primary_username} -lt 1 ]; then
     echo "WARN: Ignoring upload id where upload user id does not contain username: ${upload_id} ${primary_user_id}" >&2
     return
@@ -104,7 +95,7 @@ assign_users_upload_ids()
       echo "${directory}/assign_users_upload_ids.sh ${environment} ${primary_user_id} ${upload_id} # ${primary_username}"
     fi
   else
-    alternate_user_id="$(mongo ${MONGO_OPTIONS} ${USERS_DATABASE} --eval "db.users.find({username: \"${alternate_username}\"}).forEach(function(f) { print(f.userid); })")"
+    alternate_user_id="$(mongo ${MONGO_OPTIONS} user --eval "db.users.find({username: \"${alternate_username}\"}).forEach(function(f) { print(f.userid); })")"
     if [ ${#alternate_user_id} -lt 1 ]; then
       echo "WARN: Ignoring upload id where upload username does not contain user id: ${upload_id} ${alternate_username}" >&2
       return

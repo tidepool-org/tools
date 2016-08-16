@@ -23,15 +23,9 @@ fi
 case "${environment}" in
   prd|stg|dev)
     MONGO_OPTIONS="${MONGO_OPTIONS:-} --ssl --sslAllowInvalidCertificates --quiet"
-    DEVICEDATA_DATABASE="data"
     ;;
-  test)
+  test|local)
     MONGO_OPTIONS="${MONGO_OPTIONS:-} --quiet"
-    DEVICEDATA_DATABASE="data"
-    ;;
-  local)
-    MONGO_OPTIONS="${MONGO_OPTIONS:-} --quiet"
-    DEVICEDATA_DATABASE="streams"
     ;;
   *)
     echo "ERROR: First argument must be environment: prd, stg, dev, test, local" >&2
@@ -84,7 +78,7 @@ assign_users_upload_ids()
   fi
 
   echo "INFO: Assigning upload id '${upload_id}' to user id '${user_id}' with private uploads id '${private_uploads_id}'"
-  mongo ${MONGO_OPTIONS} ${DEVICEDATA_DATABASE} --eval "db.deviceData.update({uploadId: \"${upload_id}\"}, {\$set: {_groupId: \"${private_uploads_id}\"}}, {multi: true})"
+  mongo ${MONGO_OPTIONS} data --eval "db.deviceData.update({uploadId: \"${upload_id}\"}, {\$set: {_groupId: \"${private_uploads_id}\"}}, {multi: true})"
   if [ $? -ne 0 ]; then
     echo "ERROR: Failure to update mongo for upload_id: ${upload_id}" >&2
     return
