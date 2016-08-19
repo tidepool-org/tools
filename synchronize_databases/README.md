@@ -19,9 +19,9 @@ In order to use this updated code you will have to migrate the code and local da
 
 # Instructions
 
-1. Shutdown all locally running Tidepool services (eg. `tp_kill`).
-1. Update the code for all Tidepool services to the latest (eg. `get_current_tidepool_repos.sh`).
-1. Start MongoDB (eg. `tp_mongo()` or `mongod` in a new terminal window).
+1. Shutdown all locally running Tidepool services (eg. `tp_kill -9`).
+1. Update the code for all Tidepool services to the latest (eg. `update_current_tidepool_repos.sh`).
+1. Start MongoDB (eg. `tp_mongo` or `mongod` in a new terminal window).
 1. Backup your database (eg. `mongodump --archive=backup.20160816`).
 1. Execute the following to copy the old databases and collections to the new names:
 ```
