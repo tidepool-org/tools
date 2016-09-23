@@ -1,29 +1,33 @@
 {
   "http": {
-      "localhost:8009": [
-	  { "type": "cors",
-	    "headers": {
-		"access-control-allow-origin": "*",
-		"access-control-allow-headers": "authorization, content-type, x-tidepool-session-token",
-		"access-control-allow-methods": "GET, POST, PUT",
-		"access-control-expose-headers": "x-tidepool-session-token",
-		"access-control-max-age": 0
-	    }
-	  },
-	  { "type": "pathPrefix", "prefix": "/auth", "rule": { "type": "staticService", "hosts": [{ "protocol": "http", "host": "localhost:9107"}]}},
-	  { "type": "pathPrefix", "prefix": "/data", "rule": { "type": "staticService", "hosts": [{ "protocol": "http", "host": "localhost:9127"}]}},
-	  { "type": "pathPrefix", "prefix": "/confirm", "rule": { "type": "staticService", "hosts": [{ "protocol": "http", "host": "localhost:9157"}]}},
-	  { "type": "pathPrefix", "prefix": "/message", "rule": { "type": "staticService", "hosts": [{ "protocol": "http", "host": "localhost:9119"}]}},
-	  { "type": "pathPrefix", "prefix": "/metadata", "rule": { "type": "staticService", "hosts": [{ "protocol": "http", "host": "localhost:9120"}]}},
-	  { "type": "pathPrefix", "prefix": "/metrics", "rule": { "type": "staticService", "hosts": [{ "protocol": "http", "host": "localhost:9191"}]}},
-	  { "type": "pathPrefix", "prefix": "/query", "rule": { "type": "staticService", "hosts": [{ "protocol": "http", "host": "localhost:9130"}]}},
+    "localhost:8009": [
+  	  {
+        "type": "cors",
+  	    "headers": {
+      		"access-control-allow-origin": "*",
+      		"access-control-allow-headers": "authorization, content-type, x-tidepool-session-token",
+      		"access-control-allow-methods": "GET, POST, PUT",
+      		"access-control-expose-headers": "x-tidepool-session-token",
+      		"access-control-max-age": 0
+  	    }
+  	  },
+  	  { "type": "pathPrefix", "prefix": "/auth", "rule": { "type": "staticService", "hosts": [{ "protocol": "http", "host": "localhost:9107"}]}},
+  	  { "type": "pathPrefix", "prefix": "/data/", "rule": { "type": "staticService", "hosts": [{ "protocol": "http", "host": "localhost:9127"}]}},
+  	  { "type": "pathPrefix", "prefix": "/confirm", "rule": { "type": "staticService", "hosts": [{ "protocol": "http", "host": "localhost:9157"}]}},
+  	  { "type": "pathPrefix", "prefix": "/message", "rule": { "type": "staticService", "hosts": [{ "protocol": "http", "host": "localhost:9119"}]}},
+  	  { "type": "pathPrefix", "prefix": "/metadata", "rule": { "type": "staticService", "hosts": [{ "protocol": "http", "host": "localhost:9120"}]}},
+  	  { "type": "pathPrefix", "prefix": "/metrics", "rule": { "type": "staticService", "hosts": [{ "protocol": "http", "host": "localhost:9191"}]}},
+  	  { "type": "pathPrefix", "prefix": "/query", "rule": { "type": "staticService", "hosts": [{ "protocol": "http", "host": "localhost:9130"}]}},
       { "type": "pathPrefix", "prefix": "/upload", "rule": { "type": "staticService", "hosts": [{ "protocol": "http", "host": "localhost:9122"}]}},
-	  { "type": "pathPrefix", "stripPrefix": false, "prefix": "/access", "rule": { "type": "staticService", "hosts": [{ "protocol": "http", "host": "localhost:9123"}]}}
-      ]
+  	  { "type": "pathPrefix", "stripPrefix": false, "prefix": "/access", "rule": { "type": "staticService", "hosts": [{ "protocol": "http", "host": "localhost:9123"}]}},
+  	  { "type": "pathPrefix", "prefix": "/platform", "rule": { "type": "staticService", "hosts": [{ "protocol": "http", "host": "localhost:8077"}]}},
+  	  { "type": "pathPrefix", "prefix": "/dataservices", "rule": { "type": "staticService", "hosts": [{ "protocol": "http", "host": "localhost:8077"}]}},
+  	  { "type": "pathPrefix", "prefix": "/userservices", "rule": { "type": "staticService", "hosts": [{ "protocol": "http", "host": "localhost:8078"}]}}
+    ]
   },
   "https": {
-      "localhost:8010": [
-	  { "type": "redirect", "host": "http://localhost:8009" }
-      ]
+    "localhost:8010": [
+	    { "type": "redirect", "host": "http://localhost:8009" }
+    ]
   }
 }
