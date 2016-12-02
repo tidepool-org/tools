@@ -292,6 +292,20 @@ tp_blip() {
     echo "Blip started at http://localhost:$PORT"
 }
 
+# platform
+tp_platform() {
+    echo "Starting platform"
+    export GOPATH=/tidepool/platform
+    cd $GOPATH/src/github.com/tidepool-org/platform
+    . ./.env
+    _bin/dataservices/dataservices >> /tidepool/platform_server.log 2>&1 &
+	PIDDY=$!
+	echo "Started platform, pid ${PIDDY}"
+	export TP_PIDS="$TP_PIDS $PIDDY"
+    NAME=TP_PLATFORM
+    export $NAME=$PIDDY
+}
+
 # NOTE: If you modify this list, please also modify required_repos.txt.
 
 tp_warmup
@@ -309,3 +323,4 @@ tp_gatekeeper || return
 tp_styx || return
 tp_jellyfish || return
 tp_blip || return
+tp_platform

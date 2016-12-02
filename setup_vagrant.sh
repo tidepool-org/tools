@@ -1,5 +1,10 @@
 #!/bin/bash
 
+echo "Adding MongoDB Repository"
+apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
+apt-key adv --keyserver keyserver.ubuntu.com --recv-keys D68FA50FEA312927
+echo "deb http://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/3.2 multiverse" | tee /etc/apt/sources.list.d/mongodb-org-3.2.list
+
 echo "Perform Update"
 apt-get update
 
@@ -34,14 +39,13 @@ echo "Installing Webpack..."
 npm install -g webpack
 
 echo "Installing MongoDB..."
-apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
-echo 'deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' | tee /etc/apt/sources.list.d/mongodb.list
-apt-get install -y mongodb-org=2.6.5 mongodb-org-server=2.6.5 mongodb-org-shell=2.6.5 mongodb-org-mongos=2.6.5 mongodb-org-tools=2.6.5
+apt-get install -y mongodb-org=3.2.11 mongodb-org-server=3.2.11 mongodb-org-shell=3.2.11 mongodb-org-mongos=3.2.11 mongodb-org-tools=3.2.11
 
 echo "Installing golang..."
-wget -qO- https://storage.googleapis.com/golang/go1.4.2.linux-amd64.tar.gz | tar -C /usr/local/ -xzv
+wget -qO- https://storage.googleapis.com/golang/go1.7.1.linux-amd64.tar.gz | tar -C /usr/local/ -xzv
 # Set PATH variable for Go
 echo "export PATH=\$PATH:/usr/local/go/bin" > /etc/profile.d/golang.sh
+echo "export GOPATH=/tidepool/platform" >> /etc/profile.d/golang.sh
 
 # Reload bash profile so that go is present on PATH
 source ~/.profile
