@@ -11,14 +11,17 @@ apt-get update
 echo "Installing htop..."
 apt-get install -y htop
 
+echo "Installing zip (needed for Chrome Uploader builds)..."
+apt-get install -y zip unzip
+
 echo "Installing node.js..."
-wget -qO- http://nodejs.org/dist/v0.12.1/node-v0.12.1-linux-x64.tar.gz  | tar -C /usr/local --strip-components 1 -xzv
+wget -qO- http://nodejs.org/dist/v0.12.7/node-v0.12.7-linux-x64.tar.gz  | tar -C /usr/local --strip-components 1 -xzv
 
 echo "Installing PhantomJS..."
 # Installation of PhantomJS taken from https://gist.github.com/julionc/7476620
-apt-get install build-essential chrpath libssl-dev libxft-dev
-sudo apt-get install libfreetype6 libfreetype6-dev
-sudo apt-get install libfontconfig1 libfontconfig1-dev
+apt-get install -y build-essential chrpath libssl-dev libxft-dev
+sudo apt-get install -y libfreetype6 libfreetype6-dev
+sudo apt-get install -y libfontconfig1 libfontconfig1-dev
 
 cd ~
 export PHANTOM_JS="phantomjs-1.9.8-linux-x86_64"

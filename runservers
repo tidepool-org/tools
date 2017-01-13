@@ -81,11 +81,11 @@ tp_check() {
 
 tp_start_server() {   # expects servername, start name
     echo "Starting $1"
-    cd $1 || return
+    pushd $1 || return
     # use the first line if you want individual logs, the 2nd if you want to aggregate them.
     #node $2 2>&1 > ../$1.log &
     node $2 2>&1 >> ../server.log &
-    cd ..
+    popd
     PIDDY=$!
     echo "Started $1, pid ${PIDDY}"
     export TP_PIDS="$TP_PIDS $PIDDY"
@@ -96,7 +96,7 @@ tp_start_server() {   # expects servername, start name
 
 tp_go_server() {
     echo "Starting $1"
-    cd $1 || return
+    pushd $1 || return
     PATH=${PATH}:../tools/ ./build
     EXIT_CODE=$?
     if [ ${EXIT_CODE} == 0 ]; then
@@ -110,7 +110,7 @@ tp_go_server() {
     export $NAME=$PIDDY
 	sleep 1
     fi
-    cd ..
+    popd
 }
 
 # Everyone
@@ -232,9 +232,9 @@ tp_jellyfish() {
 
     if [ "$SKIP_BUILD" != "true" ]; then
       echo "Building Jellyfish..."
-      cd jellyfish || return
+      pushd jellyfish || return
       npm run build > /dev/null
-      cd ..
+      popd
     fi
 
     tp_start_server jellyfish app.js
@@ -283,9 +283,9 @@ tp_blip() {
 
     if [ "$SKIP_BUILD" != "true" ]; then
       echo "Building Blip..."
-      cd blip || return
+      pushd blip || return
       npm run build > /dev/null
-      cd ..
+      popd
     fi
 
     tp_start_server blip server.js
@@ -293,17 +293,28 @@ tp_blip() {
 }
 
 # platform
-tp_platform() {
-    echo "Starting platform"
+tp_platform_server() {
+    echo "Starting $1"
     export GOPATH=/tidepool/platform
-    cd $GOPATH/src/github.com/tidepool-org/platform
+    pushd $GOPATH/src/github.com/tidepool-org/platform
     . ./.env
-    _bin/dataservices/dataservices >> /tidepool/platform_server.log 2>&1 &
+    _bin/$1/$1 >> /tidepool/platform_$1_server.log 2>&1 &
 	PIDDY=$!
-	echo "Started platform, pid ${PIDDY}"
+	echo "Started $1, pid ${PIDDY}"
 	export TP_PIDS="$TP_PIDS $PIDDY"
-    NAME=TP_PLATFORM
+    NAME=TP_$1
     export $NAME=$PIDDY
+    popd
+}
+
+# dataservices
+tp_dataservices() {
+    tp_platform_server dataservices
+}
+
+# userservices
+tp_userservices() {
+    tp_platform_server userservices
 }
 
 # NOTE: If you modify this list, please also modify required_repos.txt.
@@ -323,4 +334,5 @@ tp_gatekeeper || return
 tp_styx || return
 tp_jellyfish || return
 tp_blip || return
-tp_platform
+tp_dataservices
+tp_userservices
