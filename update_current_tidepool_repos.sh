@@ -32,7 +32,19 @@ update_one_tidepool_repo()
     fi
 }
 
+update_platform()
+{
+    echo "*** platform ***"
+    export GOPATH=/tidepool/platform
+    cd $GOPATH/src/github.com/tidepool-org/platform
+    git fetch --prune --tags
+    git pull
+    . ./.env
+    make build
+}
+
 for repo in $(cat "tools/required_repos.txt"); do
     update_one_tidepool_repo $repo
 done
 
+update_platform
