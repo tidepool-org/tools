@@ -46,9 +46,9 @@ Once it's set up in a given repository, one merely has to run this to update the
 
 ## Development VM using Vagrant
 
-Courtesy of [pazaan](https://github.com/pazaan) Tidepool has a VM for quickly firing up a development environment on your local.
+Tidepool has a VM for quickly firing up a development environment on your local machine.
 
-A Vagrant configuration to create a VM and check out all of the Tidepool repositories to get you developing on [Tidepool](http://tidepool.org) as quickly as possible.
+The Vagrant configuration creates a VM and checks out all of the Tidepool repositories to get you developing on [Tidepool](http://tidepool.org) as quickly as possible.
 
 #### Prerequisites
 To use this `Vagrantfile`, you need to have [Vagrant](https://www.vagrantup.com/) installed, as well as one of the following VM providers:
@@ -58,19 +58,19 @@ To use this `Vagrantfile`, you need to have [Vagrant](https://www.vagrantup.com/
 
 #### To get started
 * Create a top level tidepool directory somewhere (eg `tidepool`)
-* Clone this repo into a subdirectory (eg `tidepool-vagrant`)
-* Open a console, and change into the cloned directory
+* Clone this repo into a subdirectory called `tools`
+* Open a console, and change into the cloned `tools` directory
 * Run `vagrant up --provider <Provider Name>`, where `<Provider Name>` is one of:
   * `virtualbox`
   * `parallels`
   * `vmware_desktop`
 
 This will download and install the Base Ubuntu 14.04 virtual machine and install the following Tidepool dependencies:
-* Node.js v12
+* Node.js v0.12.7
 * Gulp
 * Mocha
-* MongoDB 2.6.5
-* golang 1.4.2
+* MongoDB 3.2.11
+* golang 1.7.1
 * bzr
 
 Once the box has been set up, you can ssh into it using:
