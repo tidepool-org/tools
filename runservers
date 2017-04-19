@@ -166,7 +166,6 @@ tp_highwater() {
     # if you're not testing highwater, you can just turn it off with this:
     export METRICS_APIKEY=""
     export METRICS_UCSF_APIKEY=""
-    export AWS_CONFIG=""
     # if you need highwater to be working, you can comment out those lines
     # and uncomment these:
 
@@ -174,20 +173,8 @@ tp_highwater() {
     # export METRICS_APIKEY=28814957ee8160309f522a0bd0f2824de585befb
     # export METRICS_UCSF_APIKEY=28814957ee8160309f522a0bd0f2824de585befb
 
-    # if you set AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY in your local
-    # environment, this will Just Work
-    # export AWS_CONFIG="\
-    # {\
-    #     \"accessKeyId\": \"$AWS_ACCESS_KEY_ID\",
-    #     \"secretAccessKey\": \"$AWS_SECRET_ACCESS_KEY\",
-    #     \"region\": \"us-west-2\",
-    #     \"apiVersion\": \"2015-04-06\"
-    # }"
-
     # this will let you test direct to highwater at localhost:9191/noauth
     # export NOAUTH=true
-
-    export AWS_TABLE_NAME=tidepool_metrics_devel
 
     tp_start_server highwater lib/index.js
 }
