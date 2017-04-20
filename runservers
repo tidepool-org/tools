@@ -41,6 +41,7 @@
 
 
 tp_warmup() {
+    nvm use v0.12
     export TP_PIDS=
 }
 
@@ -263,6 +264,7 @@ tp_styx() {
 
 # blip
 tp_blip() {
+    nvm use v6
     export PORT=3000
     export MOCK=false
     export API_HOST="http://localhost:8009"
