@@ -44,13 +44,18 @@ get_one_tidepool_repo()
 setup_platform()
 {
     echo "*** platform ***"
-    mkdir -p platform
-    export GOPATH=${PWD}/platform
-    # Ignore the "no buildable Go source files" warning
-    go get github.com/tidepool-org/platform 2>&1 | grep -v "no buildable Go source files"
-    cd ${GOPATH}/src/github.com/tidepool-org/platform
-    . ./.env
-    make build
+    if [ -d "platform" ]; then
+        echo "Skipping platform because there is already a directory by that name."
+    else
+        mkdir -p platform
+        export GOPATH=${PWD}/platform
+        # Ignore the "no buildable Go source files" warning
+        go get github.com/tidepool-org/platform 2>&1 | grep -v "no buildable Go source files"
+        pushd ${GOPATH}/src/github.com/tidepool-org/platform
+        . ./.env
+        make build
+        popd
+    fi
 }
 
 for repo in $(cat "tools/required_repos.txt"); do
