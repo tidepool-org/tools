@@ -80,6 +80,5 @@ checkStatusThroughStyx gatekeeper access
 checkStatusThroughStyx hydrophone confirm
 checkStatusThroughStyx message_api message
 checkStatusThroughStyx tide-whisperer data
-checkStatusThroughStyx octopus query
 checkStatus jellyfish $UPLOAD_URL/status
 checkStatus blip $BLIP_URL/index.html
