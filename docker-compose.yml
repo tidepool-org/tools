@@ -1,0 +1,269 @@
+version: '3'
+
+services:
+  mongo:
+    image: mongo:3.2
+    container_name: tidepool_mongo
+    volumes:
+      - ${TP_MONGO_DATA_DIR:-mongo-data}:/data/db
+    networks:
+     - back-tier
+    # So that we can get to the database from the host
+    ports:
+      - '27017:27017'
+
+  hakken:
+    image: tidepool/hakken
+    container_name: hakken
+    build: ../hakken
+    volumes:
+      - ${TP_HAKKEN_DIR:-hakken-code}:/app
+    environment:
+      NODE_ENV: development
+    expose:
+      - '8000'
+    networks:
+      - back-tier
+
+  highwater:
+    image: tidepool/highwater
+    container_name: highwater
+    build: ../highwater
+    volumes:
+      - ${TP_HIGHWATER_DIR:-highwater-code}:/app
+    links:
+      - hakken
+    environment:
+      NODE_ENV: development
+    expose:
+      - '9191'
+    networks:
+      - back-tier
+
+  hydrophone:
+    image: tidepool/hydrophone
+    container_name: hydrophone
+    build: ../hydrophone
+    volumes:
+      - ${TP_HYDROPHONE_DIR:-hydrophone-code}:/go/src/app
+    links:
+      - mongo
+      - hakken
+      - gatekeeper
+      - seagull
+      - highwater
+      - shoreline
+    expose:
+      - '9157'
+    networks:
+      - back-tier
+
+  seagull:
+    image: tidepool/seagull
+    container_name: seagull
+    build: ../seagull
+    volumes:
+      - ${TP_SEAGULL_DIR:-seagull-code}:/app
+    environment:
+      NODE_ENV: development
+    links:
+      - hakken
+      - mongo
+    expose:
+      - '9120'
+    networks:
+      - back-tier
+
+  jellyfish:
+    image: tidepool/jellyfish
+    container_name: jellyfish
+    build: ../jellyfish
+    volumes:
+      - ${TP_JELLYFISH_DIR:-jellyfish-code}:/app
+    environment:
+      NODE_ENV: development
+    links:
+      - hakken
+      - mongo
+    expose:
+      - '9122'
+    networks:
+      - back-tier
+      - front-tier
+    ports:
+      - '9122:9122'
+
+  dataservices:
+    image: tidepool/dataservices
+    container_name: dataservices
+    build:
+      context: ../platform
+      dockerfile: Dockerfile.dataservices
+    volumes:
+      - ${TP_DATASERVICES_DIR:-dataservices-code}:/go/src/github.com/tidepool-org/platform
+    links:
+      - hakken
+      - mongo
+      - styx
+      - userservices
+    expose:
+      - '8077'
+    networks:
+      - back-tier
+      - front-tier
+    ports:
+      - '8077:8077'
+
+  userservices:
+    image: tidepool/userservices
+    container_name: userservices
+    build:
+      context: ../platform
+      dockerfile: Dockerfile.userservices
+    volumes:
+      - ${TP_USERSERVICES_DIR:-userservices-code}:/go/src/github.com/tidepool-org/platform
+    links:
+      - hakken
+      - mongo
+      - styx
+    expose:
+      - '8078'
+    networks:
+      - back-tier
+      - front-tier
+    ports:
+      - '8078:8078'
+
+  blip:
+    image: tidepool/blip
+    container_name: blip
+    build: ../blip
+    volumes:
+      - ${TP_BLIP_DIR:-blip-code}:/app
+      - ${TP_VIZ_DIR:-viz-code}:/viz
+    environment:
+      NODE_ENV: development
+      DEV_TOOLS: ${DEV_TOOLS:-true}
+    depends_on:
+      - styx
+      - shoreline
+      - seagull
+      - jellyfish
+      - gatekeeper
+    expose:
+      - '3000'
+    networks:
+      - back-tier
+      - front-tier
+    ports:
+      - '3000:3000'
+
+  message-api:
+    image: tidepool/message-api
+    container_name: message-api
+    build: ../message-api
+    volumes:
+      - ${TP_MESSAGE_API_DIR:-message-api-code}:/app
+    environment:
+      NODE_ENV: development
+    links:
+      - hakken
+      - mongo
+    expose:
+      - '9119'
+    networks:
+      - back-tier
+
+  styx:
+    image: tidepool/styx
+    container_name: styx
+    build: ../styx
+    volumes:
+      - ${TP_STYX_DIR:-styx-code}:/app
+    environment:
+      NODE_ENV: development
+    links:
+      - hakken
+      - shoreline
+      - seagull
+      - jellyfish
+      - gatekeeper
+    expose:
+      - '8009'
+      - '8010'
+    networks:
+      - back-tier
+      - front-tier
+    ports:
+      - '8009:8009'
+      - '8010:8010'
+
+  gatekeeper:
+    image: tidepool/gatekeeper
+    container_name: gatekeeper
+    build: ../gatekeeper
+    volumes:
+      - ${TP_GATEKEEPER_DIR:-gatekeeper-code}:/app
+    environment:
+      NODE_ENV: development
+    links:
+      - mongo
+      - hakken
+    expose:
+      - '9123'
+    networks:
+      - back-tier
+
+  shoreline:
+    image: tidepool/shoreline
+    container_name: shoreline
+    build: ../shoreline
+    volumes:
+      - ${TP_SHORELINE_DIR:-shoreline-code}:/go/src/app
+    links:
+      - mongo
+      - hakken
+      - highwater
+      - gatekeeper
+    expose:
+      - '9107'
+    networks:
+      - back-tier
+
+  tide-whisperer:
+    image: tidepool/tide-whisperer
+    container_name: tide-whisperer
+    build: ../tide-whisperer
+    volumes:
+      - ${TP_TIDE_WHISPERER_DIR:-tide-whisperer-code}:/go/src/app
+    links:
+      - mongo
+      - hakken
+      - gatekeeper
+      - seagull
+      - shoreline
+    expose:
+      - '9127'
+    networks:
+      - back-tier
+
+volumes:
+  mongo-data:
+  blip-code:
+  viz-code:
+  dataservices-code:
+  gatekeeper-code:
+  hakken-code:
+  highwater-code:
+  hydrophone-code:
+  jellyfish-code:
+  message-api-code:
+  seagull-code:
+  shoreline-code:
+  styx-code:
+  tide-whisperer-code:
+  userservices-code:
+
+networks:
+  front-tier:
+  back-tier:

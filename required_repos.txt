@@ -4,7 +4,6 @@ hydrophone
 highwater
 seagull
 message-api
-octopus
 tide-whisperer
 gatekeeper
 styx
