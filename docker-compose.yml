@@ -1,3 +1,7 @@
+# TODO - Need to comment out `build` blocks as a workaround to allow `docker-compose up`
+# to work until we can add cache_from when docker-compose 1.12.0 is GA (and version 3.2 is supported)
+# Is there a similar thing we can do for `volumes`?
+
 version: '3'
 
 services:
@@ -15,9 +19,8 @@ services:
   hakken:
     image: tidepool/hakken
     container_name: hakken
-    build: ../hakken
-    volumes:
-      - ${TP_HAKKEN_DIR:-hakken-code}:/app
+    # volumes:
+    #   - $TP_HAKKEN_DIR:/app
     environment:
       NODE_ENV: development
     expose:
@@ -28,9 +31,8 @@ services:
   highwater:
     image: tidepool/highwater
     container_name: highwater
-    build: ../highwater
-    volumes:
-      - ${TP_HIGHWATER_DIR:-highwater-code}:/app
+    # volumes:
+    #   - $TP_HIGHWATER_DIR:/app
     links:
       - hakken
     environment:
@@ -43,9 +45,7 @@ services:
   hydrophone:
     image: tidepool/hydrophone
     container_name: hydrophone
-    build: ../hydrophone
-    volumes:
-      - ${TP_HYDROPHONE_DIR:-hydrophone-code}:/go/src/app
+    # build: $TP_HYDROPHONE_DIR
     links:
       - mongo
       - hakken
@@ -61,9 +61,8 @@ services:
   seagull:
     image: tidepool/seagull
     container_name: seagull
-    build: ../seagull
-    volumes:
-      - ${TP_SEAGULL_DIR:-seagull-code}:/app
+    # volumes:
+    #   - $TP_SEAGULL_DIR:/app
     environment:
       NODE_ENV: development
     links:
@@ -77,9 +76,8 @@ services:
   jellyfish:
     image: tidepool/jellyfish
     container_name: jellyfish
-    build: ../jellyfish
-    volumes:
-      - ${TP_JELLYFISH_DIR:-jellyfish-code}:/app
+    # volumes:
+    #   - $TP_JELLYFISH_DIR:/app
     environment:
       NODE_ENV: development
     links:
@@ -96,11 +94,9 @@ services:
   dataservices:
     image: tidepool/dataservices
     container_name: dataservices
-    build:
-      context: ../platform
-      dockerfile: Dockerfile.dataservices
-    volumes:
-      - ${TP_DATASERVICES_DIR:-dataservices-code}:/go/src/github.com/tidepool-org/platform
+    # build:
+    #  context: $TP_PLATFORM_DIR
+    #  dockerfile: Dockerfile.dataservices
     links:
       - hakken
       - mongo
@@ -117,11 +113,9 @@ services:
   userservices:
     image: tidepool/userservices
     container_name: userservices
-    build:
-      context: ../platform
-      dockerfile: Dockerfile.userservices
-    volumes:
-      - ${TP_USERSERVICES_DIR:-userservices-code}:/go/src/github.com/tidepool-org/platform
+    # build:
+    #  context: $TP_PLATFORM_DIR
+    #  dockerfile: Dockerfile.userservices
     links:
       - hakken
       - mongo
@@ -137,10 +131,9 @@ services:
   blip:
     image: tidepool/blip
     container_name: blip
-    build: ../blip
-    volumes:
-      - ${TP_BLIP_DIR:-blip-code}:/app
-      - ${TP_VIZ_DIR:-viz-code}:/viz
+    # volumes:
+    #   - $TP_BLIP_DIR:/app
+    #   - $TP_VIZ_DIR:/viz
     environment:
       NODE_ENV: development
       DEV_TOOLS: ${DEV_TOOLS:-true}
@@ -161,9 +154,8 @@ services:
   message-api:
     image: tidepool/message-api
     container_name: message-api
-    build: ../message-api
-    volumes:
-      - ${TP_MESSAGE_API_DIR:-message-api-code}:/app
+    # volumes:
+    #   - $TP_MESSAGE_API_DIR:/app
     environment:
       NODE_ENV: development
     links:
@@ -177,9 +169,8 @@ services:
   styx:
     image: tidepool/styx
     container_name: styx
-    build: ../styx
-    volumes:
-      - ${TP_STYX_DIR:-styx-code}:/app
+    # volumes:
+    #   - $TP_STYX_DIR:/app
     environment:
       NODE_ENV: development
     links:
@@ -201,9 +192,8 @@ services:
   gatekeeper:
     image: tidepool/gatekeeper
     container_name: gatekeeper
-    build: ../gatekeeper
-    volumes:
-      - ${TP_GATEKEEPER_DIR:-gatekeeper-code}:/app
+    # volumes:
+    #   - $TP_GATEKEEPER_DIR:/app
     environment:
       NODE_ENV: development
     links:
@@ -217,9 +207,7 @@ services:
   shoreline:
     image: tidepool/shoreline
     container_name: shoreline
-    build: ../shoreline
-    volumes:
-      - ${TP_SHORELINE_DIR:-shoreline-code}:/go/src/app
+    # build: $TP_SHORELINE_DIR
     links:
       - mongo
       - hakken
@@ -233,9 +221,7 @@ services:
   tide-whisperer:
     image: tidepool/tide-whisperer
     container_name: tide-whisperer
-    build: ../tide-whisperer
-    volumes:
-      - ${TP_TIDE_WHISPERER_DIR:-tide-whisperer-code}:/go/src/app
+    # build: $TP_TIDE_WHISPERER_DIR
     links:
       - mongo
       - hakken
@@ -249,20 +235,6 @@ services:
 
 volumes:
   mongo-data:
-  blip-code:
-  viz-code:
-  dataservices-code:
-  gatekeeper-code:
-  hakken-code:
-  highwater-code:
-  hydrophone-code:
-  jellyfish-code:
-  message-api-code:
-  seagull-code:
-  shoreline-code:
-  styx-code:
-  tide-whisperer-code:
-  userservices-code:
 
 networks:
   front-tier:
