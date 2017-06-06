@@ -81,15 +81,16 @@ When you have finished using the environment, you can press `CTRL + C` to shutdo
 | `tidepool/userservices`   | Current generation authorization service            | https://github.com/tidepool-org/platform          | `TP_PLATFORM_DIR`: local directory where the `platform` repository is cloned             |
 
 #### Working with Tidepool Docker containers
-| Use command...                         | When you want to                                                                                                                                         |
-|----------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `docker-compose up`                    | start up the containers in interactive mode (shows logs). Press `CTRL + C` to exit                                                                       |
-| `docker-compose up -d`                 | start up the containers in non-interactive mode                                                                                                          |
-| `docker-compose ps`                    | show the list of running Tidepool containers                                                                                                             |
-| `docker-compose down`                  | shut down the containers, and remove the virtual networks                                                                                                |
-| `docker-compose logs`                  | shows logs for all of the containers                                                                                                                     |
+| Use command...                | When you want to                                                                                                                                |
+|-------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------|
+| `docker-compose up`           | start up the containers in interactive mode (shows logs). Press `CTRL + C` to exit                                                              |
+| `docker-compose up -d`        | start up the containers in non-interactive mode                                                                                                 |
+| `docker-compose ps`           | show the list of running Tidepool containers                                                                                                    |
+| `docker-compose down`         | shut down the containers, and remove the virtual networks                                                                                       |
+| `docker-compose logs`         | shows logs for all of the containers                                                                                                            |
 | `docker-compose logs blip`    | shows logs for just the `blip` container. Use different container names to see other logs                                                       |
 | `docker-compose logs -f styx` | shows logs for just the `styx` container, and follows the log output (similar to `tail -f`). Use different container names to follow other logs |
+| `docker-compose pull`         | download the latest versions of the Tidepool Docker containers (run `docker-compose up -d` afterwards to apply the updates)                     |
 
 #### Developing with the Docker containers
 To develop for Tidepool using the Docker containers, you should first clone the repositories that you wish to contribute to.  
