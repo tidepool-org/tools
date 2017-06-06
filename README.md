@@ -135,12 +135,12 @@ To go back to running the container with `DEV_TOOLS` set to true:
 
 [To link `viz` in the `blip` container](https://github.com/tidepool-org/viz#running-locally-with-blip):
 * In a terminal window, make sure that you're in the same directory as the `docker-compose.yml` file.
-* Set the optional Environment Variable for the `viz` repository:
-  * For example, `export TP_VIZ_DIR=$PWD/viz`
-* Edit the `docker-compose.yml`, and un-comment  the `/viz` volume from the `volumes` section for the `blip` service (you only need to do this once).
-* Link `viz` in your container by running:
-  * `docker-compose run blip yarn link /viz` (you only need to do this once)
-* Run `docker-compose up -d` to trigger the changes to the Docker container
+* Set the optional Environment Variable for both the `blip` and `viz` repositories:
+  * For example, `export TP_BLIP_DIR=$PWD/blip` and `export TP_VIZ_DIR=$PWD/viz`
+* Edit the `docker-compose.yml`, and un-comment the `/app` and `/viz` volumes from the `volumes` section for the `blip` service (you only need to do this once).
+* Link `viz` in your container by running the following (you only need to do this once):
+  * `docker-compose up -d`
+  * `docker-compose run blip /bin/sh -c "cd /viz && yarn link && cd /app && yarn link @tidepool/viz"`
 
 ## Development VM using Vagrant
 Tidepool also has a VM for quickly firing up a development environment on your local machine.
