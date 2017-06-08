@@ -6,7 +6,7 @@ A place to put tooling and scripts that help when working on Tidepool stuff.
 Contains:
 
 ## required_repos.txt
-This is just a list of the names of required repositories if you're going to run the Tidepool stack locally. It's used by the following two scripts.
+This is just a list of the names of required repositories if you're going to run the Tidepool stack locally. It's used by the following two scripts. It does not include the Go repos.
 
 ## get_current_tidepool_repos.sh
 This is a script that will clone all the required repositories into a directory structure expected by runservers and the update script. It also runs npm install and bower install appropriately. It first checks that you have several required tools installed.

@@ -1,10 +1,7 @@
 hakken
-shoreline
-hydrophone
 highwater
 seagull
 message-api
-tide-whisperer
 gatekeeper
 styx
 jellyfish

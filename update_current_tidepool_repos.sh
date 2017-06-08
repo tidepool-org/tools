@@ -32,15 +32,22 @@ update_one_tidepool_repo()
     fi
 }
 
-update_platform()
+update_go()
 {
-    echo "*** platform ***"
-    export GOPATH=${PWD}/platform
-    pushd $GOPATH/src/github.com/tidepool-org/platform
+    REPO="${1}"
+    echo "*** ${REPO} ***"
+    export GOPATH="${PWD}/${REPO}"
+    pushd "${GOPATH}/src/github.com/tidepool-org/${REPO}"
     git fetch --prune --tags
     git pull
-    . ./.env
-    make build
+    if [ -f '.env' ]; then
+        . .env
+    fi
+    if [ -f 'Makefile' ]; then
+        make build
+    elif [ -f 'build.sh' ]; then
+        ./build.sh
+    fi
     popd
 }
 
@@ -48,4 +55,7 @@ for repo in $(cat "tools/required_repos.txt"); do
     update_one_tidepool_repo $repo
 done
 
-update_platform
+update_go hydrophone
+update_go platform
+update_go shoreline
+update_go tide-whisperer

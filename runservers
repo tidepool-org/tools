@@ -96,21 +96,19 @@ tp_start_server() {   # expects servername, start name
 }
 
 tp_go_server() {
-    echo "Starting $1"
-    pushd $1 || return
-    PATH=${PATH}:../tools/ ./build
-    EXIT_CODE=$?
-    if [ ${EXIT_CODE} == 0 ]; then
+    REPO="${1}"
+    echo "Starting ${REPO}"
+    export GOPATH="${PWD}/${REPO}"
+    pushd "${GOPATH}/src/github.com/tidepool-org/${REPO}"
 	# use the first line if you want individual logs, the 2nd if you want to aggregate them.
-	#./bin/$1 > ../$1.log 2>&1 &
-	./dist/$1 >> ../server.log 2>&1  &
-	PIDDY=$!
-	echo "Started $1, pid ${PIDDY}"
-	export TP_PIDS="$TP_PIDS $PIDDY"
-    NAME=TP_${1/-/}    # remove any dashes from the name
-    export $NAME=$PIDDY
+	# ./dist/${REPO} > ../${REPO}.log 2>&1 &
+	./dist/${REPO} >> ../server.log 2>&1 &
+	PIDDY=${!}
+	echo "Started ${REPO}, pid ${PIDDY}"
+	export TP_PIDS="${TP_PIDS} ${PIDDY}"
+    NAME="TP_${REPO/-/}"    # remove any dashes from the name
+    export ${NAME}="${PIDDY}"
 	sleep 1
-    fi
     popd
 }
 

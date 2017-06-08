@@ -41,19 +41,25 @@ get_one_tidepool_repo()
     fi
 }
 
-setup_platform()
+setup_go()
 {
-    echo "*** platform ***"
-    if [ -d "platform" ]; then
-        echo "Skipping platform because there is already a directory by that name."
+    REPO="${1}"
+    echo "*** ${REPO} ***"
+    if [ -d "${REPO}" ]; then
+        echo "Skipping ${REPO} because there is already a directory by that name."
     else
-        mkdir -p platform
-        export GOPATH=${PWD}/platform
-        # Ignore the "no buildable Go source files" warning
-        go get github.com/tidepool-org/platform 2>&1 | grep -v "no buildable Go source files"
-        pushd ${GOPATH}/src/github.com/tidepool-org/platform
-        . ./.env
-        make build
+        mkdir -p "${REPO}"
+        export GOPATH="${PWD}/${REPO}"
+        go get "github.com/tidepool-org/${REPO}" 2>&1 | grep -v 'no buildable Go source files'
+        pushd "${GOPATH}/src/github.com/tidepool-org/${REPO}"
+        if [ -f '.env' ]; then
+            . .env
+        fi
+        if [ -f 'Makefile' ]; then
+            make build
+        elif [ -f 'build.sh' ]; then
+            ./build.sh
+        fi
         popd
     fi
 }
@@ -62,4 +68,7 @@ for repo in $(cat "tools/required_repos.txt"); do
     get_one_tidepool_repo $repo
 done
 
-setup_platform
+setup_go hydrophone
+setup_go platform
+setup_go shoreline
+setup_go tide-whisperer
