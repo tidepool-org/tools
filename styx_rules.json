@@ -20,7 +20,6 @@
   	  { "type": "pathPrefix", "prefix": "/query", "rule": { "type": "staticService", "hosts": [{ "protocol": "http", "host": "localhost:9130"}]}},
       { "type": "pathPrefix", "prefix": "/upload", "rule": { "type": "staticService", "hosts": [{ "protocol": "http", "host": "localhost:9122"}]}},
   	  { "type": "pathPrefix", "stripPrefix": false, "prefix": "/access", "rule": { "type": "staticService", "hosts": [{ "protocol": "http", "host": "localhost:9123"}]}},
-  	  { "type": "pathPrefix", "prefix": "/platform", "rule": { "type": "staticService", "hosts": [{ "protocol": "http", "host": "localhost:8077"}]}},
   	  { "type": "pathPrefix", "prefix": "/dataservices", "rule": { "type": "staticService", "hosts": [{ "protocol": "http", "host": "localhost:8077"}]}},
   	  { "type": "pathPrefix", "prefix": "/userservices", "rule": { "type": "staticService", "hosts": [{ "protocol": "http", "host": "localhost:8078"}]}}
     ]
