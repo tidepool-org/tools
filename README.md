@@ -176,18 +176,18 @@ Before using this tool, you need to set the TP_BASE_DIR environment variable to 
 i.e. `export TP_BASE_DIR="/Users/MY_USER/tidepool"`
 
 After that, usage is as follows:
-| Use command...                | When you want to                                                                                                                                |
-|-------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------|
-| `tidepool up`           | start and/or (re)build the tidepool stack |
-| `tidepool down`        | shut down the tidepool stack |
-| `tidepool restart [service]`           | restart the entire tidepool stack or the specified service |
-| `tidepool logs [service]`         | tail logs for the entire tidepool stack or the specified service |
-| `tidepool run service [...commands]`         | run arbitrary shell commands against a service |
-| `tidepool link service dir [name]`    | yarn link a mounted package and restart the service (package name must be provided if different that the mounted directory) |
-| `tidepool unlink service dir [name]` | yarn unlink a mounted package, reinstall the remote package, and restart the service (package name must be provided if different that the mounted directory) |
-| `tidepool list`         | list running services in the tidepool stack |
-| `tidepool [blip|viz|tideline] [command]`         | shortcut to run yarn commands against the specified service |
-| `tidepool help`         | show more detailed usage text than what's listed here |
+| Use command...                           | When you want to                                                                                                                                             |
+|------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `tidepool up`                            | start and/or (re)build the tidepool stack                                                                                                                    |
+| `tidepool down`                          | shut down the tidepool stack                                                                                                                                 |
+| `tidepool restart [service]`             | restart the entire tidepool stack or the specified service                                                                                                   |
+| `tidepool logs [service]`                | tail logs for the entire tidepool stack or the specified service                                                                                             |
+| `tidepool run service [...cmds]`         | run arbitrary shell commands against a service                                                                                                               |
+| `tidepool link service dir [name]`       | yarn link a mounted package and restart the service (package name must be provided if different that the mounted directory)                                  |
+| `tidepool unlink service dir [name]`     | yarn unlink a mounted package, reinstall the remote package, and restart the service (package name must be provided if different that the mounted directory) |
+| `tidepool list`                          | list running services in the tidepool stack                                                                                                                  |
+| `tidepool [blip|viz|tideline] [...cmds]` | shortcut to run yarn commands against the specified service                                                                                                  |
+| `tidepool help`                          | show more detailed usage text than what's listed here                                                                                                        |
 
 ## Development VM using Vagrant
 Tidepool also has a VM for quickly firing up a development environment on your local machine.

@@ -21,7 +21,7 @@ Usage: tidepool command [service] [...additional args]
     restart [service]               restart the entire tidepool stack or the specified service
     logs [service]                  tail logs for the entire tidepool stack or the specified service
 
-    run service [...commands]       run arbitrary shell commands against a service
+    run service [...cmds]          run arbitrary shell commands against a service
                                       example: 'tidepool run blip yarn install'
 
     link service dir [name]         yarn link a mounted package and restart the service
@@ -38,7 +38,7 @@ Usage: tidepool command [service] [...additional args]
 
     list                            list running services in the tidepool stack
 
-    [blip|viz|tideline] [command]   shortcut to run yarn commands against the specified service
+    [blip|viz|tideline] [...cmds]   shortcut to run yarn commands against the specified service
                                     NOTE: tideline is an optional volume mount within the blip service
                                       example: 'tidepool tideline install'
                                       example: 'tidepool viz run stories'
