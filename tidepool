@@ -1,0 +1,67 @@
+#!/bin/bash
+
+if [ -z "$TP_BASE_DIR" ]; then
+  cat <<EOF
+=====================================================================
+You need to set the TP_BASE_DIR environment variable to the location
+of your docker-compose.yml file for the tidepool stack
+
+EOF
+  exit 1
+fi
+
+usage() {
+  cat <<EOF
+=======================================================
+Usage: tidepool command [service] [...additional args]
+
+  commands:
+    up                            starts and/or (re)builds the tidepool stack
+    down                          shuts down the tidepool stack
+    restart [service]             shuts down the entire tidepool stack or the specified service
+    logs [service]                tails logs for the entire tidepool stack or the specified service
+
+    run service [...commands]     run arbitrary shell commands against a service
+                                    example: 'tidepool run blip yarn install'
+
+    link service dir [name]       npm links a mounted package and restarts the service
+                                  NOTE: the name must be provided if it doesn't match the mounted directory
+                                    example: 'tidepool link blip viz "@tidepool/viz"'
+                                      - will link the package mounted at /viz and link the
+                                        "@tidepool/viz" package in blip
+
+    unlink service dir [name]     npm unlinks a mounted package, reinstalls the remote package,
+                                  and restarts the service
+                                    example: 'tidepool unlink blip tideline'
+                                      - will link the package mounted at /tideline and unlink
+                                        the "tideline" package in blip
+
+    list                          lists running services in the tidepool stack
+
+    [blip|viz|tideline]           shortcut to run yarn commands against these services
+                                  NOTE: tideline is an optional volume mount within the blip service
+                                    example: 'tidepool tideline install'
+                                    example: 'tidepool viz run stories'
+
+    help                          show this help text
+
+EOF
+}
+
+restart() { (cd $TP_BASE_DIR && docker-compose stop $1 && exec docker-compose start $1); }
+
+run() { args=${@:2} && (cd $TP_BASE_DIR && exec docker-compose run $1 /bin/sh -c "${args}") }
+
+case $1 in
+  up) (cd $TP_BASE_DIR && exec docker-compose $1 -d);;
+  down) (cd $TP_BASE_DIR && exec docker-compose $1);;
+  restart) restart $2;;
+  logs) (cd $TP_BASE_DIR && exec docker-compose $1 --tail=2000 -f $2);;
+  run) run $2 ${@:3};;
+  link) (cd $TP_BASE_DIR && exec docker-compose exec $2 /bin/sh -c "cd /${3} && yarn link && cd /app && yarn link ${4:-$3}") && restart $2;;
+  unlink) (cd $TP_BASE_DIR && exec docker-compose exec $2 /bin/sh -c "yarn unlink ${4:-$3}; cd /${3} && yarn unlink; cd /app && yarn install --force") && restart $2;;
+  list) (cd $TP_BASE_DIR && exec docker-compose ps);;
+  blip|viz) run $1 "yarn ${@:2}";;
+  tideline) run blip "cd /${1} && yarn ${@:2}";;
+  *|help) usage;;
+esac
