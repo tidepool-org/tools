@@ -16,34 +16,34 @@ usage() {
 Usage: tidepool command [service] [...additional args]
 
   commands:
-    up                            starts and/or (re)builds the tidepool stack
-    down                          shuts down the tidepool stack
-    restart [service]             shuts down the entire tidepool stack or the specified service
-    logs [service]                tails logs for the entire tidepool stack or the specified service
+    up                              start and/or (re)build the tidepool stack
+    down                            shut down the tidepool stack
+    restart [service]               restart the entire tidepool stack or the specified service
+    logs [service]                  tail logs for the entire tidepool stack or the specified service
 
-    run service [...commands]     run arbitrary shell commands against a service
-                                    example: 'tidepool run blip yarn install'
+    run service [...commands]       run arbitrary shell commands against a service
+                                      example: 'tidepool run blip yarn install'
 
-    link service dir [name]       npm links a mounted package and restarts the service
-                                  NOTE: the name must be provided if it doesn't match the mounted directory
-                                    example: 'tidepool link blip viz "@tidepool/viz"'
-                                      - will link the package mounted at /viz and link the
-                                        "@tidepool/viz" package in blip
+    link service dir [name]         yarn link a mounted package and restart the service
+                                    NOTE: the name must be provided if it doesn't match the mounted directory
+                                      example: 'tidepool link blip viz "@tidepool/viz"'
+                                        - will link the package mounted at /viz and link the
+                                          "@tidepool/viz" package in blip
 
-    unlink service dir [name]     npm unlinks a mounted package, reinstalls the remote package,
-                                  and restarts the service
-                                    example: 'tidepool unlink blip tideline'
-                                      - will link the package mounted at /tideline and unlink
-                                        the "tideline" package in blip
+    unlink service dir [name]       yarn unlink a mounted package, reinstall the remote package,
+                                    and restart the service
+                                      example: 'tidepool unlink blip tideline'
+                                        - will link the package mounted at /tideline and unlink
+                                          the "tideline" package in blip
 
-    list                          lists running services in the tidepool stack
+    list                            list running services in the tidepool stack
 
-    [blip|viz|tideline]           shortcut to run yarn commands against these services
-                                  NOTE: tideline is an optional volume mount within the blip service
-                                    example: 'tidepool tideline install'
-                                    example: 'tidepool viz run stories'
+    [blip|viz|tideline] [command]   shortcut to run yarn commands against the specified service
+                                    NOTE: tideline is an optional volume mount within the blip service
+                                      example: 'tidepool tideline install'
+                                      example: 'tidepool viz run stories'
 
-    help                          show this help text
+    help                            show this help text
 
 EOF
 }
