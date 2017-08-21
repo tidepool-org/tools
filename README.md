@@ -168,7 +168,7 @@ This is especially useful in providing shortcuts for a few common development sc
 
 This script will only work in a Linux or MacOS environment (though Windows users may be able to get it working in [GitBash](https://git-for-windows.github.io/) or the new [Bash integration in Windows 10](https://msdn.microsoft.com/en-us/commandline/wsl/install_guide))
 
-While you can run the script in this directory via `./tidepool`, it's recommended that you copy it over to a location where it will be found in your `$PATH`, such as your `usr/local/bin` directory.
+While you can run the script in this directory via `./tidepool`, it's recommended that you copy it over to a location where it will be found in your `$PATH`, such as your `/usr/local/bin` directory.
 
 In that case, you can run it from any location in your filesystem, which is very convenient.
 

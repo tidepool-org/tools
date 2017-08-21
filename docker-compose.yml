@@ -135,8 +135,6 @@ services:
   #     - $TP_VIZ_DIR:/app:cached
   #   environment:
   #     NODE_ENV: development
-  #   expose:
-  #     - '8081'
   #   ports:
   #     - '8081:8081'
 
@@ -156,8 +154,6 @@ services:
       - seagull
       - jellyfish
       - gatekeeper
-    expose:
-      - '3000'
     networks:
       - back-tier
       - front-tier
