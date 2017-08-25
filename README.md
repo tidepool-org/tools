@@ -45,7 +45,7 @@ was fast to implement and does the job of making it so that it's easier to keep 
 Once it's set up in a given repository, one merely has to run this to update the docs.
 
 ## Docker development environment
-Tidepool has a [Docker](https://www.docker.com/what-docker) environment that lets you quickly spin up a whole Tidepool environment to test and see how it works.  
+Tidepool has a [Docker](https://www.docker.com/what-docker) environment that lets you quickly spin up a whole Tidepool environment to test and see how it works.
 If you're developing, you can then optionally clone the git projects you want to work with, and attach your local git workspace to the relevant container.
 
 #### Prerequisites
@@ -58,8 +58,8 @@ To get started, [download Docker CE for your operating system](https://www.docke
 * Open a console, and change into the directory where the `docker-compose.yml` is located
 * Run `docker-compose up`
 
-`docker-compose` will download and run all of the Tidepool microservices.  
-Once the services are running, you can navigate to http://localhost:3000 to start interacting with the Tidepool Web App.  
+`docker-compose` will download and run all of the Tidepool microservices.
+Once the services are running, you can navigate to http://localhost:3000 to start interacting with the Tidepool Web App.
 When you have finished using the environment, you can press `CTRL + C` to shutdown the Docker containers.
 
 #### List of Tidepool Docker containers
@@ -67,6 +67,7 @@ When you have finished using the environment, you can press `CTRL + C` to shutdo
 |---------------------------|-----------------------------------------------------|---------------------------------------------------|------------------------------------------------------------------------------------------|
 | `mongo`                   | MongoDB for data storage                            | Instance of the standard MongoDB Docker container | `TP_MONGO_DATA_DIR`: local directory to store MongoDB data files                         |
 | `tidepool/blip`           | The Tidepool Web App                                | https://github.com/tidepool-org/blip              | `TP_BLIP_DIR`: local directory where the `blip` repository is cloned                     |
+| `tidepool/viz` (optional) | The Tidepool Viz App                                | https://github.com/tidepool-org/viz               | `TP_VIZ_DIR`: local directory where the `viz` repository is cloned                     |
 | `tidepool/dataservices`   | Current generation upload service                   | https://github.com/tidepool-org/platform          | `TP_PLATFORM_DIR`: local directory where the `platform` repository is cloned             |
 | `tidepool/gatekeeper`     | Authorization client and server for tidepool        | https://github.com/tidepool-org/gatekeeper        | `TP_GATEKEEPER_DIR`: local directory where the `gatekeeper` repository is cloned         |
 | `tidepool/hakken`         | Discovery service                                   | https://github.com/tidepool-org/hakken            | `TP_HAKKEN_DIR`: local directory where the `hakken` repository is cloned                 |
@@ -93,9 +94,9 @@ When you have finished using the environment, you can press `CTRL + C` to shutdo
 | `docker-compose pull`         | download the latest versions of the Tidepool Docker containers (run `docker-compose up -d` afterwards to apply the updates)                     |
 
 #### Developing with the Docker containers
-To develop for Tidepool using the Docker containers, you should first clone the repositories that you wish to contribute to.  
-Developing for golang-based services is different for developing for Node-based services.  
-There are 5 go-based services in Tidepool: `hydrophone`, `shoreline`, `tide-whisperer`, `dataservices` and `userservices` (the last 2 are part of the `platform` repository).  
+To develop for Tidepool using the Docker containers, you should first clone the repositories that you wish to contribute to.
+Developing for golang-based services is different for developing for Node-based services.
+There are 5 go-based services in Tidepool: `hydrophone`, `shoreline`, `tide-whisperer`, `dataservices` and `userservices` (the last 2 are part of the `platform` repository).
 
 ##### Golang-based containers
 To prepare your repository clone for development:
@@ -121,7 +122,7 @@ To prepare your repository clone for development:
 * Run `docker-compose up -d` to trigger the changes to the Docker container
 
 Every time you change Node code locally, the `npm start` running inside the container should notice the change and rebuild the code.
-You can validate that this is working by running the following (from the same directory that the `docker-compose.yml` file is in):  
+You can validate that this is working by running the following (from the same directory that the `docker-compose.yml` file is in):
 * `docker-compose logs -f styx`
 
 ##### The `blip` container
@@ -138,9 +139,55 @@ To go back to running the container with `DEV_TOOLS` set to true:
 * Set the optional Environment Variable for both the `blip` and `viz` repositories:
   * For example, `export TP_BLIP_DIR=$PWD/blip` and `export TP_VIZ_DIR=$PWD/viz`
 * Edit the `docker-compose.yml`, and un-comment the `/app` and `/viz` volumes from the `volumes` section for the `blip` service (you only need to do this once).
+* Edit the `docker-compose.yml`, and un-comment the `viz` service definition (you only need to do this once). This will ensure that you always have a running `viz` service, which is required for the webpack builds in `blip`
 * Link `viz` in your container by running the following (you only need to do this once):
   * `docker-compose up -d`
   * `docker-compose run blip /bin/sh -c "cd /viz && yarn link && cd /app && yarn link @tidepool/viz"`
+
+To link `tideline` in the `blip` container:
+* In a terminal window, make sure that you're in the same directory as the `docker-compose.yml` file.
+* Set the optional Environment Variable for both the `blip` and `tideline` repositories:
+  * For example, `export TP_BLIP_DIR=$PWD/blip` and `export TP_TIDELINE_DIR=$PWD/tideline`
+* Edit the `docker-compose.yml`, and un-comment the `/app` and `/tideline` volumes from the `volumes` section for the `blip` service (you only need to do this once).
+* Link `tideline` in your container by running the following (you only need to do this once):
+  * `docker-compose up -d`
+  * `docker-compose run blip /bin/sh -c "cd /tideline && yarn link && cd /app && yarn link tideline"`
+
+### Using the `tidepool` helper script to manage the docker stack
+Included at the root of this repo is a bash script named `tidepool`. It's intended to be a helpful cli tool to make some of the above management easier for developers who may not be very familiar with docker (and docker-compose) commands and concepts, or, who are familiar with them, but find them a bit verbose compared to working within their local OS.
+
+This is especially useful in providing shortcuts for a few common development scenarios:
+- link and unlink supporting packages in `blip`, such as `viz` and `tideline`
+  - `tidepool link blip viz @tidepool/viz`
+  - `tidepool link blip tideline`
+  - `tidepool unlink blip viz`
+- run npm (yarn) scripts in a service
+  - `tidepool blip install`
+  - `tidepool tideline run test-watch`
+  - `tidepool viz run stories`
+
+This script will only work in a Linux or MacOS environment (though Windows users may be able to get it working in [GitBash](https://git-for-windows.github.io/) or the new [Bash integration in Windows 10](https://msdn.microsoft.com/en-us/commandline/wsl/install_guide))
+
+While you can run the script in this directory via `./tidepool`, it's recommended that you copy it over to a location where it will be found in your `$PATH`, such as your `/usr/local/bin` directory.
+
+In that case, you can run it from any location in your filesystem, which is very convenient.
+
+Before using this tool, you need to set the TP_BASE_DIR environment variable to the location of your docker-compose.yml file for the tidepool stack.
+i.e. `export TP_BASE_DIR="/Users/MY_USER/tidepool"`
+
+After that, usage is as follows:
+| Use command...                           | When you want to                                                                                                                                             |
+|------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `tidepool up`                            | start and/or (re)build the tidepool stack                                                                                                                    |
+| `tidepool down`                          | shut down the tidepool stack                                                                                                                                 |
+| `tidepool restart [service]`             | restart the entire tidepool stack or the specified service                                                                                                   |
+| `tidepool logs [service]`                | tail logs for the entire tidepool stack or the specified service                                                                                             |
+| `tidepool run service [...cmds]`         | run arbitrary shell commands against a service                                                                                                               |
+| `tidepool link service dir [name]`       | yarn link a mounted package and restart the service (package name must be provided if different that the mounted directory)                                  |
+| `tidepool unlink service dir [name]`     | yarn unlink a mounted package, reinstall the remote package, and restart the service (package name must be provided if different that the mounted directory) |
+| `tidepool list`                          | list running services in the tidepool stack                                                                                                                  |
+| `tidepool [blip|viz|tideline] [...cmds]` | shortcut to run yarn commands against the specified service                                                                                                  |
+| `tidepool help`                          | show more detailed usage text than what's listed here                                                                                                        |
 
 ## Development VM using Vagrant
 Tidepool also has a VM for quickly firing up a development environment on your local machine.

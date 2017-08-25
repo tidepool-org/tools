@@ -128,12 +128,23 @@ services:
     ports:
       - '8078:8078'
 
+  # viz:
+  #   image: viz
+  #   container_name: viz
+  #   volumes:
+  #     - $TP_VIZ_DIR:/app:cached
+  #   environment:
+  #     NODE_ENV: development
+  #   ports:
+  #     - '8081:8081'
+
   blip:
     image: tidepool/blip
     container_name: blip
     # volumes:
-    #   - $TP_BLIP_DIR:/app
-    #   - $TP_VIZ_DIR:/viz
+    #   - $TP_BLIP_DIR:/app:cached
+    #   - $TP_VIZ_DIR:/viz:cached
+    #   - $TP_TIDELINE_DIR:/tideline:cached
     environment:
       NODE_ENV: development
       DEV_TOOLS: ${DEV_TOOLS:-true}
@@ -143,8 +154,6 @@ services:
       - seagull
       - jellyfish
       - gatekeeper
-    expose:
-      - '3000'
     networks:
       - back-tier
       - front-tier
