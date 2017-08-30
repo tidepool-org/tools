@@ -1,4 +1,5 @@
 #!/bin/bash
+shopt -s extglob
 
 if [ -z "$TP_BASE_DIR" ]; then
   cat <<EOF
@@ -10,38 +11,48 @@ EOF
   exit 1
 fi
 
+NODE_SERVICES='@(blip|viz|hakken|gatekeeper|highwater|jellyfish|message-api|seagull|styx)'
+BLIP_MOUNTED_NODE_SERVICES='@(tideline|tidepool-platform-client)'
+
 usage() {
   cat <<EOF
 =======================================================
 Usage: tidepool command [service] [...additional args]
 
   commands:
-    up                              start and/or (re)build the tidepool stack
-    down                            shut down the tidepool stack
+    up [service]                    start and/or (re)build the entire tidepool stack or the specified service
+    down [service]                  shut down the entire tidepool stack or the specified service
     restart [service]               restart the entire tidepool stack or the specified service
     logs [service]                  tail logs for the entire tidepool stack or the specified service
 
     run service [...cmds]          run arbitrary shell commands against a service
-                                      example: 'tidepool run blip yarn install'
+                                      example: 'tidepool run blip sh' (to enter the container's shell)
 
-    link service dir [name]         yarn link a mounted package and restart the service
-                                    NOTE: the name must be provided if it doesn't match the mounted directory
-                                      example: 'tidepool link blip viz "@tidepool/viz"'
-                                        - will link the package mounted at /viz and link the
-                                          "@tidepool/viz" package in blip
+    link service dir                yarn link a mounted package and restart the service
+                                    NOTE: the package must be mounted into a root directory that matches it's name
+                                      example: 'tidepool link blip @tidepool/viz'
+                                        - will link the package mounted at /@tidepool/viz and link the
+                                          "@tidepool/viz" package in blip.
 
-    unlink service dir [name]       yarn unlink a mounted package, reinstall the remote package,
-                                    and restart the service
+    unlink service dir              yarn unlink a mounted package, reinstall the remote package, and restart
+                                    NOTE: the package must be mounted into a root directory that matches it's name
                                       example: 'tidepool unlink blip tideline'
                                         - will link the package mounted at /tideline and unlink
                                           the "tideline" package in blip
 
     list                            list running services in the tidepool stack
 
-    [blip|viz|tideline] [...cmds]   shortcut to run yarn commands against the specified service
-                                    NOTE: tideline is an optional volume mount within the blip service
+    [node_service] [...cmds]        shortcut to run yarn commands against the specified nodeJS-based service
+                                    frontend node services are one of: [blip|viz|tideline|tidepool-platform-client]
+                                    NOTE: tideline and tidepool-platform-client are optional volume mounts
+                                    within the blip service
                                       example: 'tidepool tideline install'
+                                        ('install' is default yarn command, so it can be skipped here)
                                       example: 'tidepool viz run stories'
+                                        ('run' is implied in yarn scrips, so 'tidepool viz stories' works too)
+                                      example: 'tidepool tidepool-platform-client run test'
+                                    backend node services are one of:
+                                    [hakken|gatekeeper|highwater|jellyfish|message-api|seagull|styx]
 
     help                            show this help text
 
@@ -50,18 +61,18 @@ EOF
 
 restart() { (cd $TP_BASE_DIR && docker-compose stop $1 && exec docker-compose start $1); }
 
-run() { args=${@:2} && (cd $TP_BASE_DIR && exec docker-compose run $1 /bin/sh -c "${args}") }
+run() { args=${@:2} && (cd $TP_BASE_DIR && exec docker-compose exec $1 /bin/sh -c "${args}") }
 
 case $1 in
-  up) (cd $TP_BASE_DIR && exec docker-compose $1 -d);;
-  down) (cd $TP_BASE_DIR && exec docker-compose $1);;
+  up) (cd $TP_BASE_DIR && exec docker-compose up -d $2);;
+  down) (cd $TP_BASE_DIR && exec docker-compose down $2);;
   restart) restart $2;;
-  logs) (cd $TP_BASE_DIR && exec docker-compose $1 --tail=2000 -f $2);;
+  logs) (cd $TP_BASE_DIR && exec docker-compose logs --tail=2000 -f $2);;
   run) run $2 ${@:3};;
   link) (cd $TP_BASE_DIR && exec docker-compose exec $2 /bin/sh -c "cd /${3} && yarn link && cd /app && yarn link ${4:-$3}") && restart $2;;
   unlink) (cd $TP_BASE_DIR && exec docker-compose exec $2 /bin/sh -c "yarn unlink ${4:-$3}; cd /${3} && yarn unlink; cd /app && yarn install --force") && restart $2;;
   list) (cd $TP_BASE_DIR && exec docker-compose ps);;
-  blip|viz) run $1 "yarn ${@:2}";;
-  tideline) run blip "cd /${1} && yarn ${@:2}";;
+  $NODE_SERVICES) run $1 "yarn ${@:2}";;
+  $BLIP_MOUNTED_NODE_SERVICES) run blip "cd /${1} && yarn ${@:2}";;
   *|help) usage;;
 esac

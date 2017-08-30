@@ -129,7 +129,7 @@ services:
       - '8078:8078'
 
   # viz:
-  #   image: viz
+  #   image: tidepool/viz
   #   container_name: viz
   #   volumes:
   #     - $TP_VIZ_DIR:/app:cached
@@ -143,8 +143,9 @@ services:
     container_name: blip
     # volumes:
     #   - $TP_BLIP_DIR:/app:cached
-    #   - $TP_VIZ_DIR:/viz:cached
+    #   - $TP_VIZ_DIR:/@tidepool/viz:cached
     #   - $TP_TIDELINE_DIR:/tideline:cached
+    #   - $TP_TIDEPOOL_PLATFORM_CLIENT_DIR:/tidepool-platform-client:cached
     environment:
       NODE_ENV: development
       DEV_TOOLS: ${DEV_TOOLS:-true}
