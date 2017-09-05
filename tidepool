@@ -23,6 +23,7 @@ Usage: tidepool command [service] [...additional args]
     up [service]                    start and/or (re)build the entire tidepool stack or the specified service
     down [service]                  shut down the entire tidepool stack or the specified service
     restart [service]               restart the entire tidepool stack or the specified service
+    pull [service]                  pull the latest images for the entire tidepool stack or the specified service
     logs [service]                  tail logs for the entire tidepool stack or the specified service
 
     run service [...cmds]          run arbitrary shell commands against a service
@@ -67,6 +68,7 @@ case $1 in
   up) (cd $TP_BASE_DIR && exec docker-compose up -d $2);;
   down) (cd $TP_BASE_DIR && exec docker-compose down $2);;
   restart) restart $2;;
+  pull) (cd $TP_BASE_DIR && exec docker-compose pull $2);;
   logs) (cd $TP_BASE_DIR && exec docker-compose logs --tail=2000 -f $2);;
   run) run $2 ${@:3};;
   link) (cd $TP_BASE_DIR && exec docker-compose exec $2 /bin/sh -c "cd /${3} && yarn link && cd /app && yarn link ${4:-$3}") && restart $2;;
