@@ -46,6 +46,9 @@ services:
     image: tidepool/hydrophone
     container_name: hydrophone
     # build: $TP_HYDROPHONE_DIR
+    # volumes:
+    #   - $TP_HYDROPHONE_DIR:/go/src/github.com/tidepool-org/hydrophone
+    #   - hydrophone-config:/go/src/github.com/tidepool-org/hydrophone/config
     links:
       - mongo
       - hakken
@@ -245,6 +248,7 @@ services:
 
 volumes:
   mongo-data:
+  hydrophone-config:
 
 networks:
   front-tier:
