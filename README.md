@@ -103,11 +103,11 @@ To prepare your repository clone for development:
 * In a terminal window, make sure that you're in the same directory as the `docker-compose.yml` file.
 * Set the optional Environment Variable for the repository you're working on.
   * If you were working on `dataservices`, you would `export TP_PLATFORM_DIR=<Full path to platform clone>`, for example `export TP_PLATFORM_DIR=$PWD/platform`
-* Edit the `docker-compose.yml`, and un-comment  the `build` and `volumes` section for the corresponding service (you only need to do this once).
+* Edit the `docker-compose.yml`, and un-comment  the `build` and `volumes` section (if present) for the corresponding service (you only need to do this once).
 
-The golang services will automatically watch for changes made to `.go` and `.c` files, and will rebuild the service automatically when they occur.
+Any golang service with a `volumes` block will automatically watch for changes made to `.go` and `.c` files, and will rebuild the service automatically when they occur.
 
-If you need to make a change to a file that's not under watch, such as a JSON config file, you will need to rebuild the image against the code you've modified locally, with:
+If you need to make a change to a file that's not under watch, such as a JSON config file, or for golang services without a volume mount, you will need to rebuild the image against the code you've modified locally, with:
 * `docker-compose build [service]`; then
 * `docker-compose up -d [service]` (you **don't** have to run `docker-compose down` first)
 
