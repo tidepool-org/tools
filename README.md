@@ -183,7 +183,7 @@ After that, usage is as follows:
 | `tidepool restart [service]`             | restart the entire tidepool stack or the specified service                                                                                                  |
 | `tidepool pull [service]`                | pull the latest images for the entire tidepool stack or the specified service                                                                               |
 | `tidepool logs [service]`                | tail logs for the entire tidepool stack or the specified service                                                                                            |
-| `tidepool build [service]`               | (re)build the image for all services in the tidepool stack or the specified service                                                                         |
+| `tidepool rebuild [service]`             | rebuild and run image for all services in the tidepool stack or the specified service                                                                       |
 | `tidepool run service [...cmds]`         | run arbitrary shell commands against a service                                                                                                              |
 | `tidepool link service dir`              | yarn link a mounted package and restart the service (package must be mounted into a root directory that matches it's name)                                  |
 | `tidepool unlink service dir`            | yarn unlink a mounted package, reinstall the remote package, and restart the service (package must be mounted into a root directory that matches it's name) |

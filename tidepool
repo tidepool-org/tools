@@ -25,7 +25,9 @@ Usage: tidepool command [service] [...additional args]
     restart [service]               restart the entire tidepool stack or the specified service
     pull [service]                  pull the latest images for the entire tidepool stack or the specified service
     logs [service]                  tail logs for the entire tidepool stack or the specified service
-    build [service]                 (re)build the image for all services in the tidepool stack or the specified service
+
+    rebuild [service]               rebuild and run image for all services in the tidepool stack
+                                    or the specified service
                                     NOTE: the service(s) must have a 'build' property in the 'docker-compose.yml'
                                     file for this to have any effect.
 
@@ -73,7 +75,7 @@ case $1 in
   restart) restart $2;;
   pull) (cd $TP_BASE_DIR && exec docker-compose pull $2);;
   logs) (cd $TP_BASE_DIR && exec docker-compose logs --tail=2000 -f $2);;
-  build) (cd $TP_BASE_DIR && exec docker-compose build $2);;
+  rebuild) (cd $TP_BASE_DIR && docker-compose build $2 && exec docker-compose up -d $2);;
   run) run $2 ${@:3};;
   link) (cd $TP_BASE_DIR && exec docker-compose exec $2 /bin/sh -c "cd /${3} && yarn link && cd /app && yarn link ${4:-$3}") && restart $2;;
   unlink) (cd $TP_BASE_DIR && exec docker-compose exec $2 /bin/sh -c "yarn unlink ${4:-$3}; cd /${3} && yarn unlink; cd /app && yarn install --force") && restart $2;;
