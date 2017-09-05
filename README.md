@@ -178,6 +178,7 @@ Before using this tool, you need to set the TP_BASE_DIR environment variable to 
 i.e. `export TP_BASE_DIR="/Users/MY_USER/tidepool"`
 
 After that, usage is as follows:
+
 | Use command...                           | When you want to                                                                                                                                            |
 |------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `tidepool up`                            | start and/or (re)build the tidepool stack                                                                                                                   |
@@ -187,8 +188,8 @@ After that, usage is as follows:
 | `tidepool logs [service]`                | tail logs for the entire tidepool stack or the specified service                                                                                            |
 | `tidepool rebuild [service]`             | rebuild and run image for all services in the tidepool stack or the specified service                                                                       |
 | `tidepool run service [...cmds]`         | run arbitrary shell commands against a service                                                                                                              |
-| `tidepool link service dir`              | yarn link a mounted package and restart the service (package must be mounted into a root directory that matches it's name)                                  |
-| `tidepool unlink service dir`            | yarn unlink a mounted package, reinstall the remote package, and restart the service (package must be mounted into a root directory that matches it's name) |
+| `tidepool link service package`          | yarn link a mounted package and restart the service (package must be mounted into a root directory that matches it's name)                                  |
+| `tidepool unlink service package`        | yarn unlink a mounted package, reinstall the remote package, and restart the service (package must be mounted into a root directory that matches it's name) |
 | `tidepool list`                          | list running services in the tidepool stack                                                                                                                 |
 | `tidepool [node_service] [...cmds]`      | shortcut to run yarn commands against the specified service                                                                                                 |
 | `tidepool help`                          | show more detailed usage text than what's listed here                                                                                                       |
