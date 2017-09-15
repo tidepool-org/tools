@@ -77,8 +77,8 @@ case $1 in
   logs) (cd $TP_BASE_DIR && exec docker-compose logs --tail=2000 -f $2);;
   rebuild) (cd $TP_BASE_DIR && docker-compose build $2 && exec docker-compose up -d $2);;
   run) run $2 ${@:3};;
-  link) (cd $TP_BASE_DIR && exec docker-compose exec $2 /bin/sh -c "cd /${3} && yarn link && cd /app && yarn link ${4:-$3}") && restart $2;;
-  unlink) (cd $TP_BASE_DIR && exec docker-compose exec $2 /bin/sh -c "yarn unlink ${4:-$3}; cd /${3} && yarn unlink; cd /app && yarn install --force") && restart $2;;
+  link) (cd $TP_BASE_DIR && exec docker-compose exec $2 /bin/sh -c "cd /${3} && yarn link && cd /app && yarn link ${3}") && restart $2;;
+  unlink) (cd $TP_BASE_DIR && exec docker-compose exec $2 /bin/sh -c "yarn unlink ${3}; cd /${3} && yarn unlink; cd /app && rm -f node_modules/${3} && yarn install --force") && restart $2;;
   list) (cd $TP_BASE_DIR && exec docker-compose ps);;
   $NODE_SERVICES) run $1 "yarn ${@:2}";;
   $BLIP_MOUNTED_NODE_SERVICES) run blip "cd /${1} && yarn ${@:2}";;
