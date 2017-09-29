@@ -192,6 +192,7 @@ After that, usage is as follows:
 | `tidepool unlink service package`        | yarn unlink a mounted package, reinstall the remote package, and restart the service (package must be mounted into a root directory that matches it's name) |
 | `tidepool list`                          | list running services in the tidepool stack                                                                                                                 |
 | `tidepool [node_service] [...cmds]`      | shortcut to run yarn commands against the specified service                                                                                                 |
+| `tidepool api [...cmds]`                 | wrapper for the 'tapi' cli tool in the 'tools' service                                                                                                      |
 | `tidepool help`                          | show more detailed usage text than what's listed here                                                                                                       |
 
 ## Development VM using Vagrant

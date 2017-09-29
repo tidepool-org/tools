@@ -100,6 +100,9 @@ services:
     # build:
     #  context: $TP_PLATFORM_DIR
     #  dockerfile: Dockerfile.dataservices
+    # volumes:
+    # - $TP_PLATFORM_DIR:/go/src/github.com/tidepool-org/platform
+    # - platform-config:/go/src/github.com/tidepool-org/platform/_config
     links:
       - hakken
       - mongo
@@ -119,6 +122,9 @@ services:
     # build:
     #  context: $TP_PLATFORM_DIR
     #  dockerfile: Dockerfile.userservices
+    # volumes:
+    # - $TP_PLATFORM_DIR:/go/src/github.com/tidepool-org/platform
+    # - platform-config:/go/src/github.com/tidepool-org/platform/_config
     links:
       - hakken
       - mongo
@@ -130,6 +136,25 @@ services:
       - front-tier
     ports:
       - '8078:8078'
+
+  # tools:
+  #   image: tidepool/tools
+  #   container_name: tools
+  #   # build:
+  #   #  context: $TP_PLATFORM_DIR
+  #   #  dockerfile: Dockerfile.tools
+  #   # volumes:
+  #   # - $TP_PLATFORM_DIR:/go/src/github.com/tidepool-org/platform
+  #   # - platform-config:/go/src/github.com/tidepool-org/platform/_config
+  #   links:
+  #     - hakken
+  #     - mongo
+  #     - styx
+  #     - userservices
+  #     - dataservices
+  #   networks:
+  #     - back-tier
+  #     - front-tier
 
   # viz:
   #   image: tidepool/viz
@@ -249,6 +274,7 @@ services:
 volumes:
   mongo-data:
   hydrophone-config:
+  platform-config:
 
 networks:
   front-tier:
