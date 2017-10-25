@@ -30,8 +30,11 @@ Vagrant.configure(2) do |config|
   config.vm.network "forwarded_port", guest: 8009, host: 8009
   config.vm.network "forwarded_port", guest: 9122, host: 9122
   config.vm.network "forwarded_port", guest: 3004, host: 3004
-  config.vm.network "forwarded_port", guest: 8077, host: 8077 # dataservices
-  config.vm.network "forwarded_port", guest: 8078, host: 8078 # userservices
+  config.vm.network "forwarded_port", guest: 9220, host: 9220
+  config.vm.network "forwarded_port", guest: 9221, host: 9221
+  config.vm.network "forwarded_port", guest: 9222, host: 9222
+  config.vm.network "forwarded_port", guest: 9223, host: 9223
+  config.vm.network "forwarded_port", guest: 9224, host: 9224
 
   # Let's make the VM accessible via a static local IP too
   config.vm.network "private_network", ip: "192.168.33.100"

@@ -91,42 +91,98 @@ services:
     ports:
       - '9122:9122'
 
-  dataservices:
-    image: tidepool/dataservices
-    container_name: dataservices
+  auth:
+    image: tidepool/auth
+    container_name: auth
     # build:
     #  context: $TP_PLATFORM_DIR
-    #  dockerfile: Dockerfile.dataservices
+    #  dockerfile: Dockerfile.auth
     links:
       - hakken
       - mongo
       - styx
-      - userservices
+      - task
     expose:
-      - '8077'
+      - '9222'
     networks:
       - back-tier
       - front-tier
     ports:
-      - '8077:8077'
+      - '9222:9222'
 
-  userservices:
-    image: tidepool/userservices
-    container_name: userservices
+  data:
+    image: tidepool/data
+    container_name: data
     # build:
     #  context: $TP_PLATFORM_DIR
-    #  dockerfile: Dockerfile.userservices
+    #  dockerfile: Dockerfile.data
+    links:
+      - hakken
+      - mongo
+      - styx
+      - user
+    expose:
+      - '9220'
+    networks:
+      - back-tier
+      - front-tier
+    ports:
+      - '9220:9220'
+
+  notification:
+    image: tidepool/notification
+    container_name: notification
+    # build:
+    #  context: $TP_PLATFORM_DIR
+    #  dockerfile: Dockerfile.notification
     links:
       - hakken
       - mongo
       - styx
     expose:
-      - '8078'
+      - '9223'
     networks:
       - back-tier
       - front-tier
     ports:
-      - '8078:8078'
+      - '9223:9223'
+
+  task:
+    image: tidepool/task
+    container_name: task
+    # build:
+    #  context: $TP_PLATFORM_DIR
+    #  dockerfile: Dockerfile.task
+    links:
+      - hakken
+      - mongo
+      - styx
+      - auth
+    expose:
+      - '9224'
+    networks:
+      - back-tier
+      - front-tier
+    ports:
+      - '9224:9224'
+
+  user:
+    image: tidepool/user
+    container_name: user
+    # build:
+    #  context: $TP_PLATFORM_DIR
+    #  dockerfile: Dockerfile.user
+    links:
+      - hakken
+      - mongo
+      - styx
+    expose:
+      - '9221'
+    networks:
+      - back-tier
+      - front-tier
+    ports:
+      - '9221:9221'
 
   # viz:
   #   image: tidepool/viz

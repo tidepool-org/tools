@@ -281,7 +281,7 @@ tp_platform_server() {
     export GOPATH=${PWD}/platform
     pushd $GOPATH/src/github.com/tidepool-org/platform > /dev/null
     . ./.env
-    _bin/$1/$1 >> ${PWD}/platform_$1_server.log 2>&1 &
+    _bin/services/$1/$1 >> ${PWD}/platform_$1_server.log 2>&1 &
 	PIDDY=$!
 	echo "Started $1, pid ${PIDDY}"
 	export TP_PIDS="$TP_PIDS $PIDDY"
@@ -290,14 +290,29 @@ tp_platform_server() {
     popd > /dev/null
 }
 
-# dataservices
-tp_dataservices() {
-    tp_platform_server dataservices
+# platform_auth
+tp_platform_auth() {
+    tp_platform_server auth
 }
 
-# userservices
-tp_userservices() {
-    tp_platform_server userservices
+# platform_data
+tp_platform_data() {
+    tp_platform_server data
+}
+
+# platform_notification
+tp_platform_notification() {
+    tp_platform_server notification
+}
+
+# platform_task
+tp_platform_task() {
+    tp_platform_server task
+}
+
+# platform_user
+tp_platform_user() {
+    tp_platform_server user
 }
 
 # NOTE: If you modify this list, please also modify required_repos.txt.
@@ -313,8 +328,11 @@ tp_hydrophone || return
 tp_messageapi || return
 tp_tidewhisperer || return
 tp_gatekeeper || return
-tp_styx || return
 tp_jellyfish || return
+tp_platform_auth || return
+tp_platform_data || return
+tp_platform_notification || return
+tp_platform_task || return
+tp_platform_user || return
+tp_styx || return
 tp_blip || return
-tp_dataservices
-tp_userservices
