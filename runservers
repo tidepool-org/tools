@@ -280,7 +280,7 @@ tp_platform_server() {
     echo "Starting $1"
     export GOPATH=${PWD}/platform
     pushd $GOPATH/src/github.com/tidepool-org/platform > /dev/null
-    . ./.env
+    . ./env.sh
     _bin/services/$1/$1 >> ${PWD}/platform_$1_server.log 2>&1 &
 	PIDDY=$!
 	echo "Started $1, pid ${PIDDY}"
