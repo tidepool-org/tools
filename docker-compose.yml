@@ -101,7 +101,6 @@ services:
       - hakken
       - mongo
       - styx
-      - task
     expose:
       - '9222'
     networks:
