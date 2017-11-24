@@ -210,19 +210,30 @@ services:
   #   container_name: viz
   #   volumes:
   #     - $TP_VIZ_DIR:/app:cached
+  #     - viz-modules:/app/node_modules
+  #     - /app/dist
   #   environment:
   #     NODE_ENV: development
   #   ports:
   #     - '8081:8081'
+  #     - '8082:8082'
 
   blip:
     image: tidepool/blip
     container_name: blip
     # volumes:
-    #   - $TP_BLIP_DIR:/app:cached
-    #   - $TP_VIZ_DIR:/@tidepool/viz:cached
-    #   - $TP_TIDELINE_DIR:/tideline:cached
-    #   - $TP_TIDEPOOL_PLATFORM_CLIENT_DIR:/tidepool-platform-client:cached
+      # - $TP_BLIP_DIR:/app:cached
+      # - /app/node_modules
+      # - /app/dist
+
+      # - $TP_VIZ_DIR:/@tidepool/viz:cached
+      # - viz-modules:/@tidepool/viz/node_modules:ro
+
+      # - $TP_TIDELINE_DIR:/tideline:cached
+      # - /tideline/node_modules
+
+      # - $TP_TIDEPOOL_PLATFORM_CLIENT_DIR:/tidepool-platform-client:cached
+      # - /tidepool-platform-client/node_modules
     environment:
       NODE_ENV: development
       DEV_TOOLS: ${DEV_TOOLS:-true}
@@ -324,6 +335,7 @@ volumes:
   mongo-data:
   hydrophone-config:
   platform-config:
+  viz-modules:
 
 networks:
   front-tier:

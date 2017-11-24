@@ -67,7 +67,7 @@ When you have finished using the environment, you can press `CTRL + C` to shutdo
 |---------------------------|-----------------------------------------------------|---------------------------------------------------|------------------------------------------------------------------------------------------|
 | `mongo`                   | MongoDB for data storage                            | Instance of the standard MongoDB Docker container | `TP_MONGO_DATA_DIR`: local directory to store MongoDB data files                         |
 | `tidepool/blip`           | The Tidepool Web App                                | https://github.com/tidepool-org/blip              | `TP_BLIP_DIR`: local directory where the `blip` repository is cloned                     |
-| `tidepool/viz` (optional) | The Tidepool Viz App                                | https://github.com/tidepool-org/viz               | `TP_VIZ_DIR`: local directory where the `viz` repository is cloned                     |
+| `tidepool/viz` (optional) | The Tidepool Viz App                                | https://github.com/tidepool-org/viz               | `TP_VIZ_DIR`: local directory where the `viz` repository is cloned                       |
 | `tidepool/dataservices`   | Current generation upload service                   | https://github.com/tidepool-org/platform          | `TP_PLATFORM_DIR`: local directory where the `platform` repository is cloned             |
 | `tidepool/gatekeeper`     | Authorization client and server for tidepool        | https://github.com/tidepool-org/gatekeeper        | `TP_GATEKEEPER_DIR`: local directory where the `gatekeeper` repository is cloned         |
 | `tidepool/hakken`         | Discovery service                                   | https://github.com/tidepool-org/hakken            | `TP_HAKKEN_DIR`: local directory where the `hakken` repository is cloned                 |
@@ -87,7 +87,8 @@ When you have finished using the environment, you can press `CTRL + C` to shutdo
 | `docker-compose up`           | start up the containers in interactive mode (shows logs). Press `CTRL + C` to exit                                                              |
 | `docker-compose up -d`        | start up the containers in non-interactive mode                                                                                                 |
 | `docker-compose ps`           | show the list of running Tidepool containers                                                                                                    |
-| `docker-compose down`         | shut down the containers, and remove the virtual networks                                                                                       |
+| `docker-compose stop`         | shut down the containers                                                                                                                        |
+| `docker-compose down`         | shut down and remove the containers and volumes, and remove the virtual networks                                                                |
 | `docker-compose logs`         | shows logs for all of the containers                                                                                                            |
 | `docker-compose logs blip`    | shows logs for just the `blip` container. Use different container names to see other logs                                                       |
 | `docker-compose logs -f styx` | shows logs for just the `styx` container, and follows the log output (similar to `tail -f`). Use different container names to follow other logs |
@@ -150,7 +151,7 @@ To link `tideline` in the `blip` container:
 * In a terminal window, make sure that you're in the same directory as the `docker-compose.yml` file.
 * Set the optional Environment Variable for both the `blip` and `tideline` repositories:
   * For example, `export TP_BLIP_DIR=$PWD/blip` and `export TP_TIDELINE_DIR=$PWD/tideline`
-* Edit the `docker-compose.yml`, and un-comment the `/app` and `/tideline` volumes from the `volumes` section for the `blip` service (you only need to do this once).
+* Edit the `docker-compose.yml`, and un-comment all the volumes with mount paths beginning with `/app` and `/tideline` from the `volumes` section for the `blip` service (you only need to do this once).
 * Link `tideline` in your container by running the following (you only need to do this once):
   * `docker-compose up -d`
   * `docker-compose run blip /bin/sh -c "cd /tideline && yarn link && cd /app && yarn link tideline"`
@@ -177,23 +178,28 @@ In that case, you can run it from any location in your filesystem, which is very
 Before using this tool, you need to set the TP_BASE_DIR environment variable to the location of your docker-compose.yml file for the tidepool stack.
 i.e. `export TP_BASE_DIR="/Users/MY_USER/tidepool"`
 
-After that, usage is as follows:
+### Overriding the default docker-compose.yml file
+If you also have a docker-compose.override.yml file in your base Tidepool directory, it will be overlayed atop the main compose file, allowing you to make local changes to the stack without modifying the main docker-compose.yml file.  This will work while using the `tidepool` helper script, or the standard `docker-compose` tool.
 
-| Use command...                           | When you want to                                                                                                                                            |
-|------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `tidepool up`                            | start and/or (re)build the tidepool stack                                                                                                                   |
-| `tidepool down`                          | shut down the tidepool stack                                                                                                                                |
-| `tidepool restart [service]`             | restart the entire tidepool stack or the specified service                                                                                                  |
-| `tidepool pull [service]`                | pull the latest images for the entire tidepool stack or the specified service                                                                               |
-| `tidepool logs [service]`                | tail logs for the entire tidepool stack or the specified service                                                                                            |
-| `tidepool rebuild [service]`             | rebuild and run image for all services in the tidepool stack or the specified service                                                                       |
-| `tidepool run service [...cmds]`         | run arbitrary shell commands against a service                                                                                                              |
-| `tidepool link service package`          | yarn link a mounted package and restart the service (package must be mounted into a root directory that matches it's name)                                  |
-| `tidepool unlink service package`        | yarn unlink a mounted package, reinstall the remote package, and restart the service (package must be mounted into a root directory that matches it's name) |
-| `tidepool list`                          | list running services in the tidepool stack                                                                                                                 |
-| `tidepool [node_service] [...cmds]`      | shortcut to run yarn commands against the specified service                                                                                                 |
-| `tidepool api [...cmds]`                 | wrapper for the 'tapi' cli tool in the 'tools' service                                                                                                      |
-| `tidepool help`                          | show more detailed usage text than what's listed here                                                                                                       |
+See [Understanding multiple Compose files](https://docs.docker.com/compose/extends/#understanding-multiple-compose-files) for full details.
+
+Once you have your base Tidepool directory set up, usage of the `tidepool` script is as follows:
+
+| Use command...                      | When you want to                                                                                                                                            |
+|-------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `tidepool up`                       | start and/or (re)build the tidepool stack                                                                                                                   |
+| `tidepool down`                     | shut down the tidepool stack                                                                                                                                |
+| `tidepool restart [service]`        | restart the entire tidepool stack or the specified service                                                                                                  |
+| `tidepool pull [service]`           | pull the latest images for the entire tidepool stack or the specified service                                                                               |
+| `tidepool logs [service]`           | tail logs for the entire tidepool stack or the specified service                                                                                            |
+| `tidepool rebuild [service]`        | rebuild and run image for all services in the tidepool stack or the specified service                                                                       |
+| `tidepool run service [...cmds]`    | run arbitrary shell commands against a service                                                                                                              |
+| `tidepool link service package`     | yarn link a mounted package and restart the service (package must be mounted into a root directory that matches it's name)                                  |
+| `tidepool unlink service package`   | yarn unlink a mounted package, reinstall the remote package, and restart the service (package must be mounted into a root directory that matches it's name) |
+| `tidepool list`                     | list running services in the tidepool stack                                                                                                                 |
+| `tidepool [node_service] [...cmds]` | shortcut to run yarn commands against the specified service                                                                                                 |
+| `tidepool api [...cmds]`            | wrapper for the 'tapi' cli tool in the 'tools' service                                                                                                      |
+| `tidepool help`                     | show more detailed usage text than what's listed here                                                                                                       |
 
 ## Development VM using Vagrant
 Tidepool also has a VM for quickly firing up a development environment on your local machine.
