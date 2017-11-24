@@ -82,11 +82,11 @@ tp_check() {
 
 tp_start_server() {   # expects servername, start name
     echo "Starting $1"
-    pushd $1 || return
+    pushd $1 > /dev/null || return
     # use the first line if you want individual logs, the 2nd if you want to aggregate them.
     #node $2 2>&1 > ../$1.log &
     node $2 2>&1 >> ../server.log &
-    popd
+    popd > /dev/null
     PIDDY=$!
     echo "Started $1, pid ${PIDDY}"
     export TP_PIDS="$TP_PIDS $PIDDY"
@@ -100,7 +100,7 @@ tp_go_server() {
     echo "Starting ${REPO}"
     TP_DIR="${PWD}"
     export GOPATH="${TP_DIR}/${REPO}"
-    pushd "${GOPATH}/src/github.com/tidepool-org/${REPO}"
+    pushd "${GOPATH}/src/github.com/tidepool-org/${REPO}" > /dev/null
 	# use the first line if you want individual logs, the 2nd if you want to aggregate them.
 	# ./dist/${REPO} > ${TP_DIR}/${REPO}.log 2>&1 &
 	./dist/${REPO} >> ${TP_DIR}/server.log 2>&1 &
@@ -110,7 +110,7 @@ tp_go_server() {
     NAME="TP_${REPO/-/}"    # remove any dashes from the name
     export ${NAME}="${PIDDY}"
 	sleep 1
-    popd
+    popd > /dev/null
 }
 
 # Everyone
@@ -219,9 +219,9 @@ tp_jellyfish() {
 
     if [ "$SKIP_BUILD" != "true" ]; then
       echo "Building Jellyfish..."
-      pushd jellyfish || return
+      pushd jellyfish > /dev/null || return
       npm run build > /dev/null
-      popd
+      popd > /dev/null
     fi
 
     tp_start_server jellyfish app.js
@@ -266,9 +266,9 @@ tp_blip() {
 
     if [ "$SKIP_BUILD" != "true" ]; then
       echo "Building Blip..."
-      pushd blip || return
+      pushd blip > /dev/null || return
       npm run build > /dev/null
-      popd
+      popd > /dev/null
     fi
 
     tp_start_server blip server.js
@@ -279,25 +279,40 @@ tp_blip() {
 tp_platform_server() {
     echo "Starting $1"
     export GOPATH=${PWD}/platform
-    pushd $GOPATH/src/github.com/tidepool-org/platform
-    . ./.env
-    _bin/$1/$1 >> ${PWD}/platform_$1_server.log 2>&1 &
+    pushd $GOPATH/src/github.com/tidepool-org/platform > /dev/null
+    . ./env.sh
+    _bin/services/$1/$1 >> ${PWD}/platform_$1_server.log 2>&1 &
 	PIDDY=$!
 	echo "Started $1, pid ${PIDDY}"
 	export TP_PIDS="$TP_PIDS $PIDDY"
     NAME=TP_$1
     export $NAME=$PIDDY
-    popd
+    popd > /dev/null
 }
 
-# dataservices
-tp_dataservices() {
-    tp_platform_server dataservices
+# platform_auth
+tp_platform_auth() {
+    tp_platform_server auth
 }
 
-# userservices
-tp_userservices() {
-    tp_platform_server userservices
+# platform_data
+tp_platform_data() {
+    tp_platform_server data
+}
+
+# platform_notification
+tp_platform_notification() {
+    tp_platform_server notification
+}
+
+# platform_task
+tp_platform_task() {
+    tp_platform_server task
+}
+
+# platform_user
+tp_platform_user() {
+    tp_platform_server user
 }
 
 # NOTE: If you modify this list, please also modify required_repos.txt.
@@ -313,8 +328,11 @@ tp_hydrophone || return
 tp_messageapi || return
 tp_tidewhisperer || return
 tp_gatekeeper || return
-tp_styx || return
 tp_jellyfish || return
+tp_platform_auth || return
+tp_platform_data || return
+tp_platform_notification || return
+tp_platform_task || return
+tp_platform_user || return
+tp_styx || return
 tp_blip || return
-tp_dataservices
-tp_userservices

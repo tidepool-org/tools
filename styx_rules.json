@@ -1,33 +1,44 @@
 {
-  "http": {
-    "localhost:8009": [
-  	  {
-        "type": "cors",
-  	    "headers": {
-      		"access-control-allow-origin": "*",
-      		"access-control-allow-headers": "authorization, content-type, x-tidepool-session-token",
-      		"access-control-allow-methods": "GET, POST, PUT",
-      		"access-control-expose-headers": "x-tidepool-session-token",
-      		"access-control-max-age": 0
-  	    }
-  	  },
-  	  { "type": "pathPrefix", "prefix": "/auth", "rule": { "type": "staticService", "hosts": [{ "protocol": "http", "host": "localhost:9107"}]}},
-  	  { "type": "pathPrefix", "prefix": "/data/", "rule": { "type": "staticService", "hosts": [{ "protocol": "http", "host": "localhost:9127"}]}},
-  	  { "type": "pathPrefix", "prefix": "/confirm", "rule": { "type": "staticService", "hosts": [{ "protocol": "http", "host": "localhost:9157"}]}},
-  	  { "type": "pathPrefix", "prefix": "/message", "rule": { "type": "staticService", "hosts": [{ "protocol": "http", "host": "localhost:9119"}]}},
-  	  { "type": "pathPrefix", "prefix": "/metadata", "rule": { "type": "staticService", "hosts": [{ "protocol": "http", "host": "localhost:9120"}]}},
-  	  { "type": "pathPrefix", "prefix": "/metrics", "rule": { "type": "staticService", "hosts": [{ "protocol": "http", "host": "localhost:9191"}]}},
-  	  { "type": "pathPrefix", "prefix": "/query", "rule": { "type": "staticService", "hosts": [{ "protocol": "http", "host": "localhost:9130"}]}},
-      { "type": "pathPrefix", "prefix": "/upload", "rule": { "type": "staticService", "hosts": [{ "protocol": "http", "host": "localhost:9122"}]}},
-  	  { "type": "pathPrefix", "stripPrefix": false, "prefix": "/access", "rule": { "type": "staticService", "hosts": [{ "protocol": "http", "host": "localhost:9123"}]}},
-  	  { "type": "pathPrefix", "prefix": "/platform", "rule": { "type": "staticService", "hosts": [{ "protocol": "http", "host": "localhost:8077"}]}},
-  	  { "type": "pathPrefix", "prefix": "/dataservices", "rule": { "type": "staticService", "hosts": [{ "protocol": "http", "host": "localhost:8077"}]}},
-  	  { "type": "pathPrefix", "prefix": "/userservices", "rule": { "type": "staticService", "hosts": [{ "protocol": "http", "host": "localhost:8078"}]}}
-    ]
-  },
-  "https": {
-    "localhost:8010": [
-	    { "type": "redirect", "host": "http://localhost:8009" }
-    ]
-  }
+    "http": {
+        "localhost:8009": [
+            {
+                "type": "cors",
+                "headers": {
+                    "access-control-allow-origin": "*",
+                    "access-control-allow-headers": "authorization, content-type, x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session",
+                    "access-control-allow-methods": "GET, POST, PUT, PATCH, DELETE",
+                    "access-control-expose-headers": "x-tidepool-session-token, x-tidepool-trace-request, x-tidepool-trace-session",
+                    "access-control-max-age": 0
+                }
+            },
+            {"type": "pathPrefix", "prefix": "/access",                            "rule": {"type": "staticService", "hosts":   [{"protocol": "http", "host": "localhost:9123"}]},  "stripPrefix": false},
+            {"type": "pathPrefix", "prefix": "/auth",                              "rule": {"type": "staticService", "hosts":   [{"protocol": "http", "host": "localhost:9107"}]}},
+            {"type": "pathPrefix", "prefix": "/confirm",                           "rule": {"type": "staticService", "hosts":   [{"protocol": "http", "host": "localhost:9157"}]}},
+            {"type": "pathPrefix", "prefix": "/data/",                             "rule": {"type": "staticService", "hosts":   [{"protocol": "http", "host": "localhost:9127"}]}},
+            {"type": "pathPrefix", "prefix": "/dataservices",                      "rule": {"type": "staticService", "hosts":   [{"protocol": "http", "host": "localhost:9220"}]}},
+            {"type": "pathPrefix", "prefix": "/message",                           "rule": {"type": "staticService", "hosts":   [{"protocol": "http", "host": "localhost:9119"}]}},
+            {"type": "pathPrefix", "prefix": "/metadata",                          "rule": {"type": "staticService", "hosts":   [{"protocol": "http", "host": "localhost:9120"}]}},
+            {"type": "pathPrefix", "prefix": "/metrics",                           "rule": {"type": "staticService", "hosts":   [{"protocol": "http", "host": "localhost:9191"}]}},
+            {"type": "pathPrefix", "prefix": "/userservices",                      "rule": {"type": "staticService", "hosts":   [{"protocol": "http", "host": "localhost:9221"}]}},
+            {"type": "pathMatch",  "match":  "/v1/users/[^/]+/restricted_tokens",  "rule": {"type": "staticService", "hosts":   [{"protocol": "http", "host": "localhost:9222"}]}},
+            {"type": "pathMatch",  "match":  "/v1/users/[^/]+/provider_sessions",  "rule": {"type": "staticService", "hosts":   [{"protocol": "http", "host": "localhost:9222"}]}},
+            {"type": "pathMatch",  "match":  "/v1/users/[^/]+/data_sources",       "rule": {"type": "staticService", "hosts":   [{"protocol": "http", "host": "localhost:9220"}]}},
+            {"type": "pathMatch",  "match":  "/v1/users/[^/]+/data_sets",          "rule": {"type": "staticService", "hosts":   [{"protocol": "http", "host": "localhost:9220"}]}},
+            {"type": "pathMatch",  "match":  "/v1/users/[^/]+/datasets",           "rule": {"type": "staticService", "hosts":   [{"protocol": "http", "host": "localhost:9220"}]}},
+            {"type": "pathMatch",  "match":  "/v1/users/[^/]+/data",               "rule": {"type": "staticService", "hosts":   [{"protocol": "http", "host": "localhost:9220"}]}},
+            {"type": "pathPrefix", "prefix": "/v1/tasks",                          "rule": {"type": "staticService", "hosts":   [{"protocol": "http", "host": "localhost:9224"}]},  "stripPrefix": false},
+            {"type": "pathPrefix", "prefix": "/v1/restricted_tokens",              "rule": {"type": "staticService", "hosts":   [{"protocol": "http", "host": "localhost:9222"}]},  "stripPrefix": false},
+            {"type": "pathPrefix", "prefix": "/v1/provider_sessions",              "rule": {"type": "staticService", "hosts":   [{"protocol": "http", "host": "localhost:9222"}]},  "stripPrefix": false},
+            {"type": "pathPrefix", "prefix": "/v1/data_sources",                   "rule": {"type": "staticService", "hosts":   [{"protocol": "http", "host": "localhost:9220"}]},  "stripPrefix": false},
+            {"type": "pathPrefix", "prefix": "/v1/data_sets",                      "rule": {"type": "staticService", "hosts":   [{"protocol": "http", "host": "localhost:9220"}]},  "stripPrefix": false},
+            {"type": "pathPrefix", "prefix": "/v1/datasets",                       "rule": {"type": "staticService", "hosts":   [{"protocol": "http", "host": "localhost:9220"}]},  "stripPrefix": false},
+            {"type": "pathMatch",  "match":  "/v1/data",                           "rule": {"type": "staticService", "hosts":   [{"protocol": "http", "host": "localhost:9220"}]}},
+            {"type": "pathPrefix", "prefix": "/v1/oauth",                          "rule": {"type": "staticService", "hosts":   [{"protocol": "http", "host": "localhost:9222"}]},  "stripPrefix": false}
+        ]
+    },
+    "https": {
+        "localhost:8010": [
+            {"type": "redirect", "host": "http://localhost:8009"}
+        ]
+    }
 }
