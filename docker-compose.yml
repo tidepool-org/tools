@@ -191,7 +191,7 @@ services:
   #   container_name: viz
   #   volumes:
   #     - $TP_VIZ_DIR:/app:cached
-  #     - viz-modules:/app/node_modules
+  #     - /app/node_modules
   #     - viz-dist:/app/dist
   #   environment:
   #     NODE_ENV: development
@@ -208,7 +208,6 @@ services:
       # - /app/dist
 
       # - $TP_VIZ_DIR:/@tidepool/viz:cached
-      # - viz-modules:/@tidepool/viz/node_modules:ro
       # - viz-dist:/@tidepool/viz/dist:ro
 
       # - $TP_TIDELINE_DIR:/tideline:cached
@@ -317,7 +316,6 @@ volumes:
   mongo-data:
   hydrophone-config:
   platform-config:
-  viz-modules:
   viz-dist:
 
 networks:
