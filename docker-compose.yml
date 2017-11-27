@@ -192,7 +192,7 @@ services:
   #   volumes:
   #     - $TP_VIZ_DIR:/app:cached
   #     - viz-modules:/app/node_modules
-  #     - /app/dist
+  #     - viz-dist:/app/dist
   #   environment:
   #     NODE_ENV: development
   #   ports:
@@ -209,6 +209,7 @@ services:
 
       # - $TP_VIZ_DIR:/@tidepool/viz:cached
       # - viz-modules:/@tidepool/viz/node_modules:ro
+      # - viz-dist:/@tidepool/viz/dist:ro
 
       # - $TP_TIDELINE_DIR:/tideline:cached
       # - /tideline/node_modules
@@ -317,6 +318,7 @@ volumes:
   hydrophone-config:
   platform-config:
   viz-modules:
+  viz-dist:
 
 networks:
   front-tier:
