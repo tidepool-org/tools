@@ -61,8 +61,6 @@ USAGE: tidepool command [service] [...additional args]
                                     backend node services are one of:
                                     [hakken|gatekeeper|highwater|jellyfish|message-api|seagull|styx]
 
-    api                             wrapper for the 'tapi' cli tool in the optional 'tools' service
-
     help                            show this help text
 
 
@@ -102,6 +100,5 @@ case $1 in
   list) (cd $TP_BASE_DIR && docker-compose-override ps);;
   $NODE_SERVICES) run-exec $1 "yarn ${@:2}";;
   $BLIP_MOUNTED_NODE_SERVICES) run-exec blip "cd /${1} && yarn ${@:2}";;
-  api) run tools "./_bin/tools/tapi/tapi ${@:2}";;
   *|help) usage;;
 esac
