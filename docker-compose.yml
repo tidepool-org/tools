@@ -46,6 +46,9 @@ services:
     image: tidepool/hydrophone
     container_name: hydrophone
     # build: $TP_HYDROPHONE_DIR
+    # volumes:
+    #   - $TP_HYDROPHONE_DIR:/go/src/github.com/tidepool-org/hydrophone
+    #   - hydrophone-config:/go/src/github.com/tidepool-org/hydrophone/config
     links:
       - mongo
       - hakken
@@ -188,19 +191,30 @@ services:
   #   container_name: viz
   #   volumes:
   #     - $TP_VIZ_DIR:/app:cached
+  #     - /app/node_modules
+  #     - viz-dist:/app/dist
   #   environment:
   #     NODE_ENV: development
   #   ports:
   #     - '8081:8081'
+  #     - '8082:8082'
 
   blip:
     image: tidepool/blip
     container_name: blip
     # volumes:
-    #   - $TP_BLIP_DIR:/app:cached
-    #   - $TP_VIZ_DIR:/@tidepool/viz:cached
-    #   - $TP_TIDELINE_DIR:/tideline:cached
-    #   - $TP_TIDEPOOL_PLATFORM_CLIENT_DIR:/tidepool-platform-client:cached
+      # - $TP_BLIP_DIR:/app:cached
+      # - /app/node_modules
+      # - /app/dist
+
+      # - $TP_VIZ_DIR:/@tidepool/viz:cached
+      # - viz-dist:/@tidepool/viz/dist:ro
+
+      # - $TP_TIDELINE_DIR:/tideline:cached
+      # - /tideline/node_modules
+
+      # - $TP_TIDEPOOL_PLATFORM_CLIENT_DIR:/tidepool-platform-client:cached
+      # - /tidepool-platform-client/node_modules
     environment:
       NODE_ENV: development
       DEV_TOOLS: ${DEV_TOOLS:-true}
@@ -300,6 +314,9 @@ services:
 
 volumes:
   mongo-data:
+  hydrophone-config:
+  platform-config:
+  viz-dist:
 
 networks:
   front-tier:
