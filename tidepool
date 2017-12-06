@@ -36,7 +36,7 @@ USAGE: tidepool command [service] [...additional args]
                                       example: 'tidepool run blip sh' (to enter the container's shell)
 
     exec service [...cmds]          run arbitrary shell commands in the currently running service container
-                                      example: 'tp exec blip "ls -lR . /app/node_modules/ | grep ^l | uniq"'
+                                      example: 'tp exec blip "ls -lR /app/node_modules/ | grep ^l | uniq"'
                                                (to list all symlinked npm packages, such as after yarn linking)
 
     link service package            yarn link a mounted package and restart the service
