@@ -187,8 +187,8 @@ Once you have your base Tidepool directory set up, usage of the `tidepool` scrip
 
 | Use command...                      | When you want to                                                                                                                                            |
 |-------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `tidepool up`                       | start and/or (re)build the tidepool stack                                                                                                                   |
-| `tidepool down`                     | shut down the tidepool stack                                                                                                                                |
+| `tidepool up [service]`             | start and/or (re)build the entire tidepool stack or the specified service                                                                                   |
+| `tidepool down`                     | shut down and remove the entire tidepool stack                                                                                                              |
 | `tidepool restart [service]`        | restart the entire tidepool stack or the specified service                                                                                                  |
 | `tidepool pull [service]`           | pull the latest images for the entire tidepool stack or the specified service                                                                               |
 | `tidepool logs [service]`           | tail logs for the entire tidepool stack or the specified service                                                                                            |
