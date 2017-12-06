@@ -32,8 +32,12 @@ USAGE: tidepool command [service] [...additional args]
                                     NOTE: the service(s) must have a 'build' property in the 'docker-compose.yml'
                                     file for this to have any effect.
 
-    run service [...cmds]          run arbitrary shell commands against a service
+    run service [...cmds]           run arbitrary shell commands in a new service container
                                       example: 'tidepool run blip sh' (to enter the container's shell)
+
+    exec service [...cmds]          run arbitrary shell commands in the currently running service container
+                                      example: 'tp exec blip "ls -lR . /app/node_modules/ | grep ^l | uniq"'
+                                               (to list all symlinked npm packages, such as after yarn linking)
 
     link service package            yarn link a mounted package and restart the service
                                     NOTE: the package must be mounted into a root directory that matches it's name
@@ -95,6 +99,7 @@ case $1 in
   logs) (cd $TP_BASE_DIR && docker-compose-override logs --tail=20 -f $2);;
   rebuild) (cd $TP_BASE_DIR && docker-compose build $2 && docker-compose-override up -d $2);;
   run) run $2 ${@:3};;
+  exec) run-exec $2 ${@:3};;
   link) (cd $TP_BASE_DIR && docker-compose-override exec $2 /bin/sh -c "cd /${3} && yarn link && cd /app && yarn link ${3}") && restart $2;;
   unlink) (cd $TP_BASE_DIR && docker-compose-override exec $2 /bin/sh -c "yarn unlink ${3}; cd /${3} && yarn unlink; cd /app && rm -f node_modules/${3} && yarn install --force") && restart $2;;
   list) (cd $TP_BASE_DIR && docker-compose-override ps);;
