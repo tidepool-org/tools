@@ -193,7 +193,8 @@ Once you have your base Tidepool directory set up, usage of the `tidepool` scrip
 | `tidepool pull [service]`           | pull the latest images for the entire tidepool stack or the specified service                                                                               |
 | `tidepool logs [service]`           | tail logs for the entire tidepool stack or the specified service                                                                                            |
 | `tidepool rebuild [service]`        | rebuild and run image for all services in the tidepool stack or the specified service                                                                       |
-| `tidepool run service [...cmds]`    | run arbitrary shell commands against a service                                                                                                              |
+| `tidepool run service [...cmds]`    | run arbitrary shell commands in a new service container                                                                                                     |
+| `tidepool exec service [...cmds]`   | run arbitrary shell commands in the currently running service container                                                                                     |
 | `tidepool link service package`     | yarn link a mounted package and restart the service (package must be mounted into a root directory that matches it's name)                                  |
 | `tidepool unlink service package`   | yarn unlink a mounted package, reinstall the remote package, and restart the service (package must be mounted into a root directory that matches it's name) |
 | `tidepool list`                     | list running services in the tidepool stack                                                                                                                 |
