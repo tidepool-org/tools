@@ -21,7 +21,7 @@ USAGE: tidepool command [service] [...additional args]
 
   commands:
     up [service]                    start and/or (re)build the entire tidepool stack or the specified service
-    down [service]                  shut down and remove the entire tidepool stack or the specified service
+    down                            shut down and remove the entire tidepool stack
     stop [service]                  shut down the entire tidepool stack or the specified service
     restart [service]               restart the entire tidepool stack or the specified service
     pull [service]                  pull the latest images for the entire tidepool stack or the specified service
