@@ -29,7 +29,6 @@ if [ "${TRAVIS_BRANCH:-}" == "master" -a "${TRAVIS_PULL_REQUEST_BRANCH:-}" == ""
     docker build --tag "${DOCKER_REPO}:development" --target=development .
     docker build --tag "${DOCKER_REPO}" .
     if [ "${TRAVIS_BRANCH:-}" == "master" -a "${TRAVIS_PULL_REQUEST_BRANCH:-}" == "" ]; then
-        docker push "${DOCKER_REPO}:development"
         docker push "${DOCKER_REPO}"
     fi
     if [ -n "${TRAVIS_TAG:-}" ]; then
