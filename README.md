@@ -44,6 +44,12 @@ was fast to implement and does the job of making it so that it's easier to keep 
 
 Once it's set up in a given repository, one merely has to run this to update the docs.
 
+## Docker development environment
+
+The Docker development environment has been updated and moved to it's own repo [here](https://github.com/tidepool-org/development).
+
+If you have been using the legacy docker environment from this repo, you'll need to change over to the updated one.
+
 ## Development VM using Vagrant
 Tidepool also has a VM for quickly firing up a development environment on your local machine.
 The [Docker development environment](#docker-development-environment) is recommended for development, unless you're familiar with Vagrant and you prefer it over Docker.
