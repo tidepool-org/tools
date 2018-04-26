@@ -1,0 +1,3 @@
+tar -xzvf jellyfish.tar.gz
+cd ./jellyfish
+node app.js
