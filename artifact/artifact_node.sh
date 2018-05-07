@@ -31,17 +31,19 @@ if [ -n "${TRAVIS_TAG:-}" ]; then
     rm -rf "${TMP_DIR}/"
 fi
 
-if [ "${TRAVIS_BRANCH:-}" == "master" -a "${TRAVIS_PULL_REQUEST_BRANCH:-}" == "" -o -n "${TRAVIS_TAG:-}" ]; then
-    DOCKER_REPO="tidepool/${TRAVIS_REPO_SLUG#*/}"
+# Let's disable the docker section for now
 
-    echo "${DOCKER_PASSWORD}" | docker login --username "${DOCKER_USERNAME}" --password-stdin
-
-    docker build --tag "${DOCKER_REPO}" .
-    if [ "${TRAVIS_BRANCH:-}" == "master" -a "${TRAVIS_PULL_REQUEST_BRANCH:-}" == "" ]; then
-        docker push "${DOCKER_REPO}"
-    fi
-    if [ -n "${TRAVIS_TAG:-}" ]; then
-        docker tag "${DOCKER_REPO}" "${DOCKER_REPO}:${TRAVIS_TAG}"
-        docker push "${DOCKER_REPO}:${TRAVIS_TAG}"
-    fi
-fi
+# if [ "${TRAVIS_BRANCH:-}" == "master" -a "${TRAVIS_PULL_REQUEST_BRANCH:-}" == "" -o -n "${TRAVIS_TAG:-}" ]; then
+#     DOCKER_REPO="tidepool/${TRAVIS_REPO_SLUG#*/}"
+#
+#     echo "${DOCKER_PASSWORD}" | docker login --username "${DOCKER_USERNAME}" --password-stdin
+#
+#     docker build --tag "${DOCKER_REPO}" .
+#     if [ "${TRAVIS_BRANCH:-}" == "master" -a "${TRAVIS_PULL_REQUEST_BRANCH:-}" == "" ]; then
+#         docker push "${DOCKER_REPO}"
+#     fi
+#     if [ -n "${TRAVIS_TAG:-}" ]; then
+#         docker tag "${DOCKER_REPO}" "${DOCKER_REPO}:${TRAVIS_TAG}"
+#         docker push "${DOCKER_REPO}:${TRAVIS_TAG}"
+#     fi
+# fi
