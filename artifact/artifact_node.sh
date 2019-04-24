@@ -96,7 +96,7 @@ case $me in
 		proc=node
 		;;
 	*)
-		proc=${1:=none}
+		 proc=${1-none}
 		;;
 esac
 
