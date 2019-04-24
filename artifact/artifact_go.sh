@@ -1,7 +1,8 @@
-#!/bin/bash -eu
+#!/bin/bash -eux
 
 if [ "${TRAVIS_GO_VERSION}" != "${ARTIFACT_GO_VERSION}" ]; then
-    exit 0
+    echo "Travis GO version does not match Artifact Go Version"
+    exit 1
 fi
 
 if [ -n "${TRAVIS_TAG:-}" ]; then
@@ -21,18 +22,22 @@ if [ -n "${TRAVIS_TAG:-}" ]; then
     tar -c -z -f "${APP_DIR}/${APP_TAG}.tar.gz" -C "${APP_DIR}" "${APP_TAG}" || { echo 'ERROR: Unable to create artifact'; exit 1; }
 fi
 
-if [ "${TRAVIS_BRANCH:-}" == "master" -a "${TRAVIS_PULL_REQUEST_BRANCH:-}" == "" -o -n "${TRAVIS_TAG:-}" ]; then
+if [ -n "${DOCKER_USERNAME:-}" -a -n "${DOCKER_PASSWORD:-}"  ]; then
     DOCKER_REPO="tidepool/${TRAVIS_REPO_SLUG#*/}"
-
     echo "${DOCKER_PASSWORD}" | docker login --username "${DOCKER_USERNAME}" --password-stdin
-
-    docker build --tag "${DOCKER_REPO}:development" --target=development .
-    docker build --tag "${DOCKER_REPO}" .
+    docker build --tag ${DOCKER_REPO} .
+    
     if [ "${TRAVIS_BRANCH:-}" == "master" -a "${TRAVIS_PULL_REQUEST_BRANCH:-}" == "" ]; then
-        docker push "${DOCKER_REPO}"
+        docker push ${DOCKER_REPO}
     fi
     if [ -n "${TRAVIS_TAG:-}" ]; then
-        docker tag "${DOCKER_REPO}" "${DOCKER_REPO}:${TRAVIS_TAG}"
-        docker push "${DOCKER_REPO}:${TRAVIS_TAG}"
+        docker tag ${DOCKER_REPO} ${DOCKER_REPO}:${TRAVIS_TAG}
+        docker push ${DOCKER_REPO}:${TRAVIS_TAG}
     fi
+    if [ -n "${TRAVIS_BRANCH:-}" -a -n "${TRAVIS_COMMIT:-}" ]; then
+        docker tag ${DOCKER_REPO} ${DOCKER_REPO}:${TRAVIS_BRANCH}-${TRAVIS_COMMIT}
+        docker push ${DOCKER_REPO}:${TRAVIS_BRANCH}-${TRAVIS_COMMIT}
+    fi
+else
+    echo "Missing DOCKER_USERNAME or DOCKER_PASSWORD."
 fi
