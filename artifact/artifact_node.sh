@@ -17,7 +17,7 @@ build_go_artifact() {
         APP_DIR="${ARTIFACT_DIR}/${APP}"
         APP_TAG="${APP}-${TRAVIS_TAG}"
     
-        rm -rf "${ARTIFACT_DIR}/" || { echo 'ERROR: Unable to delete artifact directory'; exit 1; }
+        rm -rf "${ARTIFACT_DIR:?}/" || { echo 'ERROR: Unable to delete artifact directory'; exit 1; }
         mkdir -p "${APP_DIR}/" || { echo 'ERROR: Unable to create app directory'; exit 1; }
     
         ./build.sh || { echo 'ERROR: Unable to build project'; exit 1; }
@@ -51,7 +51,7 @@ build_node_artifact() {
             RSYNC_OPTIONS=''
         fi
     
-        rm -rf "${ARTIFACT_DIR}/" "${TMP_DIR}/" || { echo 'ERROR: Unable to delete artifact and tmp directories'; exit 1; }
+        rm -rf "${ARTIFACT_DIR:?}/" "${TMP_DIR:?}/" || { echo 'ERROR: Unable to delete artifact and tmp directories'; exit 1; }
         mkdir -p "${APP_DIR}/" "${TMP_DIR}/" || { echo 'ERROR: Unable to create app and tmp directories'; exit 1; }
     
         ./build.sh || { echo 'ERROR: Unable to build project'; exit 1; }
@@ -60,26 +60,26 @@ build_node_artifact() {
     
         tar -c -z -f "${APP_DIR}/${APP_TAG}.tar.gz" -C "${TMP_DIR}" "${APP_TAG}" || { echo 'ERROR: Unable to create artifact'; exit 1; }
     
-        rm -rf "${TMP_DIR}/"
+        rm -rf "${TMP_DIR:?}/"
     fi
 }
 
 publish_to_dockerhub() {
-    if [ -n "${DOCKER_USERNAME:-}" -a -n "${DOCKER_PASSWORD:-}"  ]; then
+    if [ -n "${DOCKER_USERNAME:-}" ] && [ -n "${DOCKER_PASSWORD:-}"  ]; then
         DOCKER_REPO="tidepool/${TRAVIS_REPO_SLUG#*/}"
         echo "${DOCKER_PASSWORD}" | docker login --username "${DOCKER_USERNAME}" --password-stdin
-        docker build --tag ${DOCKER_REPO} .
+        docker build --tag "${DOCKER_REPO}" .
         
-        if [ "${TRAVIS_BRANCH:-}" == "master" -a "${TRAVIS_PULL_REQUEST_BRANCH:-}" == "" ]; then
-            docker push ${DOCKER_REPO}
+        if [ "${TRAVIS_BRANCH:-}" == "master" ] && [ "${TRAVIS_PULL_REQUEST_BRANCH:-}" == "" ]; then
+            docker push "${DOCKER_REPO}"
         fi
         if [ -n "${TRAVIS_TAG:-}" ]; then
-            docker tag ${DOCKER_REPO} ${DOCKER_REPO}:${TRAVIS_TAG}
-            docker push ${DOCKER_REPO}:${TRAVIS_TAG}
+            docker tag "${DOCKER_REPO}" "${DOCKER_REPO}:${TRAVIS_TAG}"
+            docker push "${DOCKER_REPO}:${TRAVIS_TAG}"
         fi
-        if [ -n "${TRAVIS_BRANCH:-}" -a -n "${TRAVIS_COMMIT:-}" ]; then
-            docker tag ${DOCKER_REPO} ${DOCKER_REPO}:${TRAVIS_BRANCH}-${TRAVIS_COMMIT}
-            docker push ${DOCKER_REPO}:${TRAVIS_BRANCH}-${TRAVIS_COMMIT}
+        if [ -n "${TRAVIS_BRANCH:-}" ] && [ -n "${TRAVIS_COMMIT:-}" ]; then
+            docker tag "${DOCKER_REPO}" "${DOCKER_REPO}:${TRAVIS_BRANCH}-${TRAVIS_COMMIT}"
+            docker push "${DOCKER_REPO}:${TRAVIS_BRANCH}-${TRAVIS_COMMIT}"
         fi
     else
         echo "Missing DOCKER_USERNAME or DOCKER_PASSWORD."
@@ -87,8 +87,8 @@ publish_to_dockerhub() {
 }
 
 # Allow encoding of behavior in file name for backward compatibility.
-me=`basename "$0"`
-case $me in
+me=$(basename "$0")
+case "$me" in
 	artifact_go.sh)
 		proc=go
 		;;
@@ -100,7 +100,7 @@ case $me in
 		;;
 esac
 
-case $proc in 
+case "$proc" in 
 	go)
 		echo "Handling go artifact"
 		check_go_version
@@ -118,3 +118,4 @@ case $proc in
 		publish_to_dockerhub
 		;;
 esac
+
