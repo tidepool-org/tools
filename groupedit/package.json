@@ -1,7 +1,7 @@
 {
   "name": "tidepool-groupedit",
   "description": "Tool to edit groups for tidepool users",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "homepage": "https://github.com/tidepool-org/tools",
   "author": {
     "name": "Kent Quirk",
@@ -23,15 +23,15 @@
   "devDependencies": {},
   "keywords": [],
   "dependencies": {
-    "amoeba": "0.2.0",
-    "async": "0.9.0",
+    "amoeba": "0.4.1",
+    "async": "2.6.2",
     "commandline-parser": "0.4.0",
-    "crypto-js": "3.1.4",
-    "hakken": "0.1.7",
-    "lodash": "3.6.0",
-    "prompt": "0.2.14",
-    "request": "2.54.0",
-    "tidepool-gatekeeper": "0.1.7",
-    "user-api-client": "0.4.0"
+    "crypto-js": "3.1.8",
+    "hakken": "0.1.11",
+    "lodash": "4.17.11",
+    "prompt": "1.0.0",
+    "request": "2.88.0",
+    "tidepool-gatekeeper": "0.2.3",
+    "user-api-client": "0.4.1"
   }
 }
