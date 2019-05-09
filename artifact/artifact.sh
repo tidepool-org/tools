@@ -86,20 +86,6 @@ publish_to_dockerhub() {
     fi
 }
 
-# Allow encoding of behavior in file name for backward compatibility.
-me=$(basename "$0")
-case "$me" in
-	artifact_go.sh)
-		proc=go
-		;;
-	artifact_node.sh)
-		proc=node
-		;;
-	*)
-		proc=${1-none}
-		;;
-esac
-
 case "$proc" in 
 	go)
 		echo "Handling go artifact"
