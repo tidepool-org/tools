@@ -93,7 +93,7 @@ publish_to_dockerhub() {
     fi
 }
 
-case "$proc" in 
+case "$1" in 
 	go)
 		echo "Handling go artifact"
 		check_go_version
