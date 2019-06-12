@@ -78,8 +78,9 @@ publish_to_dockerhub() {
             docker push "${DOCKER_REPO}:${TRAVIS_TAG}"
         fi
         if [ -n "${TRAVIS_BRANCH:-}" ] && [ -n "${TRAVIS_COMMIT:-}" ]; then
-            docker tag "${DOCKER_REPO}" "${DOCKER_REPO}:${TRAVIS_BRANCH}-${TRAVIS_COMMIT}"
-            docker push "${DOCKER_REPO}:${TRAVIS_BRANCH}-${TRAVIS_COMMIT}"
+            BRANCH=$(echo -n ${TRAVIS_BRANCH} | tr / -)
+            docker tag "${DOCKER_REPO}" "${DOCKER_REPO}:${BRANCH}-${TRAVIS_COMMIT}"
+            docker push "${DOCKER_REPO}:${BRANCH}-${TRAVIS_COMMIT}"
         fi
     else
         echo "Missing DOCKER_USERNAME or DOCKER_PASSWORD."
@@ -96,7 +97,7 @@ case "$me" in
 		proc=node
 		;;
 	*)
-		 proc=${1-none}
+		proc=${1-none}
 		;;
 esac
 
