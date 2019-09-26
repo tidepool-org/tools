@@ -77,8 +77,13 @@ publish_to_dockerhub() {
             docker tag "${DOCKER_REPO}" "${DOCKER_REPO}:${TRAVIS_TAG}"
             docker push "${DOCKER_REPO}:${TRAVIS_TAG}"
         fi
-        if [ -n "${TRAVIS_BRANCH:-}" ] && [ -n "${TRAVIS_COMMIT:-}" ]; then
-            BRANCH=$(echo -n ${TRAVIS_BRANCH} | tr / -)
+        if [ -n "${TRAVIS_BRANCH:-}" ] && [ -n "${TRAVIS_COMMIT:-}"  ]; then
+            if [ -n "${TRAVIS_PULL_REQUEST_BRANCH}" ]
+	    then
+                BRANCH=$(echo -n ${TRAVIS_PULL_REQUEST_BRANCH} | tr / -)
+	    else
+                BRANCH=$(echo -n ${TRAVIS_BRANCH} | tr / -)
+            fi
             docker tag "${DOCKER_REPO}" "${DOCKER_REPO}:${BRANCH}-${TRAVIS_COMMIT}"
             docker push "${DOCKER_REPO}:${BRANCH}-${TRAVIS_COMMIT}"
         fi
