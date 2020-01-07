@@ -12,4 +12,4 @@ before_script:
 - node_modules/.bin/newman --version
 
 script:
-- node_modules/.bin/newman run api_test/API_smoke_test.postman_collection.json -e api_test/QA1.postman_environment.json --env-var "userEmail=USER_EMAIL" --env-var "loginPw=USER_PASSWORD"
+- node_modules/.bin/newman run api_test/API_smoke_test.postman_collection.json -e api_test/QA1.postman_environment.json --env-var "userEmail=$USER_EMAIL" --env-var "loginPw=$USER_PASSWORD"
