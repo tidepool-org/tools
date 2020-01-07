@@ -1,0 +1,405 @@
+{
+	"info": {
+		"_postman_id": "ea7e6bd0-e1ff-44a8-9496-a41f0a486eb1",
+		"name": "API_smoke_test",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "5875c19d-624c-4941-b2aa-f9dc2c263109",
+						"exec": [
+							"",
+							"let jsonData = pm.response.json();",
+							"pm.environment.set(\"userId\", jsonData.userid);",
+							"let sessionHeader = pm.response.headers.get(\"x-tidepool-session-token\");",
+							"console.log('token: '+sessionHeader);",
+							"pm.environment.set(\"sessionToken\", sessionHeader);",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"x-tidepool-session-token is present\", function () {",
+							"    pm.response.to.have.header(\"x-tidepool-session-token\");",
+							"});",
+							"",
+							"pm.test(\"the response is json and not empty\", function () {",
+							"    pm.expect(pm.response.json()).to.not.be.empty;",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "{{loginEmail}}",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "{{loginPw}}",
+							"type": "string"
+						},
+						{
+							"key": "saveHelperData",
+							"value": true,
+							"type": "boolean"
+						},
+						{
+							"key": "showPassword",
+							"value": false,
+							"type": "boolean"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{api}}/auth/login",
+					"host": [
+						"{{api}}"
+					],
+					"path": [
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "03b6dfb3-fa82-4acc-b257-233f476741b5",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "x-tidepool-session-token",
+						"value": "{{sessionToken}}"
+					}
+				],
+				"url": {
+					"raw": "{{api}}/auth/user/{{userId}}",
+					"host": [
+						"{{api}}"
+					],
+					"path": [
+						"auth",
+						"user",
+						"{{userId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "add note",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "3341c83a-bc9a-4043-8c8b-8020bf5c8639",
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"the response is json and id not empty\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.id).to.not.be.empty;",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "x-tidepool-session-token",
+						"value": "{{sessionToken}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"message\": {\n        \"guid\": \"{{$guid}}\",\n        \"userid\": \"{{userId}}\",\n        \"timestamp\": \"2019-07-15T16:43:39+12:00\",\n        \"messagetext\": \"working??\"\n    }\n}"
+				},
+				"url": {
+					"raw": "{{api}}/message/send/{{userId}}",
+					"host": [
+						"{{api}}"
+					],
+					"path": [
+						"message",
+						"send",
+						"{{userId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get notes",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "72de232c-c03c-48c1-bc41-017b8aeece31",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Returns users messages object\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.messages).to.not.be.empty;",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "x-tidepool-session-token",
+						"value": "{{sessionToken}}"
+					}
+				],
+				"url": {
+					"raw": "{{api}}/message/all/{{userId}}",
+					"host": [
+						"{{api}}"
+					],
+					"path": [
+						"message",
+						"all",
+						"{{userId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "upload device data",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "8b9cf43a-8c79-47b0-9e17-02f9fb0214ba",
+						"exec": [
+							"const uuid = require('uuid');",
+							"pm.environment.set(\"uploadDeviceDataItemId\", uuid.v4());",
+							"",
+							"const moment = require('moment');",
+							"var date = moment();",
+							"",
+							"pm.variables.set(\"uploadDeviceDataItemTime\", date.format());",
+							"pm.variables.set(\"uploadDeviceDataItemDeviceTime\", date.format('YYYY-MM-DDThh:mm:ss'));",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "d0b1561e-efe4-496b-89f7-986d2badf171",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "x-tidepool-session-token",
+						"value": "{{sessionToken}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n  {\n    \"time\": \"{{uploadDeviceDataItemTime}}\",\n    \"clockDriftOffset\": -579000,\n    \"conversionOffset\": 0,\n    \"deviceTime\": \"{{uploadDeviceDataItemDeviceTime}}\",\n    \"deviceId\": \"Device-123\",\n    \"type\": \"smbg\",\n    \"value\": 106,\n    \"units\": \"mg/dL\",\n    \"subType\": \"linked\",\n    \"payload\": {\n      \"logIndices\": [\n        1\n      ]\n    },\n    \"uploadId\": \"upid_d5f278d59e4a\",\n    \"guid\": \"{{uploadDeviceDataItemId}}\"\n  }\n]"
+				},
+				"url": {
+					"raw": "{{api}}/data/{{userId}}",
+					"host": [
+						"{{api}}"
+					],
+					"path": [
+						"data",
+						"{{userId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "device data",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "1e19b771-d4bf-4f62-815b-066a9cf2a7ff",
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"    ",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"one item is returned\", function () {",
+							"    pm.expect(jsonData.length).to.eql(1);",
+							"});",
+							"",
+							"pm.test(\"one item is with id of item that was uploaded\", function () {",
+							"    pm.expect(jsonData[0].guid).to.eql(pm.environment.get(\"uploadDeviceDataItemId\"));",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-tidepool-session-token",
+						"value": "{{sessionToken}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{api}}/data/{{userId}}?type=smbg&latest=true",
+					"host": [
+						"{{api}}"
+					],
+					"path": [
+						"data",
+						"{{userId}}"
+					],
+					"query": [
+						{
+							"key": "type",
+							"value": "smbg"
+						},
+						{
+							"key": "startDate",
+							"value": "{{dDataStartDate}}",
+							"disabled": true
+						},
+						{
+							"key": "endDate",
+							"value": "{{dDataEndDate}}",
+							"disabled": true
+						},
+						{
+							"key": "latest",
+							"value": "true"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "logout",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "05a9c738-74ab-403a-9f63-7e963c699683",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-tidepool-session-token",
+						"value": "{{sessionToken}}"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": {
+					"raw": "{{api}}/auth/logout",
+					"host": [
+						"{{api}}"
+					],
+					"path": [
+						"auth",
+						"logout"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
