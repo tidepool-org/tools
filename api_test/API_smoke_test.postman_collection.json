@@ -6,7 +6,7 @@
 	},
 	"item": [
 		{
-			"name": "login",
+			"name": "login to tidepool",
 			"event": [
 				{
 					"listen": "test",
@@ -81,7 +81,7 @@
 			"response": []
 		},
 		{
-			"name": "user",
+			"name": "get the logged in users detail",
 			"event": [
 				{
 					"listen": "test",
@@ -127,7 +127,7 @@
 			"response": []
 		},
 		{
-			"name": "add note",
+			"name": "create a note for the user",
 			"event": [
 				{
 					"listen": "test",
@@ -177,7 +177,7 @@
 			"response": []
 		},
 		{
-			"name": "get notes",
+			"name": "get all current notes for the user",
 			"event": [
 				{
 					"listen": "test",
@@ -224,7 +224,7 @@
 			"response": []
 		},
 		{
-			"name": "upload device data",
+			"name": "upload a piece of device data for the user",
 			"event": [
 				{
 					"listen": "prerequest",
@@ -236,7 +236,8 @@
 							"const moment = require('moment');",
 							"let now = moment();",
 							"pm.variables.set(\"uploadDeviceDataItemTime\", now.format());",
-							"pm.variables.set(\"uploadDeviceDataItemDeviceTime\", now.format('YYYY-MM-DDThh:mm:ss'));"
+							"pm.variables.set(\"uploadDeviceDataItemDeviceTime\", now.format('YYYY-MM-DDThh:mm:ss'));",
+							""
 						],
 						"type": "text/javascript"
 					}
@@ -284,7 +285,7 @@
 			"response": []
 		},
 		{
-			"name": "device data",
+			"name": "get the last piece of uploaded device data",
 			"event": [
 				{
 					"listen": "test",
@@ -304,7 +305,8 @@
 							"pm.test('response is json and matches expected smbg schema', function() {",
 							"    const smbgSchema = JSON.parse(pm.environment.get(\"smbgSchema\"));",
 							"    pm.expect(tv4.validate(jsonData, smbgSchema)).to.be.true;",
-							"});"
+							"});",
+							""
 						],
 						"type": "text/javascript"
 					}
@@ -366,7 +368,7 @@
 			"response": []
 		},
 		{
-			"name": "logout",
+			"name": "logout of tidepool",
 			"event": [
 				{
 					"listen": "test",
