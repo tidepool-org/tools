@@ -13,26 +13,23 @@
 					"script": {
 						"id": "5875c19d-624c-4941-b2aa-f9dc2c263109",
 						"exec": [
-							"",
 							"let jsonData = pm.response.json();",
 							"pm.environment.set(\"userId\", jsonData.userid);",
 							"let sessionHeader = pm.response.headers.get(\"x-tidepool-session-token\");",
-							"console.log('token: '+sessionHeader);",
 							"pm.environment.set(\"sessionToken\", sessionHeader);",
-							"",
 							"pm.test(\"Status code is 200\", function () {",
 							"    pm.response.to.have.status(200);",
 							"});",
-							"",
 							"pm.test(\"x-tidepool-session-token is present\", function () {",
 							"    pm.response.to.have.header(\"x-tidepool-session-token\");",
 							"});",
-							"",
 							"pm.test(\"the response is json and not empty\", function () {",
-							"    pm.expect(pm.response.json()).to.not.be.empty;",
+							"    pm.expect(jsonData).to.not.be.empty;",
 							"});",
-							"",
-							""
+							"pm.test('response is json matches expected user schema', function() {",
+							"    const userSchema = JSON.parse(pm.environment.get(\"userSchema\"));",
+							"    pm.expect(tv4.validate(jsonData, userSchema)).to.be.true;",
+							"});"
 						],
 						"type": "text/javascript"
 					}
@@ -94,8 +91,10 @@
 							"pm.test(\"Status code is 200\", function () {",
 							"    pm.response.to.have.status(200);",
 							"});",
-							"",
-							""
+							"pm.test('response is json matches expected user schema', function() {",
+							"    const userSchema = JSON.parse(pm.environment.get(\"userSchema\"));",
+							"    pm.expect(tv4.validate(pm.response.json(), userSchema)).to.be.true;",
+							"});"
 						],
 						"type": "text/javascript"
 					}
@@ -138,10 +137,9 @@
 							"pm.test(\"Status code is 201\", function () {",
 							"    pm.response.to.have.status(201);",
 							"});",
-							"",
-							"pm.test(\"the response is json and id not empty\", function () {",
-							"    var jsonData = pm.response.json();",
-							"    pm.expect(jsonData.id).to.not.be.empty;",
+							"pm.test('response is json and matches expected message added schema', function() {",
+							"    const messageAddedSchema = JSON.parse(pm.environment.get(\"messageAddedSchema\"));",
+							"    pm.expect(tv4.validate(pm.response.json(), messageAddedSchema)).to.be.true;",
 							"});"
 						],
 						"type": "text/javascript"
@@ -189,10 +187,10 @@
 							"pm.test(\"Status code is 200\", function () {",
 							"    pm.response.to.have.status(200);",
 							"});",
-							"",
-							"pm.test(\"Returns users messages object\", function () {",
+							"pm.test('response is json and matches expected messages schema', function() {",
+							"    const messagesSchema = JSON.parse(pm.environment.get(\"messagesSchema\"));",
 							"    var jsonData = pm.response.json();",
-							"    pm.expect(jsonData.messages).to.not.be.empty;",
+							"    pm.expect(tv4.validate(jsonData.messages, messagesSchema)).to.be.true;",
 							"});"
 						],
 						"type": "text/javascript"
@@ -235,13 +233,10 @@
 						"exec": [
 							"const uuid = require('uuid');",
 							"pm.environment.set(\"uploadDeviceDataItemId\", uuid.v4());",
-							"",
 							"const moment = require('moment');",
-							"var date = moment();",
-							"",
-							"pm.variables.set(\"uploadDeviceDataItemTime\", date.format());",
-							"pm.variables.set(\"uploadDeviceDataItemDeviceTime\", date.format('YYYY-MM-DDThh:mm:ss'));",
-							""
+							"let now = moment();",
+							"pm.variables.set(\"uploadDeviceDataItemTime\", now.format());",
+							"pm.variables.set(\"uploadDeviceDataItemDeviceTime\", now.format('YYYY-MM-DDThh:mm:ss'));"
 						],
 						"type": "text/javascript"
 					}
@@ -297,18 +292,29 @@
 						"id": "1e19b771-d4bf-4f62-815b-066a9cf2a7ff",
 						"exec": [
 							"var jsonData = pm.response.json();",
-							"    ",
 							"pm.test(\"Status code is 200\", function () {",
 							"    pm.response.to.have.status(200);",
 							"});",
-							"",
 							"pm.test(\"one item is returned\", function () {",
 							"    pm.expect(jsonData.length).to.eql(1);",
 							"});",
-							"",
 							"pm.test(\"one item is with id of item that was uploaded\", function () {",
 							"    pm.expect(jsonData[0].guid).to.eql(pm.environment.get(\"uploadDeviceDataItemId\"));",
+							"});",
+							"pm.test('response is json and matches expected smbg schema', function() {",
+							"    const smbgSchema = JSON.parse(pm.environment.get(\"smbgSchema\"));",
+							"    pm.expect(tv4.validate(jsonData, smbgSchema)).to.be.true;",
 							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "3433a954-3a9e-49f4-a76b-3dd76c7b493a",
+						"exec": [
+							""
 						],
 						"type": "text/javascript"
 					}
