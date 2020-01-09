@@ -6,407 +6,470 @@
 	},
 	"item": [
 		{
-			"name": "login to tidepool",
-			"event": [
+			"name": "client smoke test",
+			"item": [
 				{
-					"listen": "test",
-					"script": {
-						"id": "5875c19d-624c-4941-b2aa-f9dc2c263109",
-						"exec": [
-							"let jsonData = pm.response.json();",
-							"pm.environment.set(\"userId\", jsonData.userid);",
-							"let sessionHeader = pm.response.headers.get(\"x-tidepool-session-token\");",
-							"pm.environment.set(\"sessionToken\", sessionHeader);",
-							"pm.test(\"Status code is 200\", function () {",
-							"    pm.response.to.have.status(200);",
-							"});",
-							"pm.test(\"x-tidepool-session-token is present\", function () {",
-							"    pm.response.to.have.header(\"x-tidepool-session-token\");",
-							"});",
-							"pm.test(\"the response is json and not empty\", function () {",
-							"    pm.expect(jsonData).to.not.be.empty;",
-							"});",
-							"pm.test('response is json matches expected user schema', function() {",
-							"    const userSchema = JSON.parse(pm.environment.get(\"userSchema\"));",
-							"    pm.expect(tv4.validate(jsonData, userSchema)).to.be.true;",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"auth": {
-					"type": "basic",
-					"basic": [
+					"name": "login to tidepool",
+					"event": [
 						{
-							"key": "username",
-							"value": "{{loginEmail}}",
-							"type": "string"
-						},
-						{
-							"key": "password",
-							"value": "{{loginPw}}",
-							"type": "string"
-						},
-						{
-							"key": "saveHelperData",
-							"value": true,
-							"type": "boolean"
-						},
-						{
-							"key": "showPassword",
-							"value": false,
-							"type": "boolean"
+							"listen": "test",
+							"script": {
+								"id": "5875c19d-624c-4941-b2aa-f9dc2c263109",
+								"exec": [
+									"let jsonData = pm.response.json();",
+									"pm.environment.set(\"userId\", jsonData.userid);",
+									"let sessionHeader = pm.response.headers.get(\"x-tidepool-session-token\");",
+									"pm.environment.set(\"sessionToken\", sessionHeader);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"x-tidepool-session-token is present\", function () {",
+									"    pm.response.to.have.header(\"x-tidepool-session-token\");",
+									"});",
+									"pm.test(\"the response is json and not empty\", function () {",
+									"    pm.expect(jsonData).to.not.be.empty;",
+									"});",
+									"pm.test('response is json matches expected user schema', function() {",
+									"    const userSchema = JSON.parse(pm.globals.get(\"userSchema\"));",
+									"    pm.expect(tv4.validate(jsonData, userSchema)).to.be.true;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
 						}
-					]
-				},
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
-				"url": {
-					"raw": "{{api}}/auth/login",
-					"host": [
-						"{{api}}"
 					],
-					"path": [
-						"auth",
-						"login"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "get the logged in users detail",
-			"event": [
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "{{loginEmail}}",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "{{loginPw}}",
+									"type": "string"
+								},
+								{
+									"key": "saveHelperData",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "showPassword",
+									"value": false,
+									"type": "boolean"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{api}}/auth/login",
+							"host": [
+								"{{api}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
 				{
-					"listen": "test",
-					"script": {
-						"id": "03b6dfb3-fa82-4acc-b257-233f476741b5",
-						"exec": [
-							"pm.test(\"Status code is 200\", function () {",
-							"    pm.response.to.have.status(200);",
-							"});",
-							"pm.test('response is json matches expected user schema', function() {",
-							"    const userSchema = JSON.parse(pm.environment.get(\"userSchema\"));",
-							"    pm.expect(tv4.validate(pm.response.json(), userSchema)).to.be.true;",
-							"});"
+					"name": "get the logged in users detail",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "03b6dfb3-fa82-4acc-b257-233f476741b5",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test('response is json matches expected user schema', function() {",
+									"    const userSchema = JSON.parse(pm.globals.get(\"userSchema\"));",
+									"    pm.expect(tv4.validate(pm.response.json(), userSchema)).to.be.true;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "x-tidepool-session-token",
+								"value": "{{sessionToken}}"
+							}
 						],
-						"type": "text/javascript"
-					}
+						"url": {
+							"raw": "{{api}}/auth/user/{{userId}}",
+							"host": [
+								"{{api}}"
+							],
+							"path": [
+								"auth",
+								"user",
+								"{{userId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create a note for the user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3341c83a-bc9a-4043-8c8b-8020bf5c8639",
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"pm.test('response is json and matches expected message added schema', function() {",
+									"    const messageAddedSchema = JSON.parse(pm.globals.get(\"messageAddedSchema\"));",
+									"    pm.expect(tv4.validate(pm.response.json(), messageAddedSchema)).to.be.true;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "x-tidepool-session-token",
+								"value": "{{sessionToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"message\": {\n        \"guid\": \"{{$guid}}\",\n        \"userid\": \"{{userId}}\",\n        \"timestamp\": \"2019-07-15T16:43:39+12:00\",\n        \"messagetext\": \"working??\"\n    }\n}"
+						},
+						"url": {
+							"raw": "{{api}}/message/send/{{userId}}",
+							"host": [
+								"{{api}}"
+							],
+							"path": [
+								"message",
+								"send",
+								"{{userId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all current notes for the user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "72de232c-c03c-48c1-bc41-017b8aeece31",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test('response matches expected messages schema', function() {",
+									"    const messagesSchema = JSON.parse(pm.globals.get(\"messagesSchema\"));",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(tv4.validate(jsonData.messages, messagesSchema)).to.be.true;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "x-tidepool-session-token",
+								"value": "{{sessionToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{api}}/message/all/{{userId}}",
+							"host": [
+								"{{api}}"
+							],
+							"path": [
+								"message",
+								"all",
+								"{{userId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "upload a piece of device data for the user",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "8b9cf43a-8c79-47b0-9e17-02f9fb0214ba",
+								"exec": [
+									"const uuid = require('uuid');",
+									"pm.environment.set(\"uploadDeviceDataItemId\", uuid.v4());",
+									"const moment = require('moment');",
+									"let now = moment();",
+									"pm.variables.set(\"uploadDeviceDataItemTime\", now.format());",
+									"pm.variables.set(\"uploadDeviceDataItemDeviceTime\", now.format('YYYY-MM-DDThh:mm:ss'));",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "d0b1561e-efe4-496b-89f7-986d2badf171",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "x-tidepool-session-token",
+								"value": "{{sessionToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n  {\n    \"time\": \"{{uploadDeviceDataItemTime}}\",\n    \"clockDriftOffset\": -579000,\n    \"conversionOffset\": 0,\n    \"deviceTime\": \"{{uploadDeviceDataItemDeviceTime}}\",\n    \"deviceId\": \"Device-123\",\n    \"type\": \"smbg\",\n    \"value\": 106,\n    \"units\": \"mg/dL\",\n    \"subType\": \"linked\",\n    \"payload\": {\n      \"logIndices\": [\n        1\n      ]\n    },\n    \"uploadId\": \"upid_d5f278d59e4a\",\n    \"guid\": \"{{uploadDeviceDataItemId}}\"\n  }\n]"
+						},
+						"url": {
+							"raw": "{{api}}/data/{{userId}}",
+							"host": [
+								"{{api}}"
+							],
+							"path": [
+								"data",
+								"{{userId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get the last piece of uploaded device data",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "1e19b771-d4bf-4f62-815b-066a9cf2a7ff",
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"one item is returned\", function () {",
+									"    pm.expect(jsonData.length).to.eql(1);",
+									"});",
+									"pm.test(\"one item is with id of item that was uploaded\", function () {",
+									"    pm.expect(jsonData[0].guid).to.eql(pm.environment.get(\"uploadDeviceDataItemId\"));",
+									"});",
+									"pm.test('response is json and matches expected smbg schema', function() {",
+									"    const smbgsSchema = JSON.parse(pm.globals.get(\"smbgsSchema\"));",
+									"    pm.expect(tv4.validate(jsonData, smbgsSchema)).to.be.true;",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "3433a954-3a9e-49f4-a76b-3dd76c7b493a",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-tidepool-session-token",
+								"value": "{{sessionToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{api}}/data/{{userId}}?type=smbg&latest=true",
+							"host": [
+								"{{api}}"
+							],
+							"path": [
+								"data",
+								"{{userId}}"
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "smbg"
+								},
+								{
+									"key": "startDate",
+									"value": "{{dDataStartDate}}",
+									"disabled": true
+								},
+								{
+									"key": "endDate",
+									"value": "{{dDataEndDate}}",
+									"disabled": true
+								},
+								{
+									"key": "latest",
+									"value": "true"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "logout of tidepool",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "05a9c738-74ab-403a-9f63-7e963c699683",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-tidepool-session-token",
+								"value": "{{sessionToken}}"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{api}}/auth/logout",
+							"host": [
+								"{{api}}"
+							],
+							"path": [
+								"auth",
+								"logout"
+							]
+						}
+					},
+					"response": []
 				}
 			],
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					},
-					{
-						"key": "x-tidepool-session-token",
-						"value": "{{sessionToken}}"
-					}
-				],
-				"url": {
-					"raw": "{{api}}/auth/user/{{userId}}",
-					"host": [
-						"{{api}}"
-					],
-					"path": [
-						"auth",
-						"user",
-						"{{userId}}"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "create a note for the user",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"id": "3341c83a-bc9a-4043-8c8b-8020bf5c8639",
-						"exec": [
-							"pm.test(\"Status code is 201\", function () {",
-							"    pm.response.to.have.status(201);",
-							"});",
-							"pm.test('response is json and matches expected message added schema', function() {",
-							"    const messageAddedSchema = JSON.parse(pm.environment.get(\"messageAddedSchema\"));",
-							"    pm.expect(tv4.validate(pm.response.json(), messageAddedSchema)).to.be.true;",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					},
-					{
-						"key": "x-tidepool-session-token",
-						"value": "{{sessionToken}}"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"message\": {\n        \"guid\": \"{{$guid}}\",\n        \"userid\": \"{{userId}}\",\n        \"timestamp\": \"2019-07-15T16:43:39+12:00\",\n        \"messagetext\": \"working??\"\n    }\n}"
-				},
-				"url": {
-					"raw": "{{api}}/message/send/{{userId}}",
-					"host": [
-						"{{api}}"
-					],
-					"path": [
-						"message",
-						"send",
-						"{{userId}}"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "get all current notes for the user",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"id": "72de232c-c03c-48c1-bc41-017b8aeece31",
-						"exec": [
-							"pm.test(\"Status code is 200\", function () {",
-							"    pm.response.to.have.status(200);",
-							"});",
-							"pm.test('response is json and matches expected messages schema', function() {",
-							"    const messagesSchema = JSON.parse(pm.environment.get(\"messagesSchema\"));",
-							"    var jsonData = pm.response.json();",
-							"    pm.expect(tv4.validate(jsonData.messages, messagesSchema)).to.be.true;",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					},
-					{
-						"key": "x-tidepool-session-token",
-						"value": "{{sessionToken}}"
-					}
-				],
-				"url": {
-					"raw": "{{api}}/message/all/{{userId}}",
-					"host": [
-						"{{api}}"
-					],
-					"path": [
-						"message",
-						"all",
-						"{{userId}}"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "upload a piece of device data for the user",
 			"event": [
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "8b9cf43a-8c79-47b0-9e17-02f9fb0214ba",
+						"id": "49c33b7f-2689-4615-97e2-9cae0611c109",
+						"type": "text/javascript",
 						"exec": [
-							"const uuid = require('uuid');",
-							"pm.environment.set(\"uploadDeviceDataItemId\", uuid.v4());",
-							"const moment = require('moment');",
-							"let now = moment();",
-							"pm.variables.set(\"uploadDeviceDataItemTime\", now.format());",
-							"pm.variables.set(\"uploadDeviceDataItemDeviceTime\", now.format('YYYY-MM-DDThh:mm:ss'));",
 							""
-						],
-						"type": "text/javascript"
+						]
 					}
 				},
 				{
 					"listen": "test",
 					"script": {
-						"id": "d0b1561e-efe4-496b-89f7-986d2badf171",
+						"id": "3c4b721d-fa7b-47fd-9afa-a3e644e52681",
+						"type": "text/javascript",
 						"exec": [
-							"pm.test(\"Status code is 200\", function () {",
-							"    pm.response.to.have.status(200);",
+							"// pm.test(\"Content-Type is json\", function () {",
+							"//     pm.expect(pm.response.headers.get(\"Content-Type\") === \"application/json\").to.be.true;",
+							"// });",
+							"pm.test(\"Response time is reasonable\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(1000);",
 							"});"
-						],
-						"type": "text/javascript"
+						]
 					}
 				}
 			],
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					},
-					{
-						"key": "x-tidepool-session-token",
-						"value": "{{sessionToken}}"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "[\n  {\n    \"time\": \"{{uploadDeviceDataItemTime}}\",\n    \"clockDriftOffset\": -579000,\n    \"conversionOffset\": 0,\n    \"deviceTime\": \"{{uploadDeviceDataItemDeviceTime}}\",\n    \"deviceId\": \"Device-123\",\n    \"type\": \"smbg\",\n    \"value\": 106,\n    \"units\": \"mg/dL\",\n    \"subType\": \"linked\",\n    \"payload\": {\n      \"logIndices\": [\n        1\n      ]\n    },\n    \"uploadId\": \"upid_d5f278d59e4a\",\n    \"guid\": \"{{uploadDeviceDataItemId}}\"\n  }\n]"
-				},
-				"url": {
-					"raw": "{{api}}/data/{{userId}}",
-					"host": [
-						"{{api}}"
-					],
-					"path": [
-						"data",
-						"{{userId}}"
-					]
-				}
-			},
-			"response": []
+			"protocolProfileBehavior": {}
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "85b478fc-ac96-4614-bacc-c1e101204a8b",
+				"type": "text/javascript",
+				"exec": [
+					"const userSchema = {\"required\": [\"userid\", \"username\",\"emails\",\"emailVerified\",\"termsAccepted\"],\"properties\": {\"emailVerified\": {\"type\": \"boolean\"},\"emails\": {\"type\": \"array\"},\"userid\": {\"type\":\"string\"},\"username\": {\"type\": \"string\"},\"termsAccepted\": {\"type\": \"string\"}}};",
+					"const messageAddedSchema = {\"required\": [\"id\"],\"properties\":{\"id\": {\"type\": \"string\"}}};",
+					"const messagesSchema = {\"type\": \"array\",\"items\": {\"required\": [\"id\",\"guid\",\"userid\",\"groupid\",\"timestamp\",\"createdtime\",\"messagetext\"],\"properties\": {\"id\": {\"type\": \"string\"},\"guid\": {\"type\": \"string\"},\"userid\": {\"type\": \"string\"},\"groupid\": {\"type\": \"string\"},\"timestamp\":{\"type\": \"string\"},\"createdtime\": {\"type\": \"string\"},\"messagetext\": {\"type\": \"string\"}}}};",
+					"const smbgsSchema = {\"type\":\"array\",\"items\":{\"required\": [\"_active\",\"_groupId\",\"_id\",\"_schemaVersion\", \"_userId\",\"_version\",\"clockDriftOffset\",\"createdTime\",\"deviceId\",\"deviceTime\",\"guid\",\"id\",\"subType\",\"time\",\"type\",\"units\",\"uploadId\",\"value\"],\"properties\": {\"_active\": {\"type\": \"boolean\"},\"_groupId\": {\"type\": \"string\"},\"_id\": {\"type\": \"string\"},\"_schemaVersion\": {\"type\":\"integer\"},\"_userId\": {\"type\": \"string\"},\"_version\": {\"type\":\"integer\"},\"clockDriftOffset\": {\"type\":\"integer\"},\"conversionOffset\": {\"type\":\"integer\"},\"createdTime\": {\"type\": \"string\"},\"deviceId\": {\"type\": \"string\"},\"deviceTime\": {\"type\": \"string\"},\"guid\": {\"type\": \"string\"},\"id\": {\"type\": \"string\"},\"subType\": {\"type\": \"string\"},\"time\": {\"type\": \"string\"},\"type\": {\"type\": \"string\"},\"units\":{\"type\": \"string\"},\"uploadId\": {\"type\": \"string\"},\"value\": {\"type\":\"number\"}}}};",
+					"pm.globals.set(\"userSchema\", JSON.stringify(userSchema));",
+					"pm.globals.set(\"messageAddedSchema\", JSON.stringify(messageAddedSchema));",
+					"pm.globals.set(\"messagesSchema\", JSON.stringify(messagesSchema));",
+					"pm.globals.set(\"smbgsSchema\", JSON.stringify(smbgsSchema));"
+				]
+			}
 		},
 		{
-			"name": "get the last piece of uploaded device data",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"id": "1e19b771-d4bf-4f62-815b-066a9cf2a7ff",
-						"exec": [
-							"var jsonData = pm.response.json();",
-							"pm.test(\"Status code is 200\", function () {",
-							"    pm.response.to.have.status(200);",
-							"});",
-							"pm.test(\"one item is returned\", function () {",
-							"    pm.expect(jsonData.length).to.eql(1);",
-							"});",
-							"pm.test(\"one item is with id of item that was uploaded\", function () {",
-							"    pm.expect(jsonData[0].guid).to.eql(pm.environment.get(\"uploadDeviceDataItemId\"));",
-							"});",
-							"pm.test('response is json and matches expected smbg schema', function() {",
-							"    const smbgSchema = JSON.parse(pm.environment.get(\"smbgSchema\"));",
-							"    pm.expect(tv4.validate(jsonData, smbgSchema)).to.be.true;",
-							"});",
-							""
-						],
-						"type": "text/javascript"
-					}
-				},
-				{
-					"listen": "prerequest",
-					"script": {
-						"id": "3433a954-3a9e-49f4-a76b-3dd76c7b493a",
-						"exec": [
-							""
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "x-tidepool-session-token",
-						"value": "{{sessionToken}}"
-					},
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					}
-				],
-				"url": {
-					"raw": "{{api}}/data/{{userId}}?type=smbg&latest=true",
-					"host": [
-						"{{api}}"
-					],
-					"path": [
-						"data",
-						"{{userId}}"
-					],
-					"query": [
-						{
-							"key": "type",
-							"value": "smbg"
-						},
-						{
-							"key": "startDate",
-							"value": "{{dDataStartDate}}",
-							"disabled": true
-						},
-						{
-							"key": "endDate",
-							"value": "{{dDataEndDate}}",
-							"disabled": true
-						},
-						{
-							"key": "latest",
-							"value": "true"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "logout of tidepool",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"id": "05a9c738-74ab-403a-9f63-7e963c699683",
-						"exec": [
-							"pm.test(\"Status code is 200\", function () {",
-							"    pm.response.to.have.status(200);",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "x-tidepool-session-token",
-						"value": "{{sessionToken}}"
-					}
-				],
-				"body": {
-					"mode": "formdata",
-					"formdata": []
-				},
-				"url": {
-					"raw": "{{api}}/auth/logout",
-					"host": [
-						"{{api}}"
-					],
-					"path": [
-						"auth",
-						"logout"
-					]
-				}
-			},
-			"response": []
+			"listen": "test",
+			"script": {
+				"id": "45b7dd35-b3b4-4115-bbff-92d4e2158b6f",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
 		}
 	],
 	"protocolProfileBehavior": {}
