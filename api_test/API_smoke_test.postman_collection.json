@@ -21,19 +21,12 @@
 									"let sessionHeader = pm.response.headers.get(\"x-tidepool-session-token\");",
 									"pm.environment.set(\"sessionToken\", sessionHeader);",
 									"",
-									"pm.test(\"Status code is 200\", function () {",
-									"    pm.response.to.have.status(200);",
-									"});",
-									"pm.test(\"x-tidepool-session-token is present\", function () {",
-									"    pm.response.to.have.header(\"x-tidepool-session-token\");",
-									"});",
-									"pm.test(\"the response is json and not empty\", function () {",
-									"    pm.expect(jsonData).to.not.be.empty;",
-									"});",
-									"pm.test('response is json matches expected user schema', function() {",
-									"    const userSchema = JSON.parse(pm.globals.get(\"userSchema\"));",
-									"    pm.expect(tv4.validate(jsonData, userSchema)).to.be.true;",
-									"});"
+									"const assert = eval(globals.loadAsserts);",
+									"assert.responseTimeLessThan(1500);",
+									"assert.responseHasSessionToken();",
+									"assert.responseTypeJson();",
+									"assert.responseBodyMatchesSchema(jsonData,\"userSchema\");",
+									"assert.responseStatusCodeIs(200);"
 								],
 								"type": "text/javascript"
 							}
@@ -92,13 +85,12 @@
 							"script": {
 								"id": "03b6dfb3-fa82-4acc-b257-233f476741b5",
 								"exec": [
-									"pm.test(\"Status code is 200\", function () {",
-									"    pm.response.to.have.status(200);",
-									"});",
-									"pm.test('response is json matches expected user schema', function() {",
-									"    const userSchema = JSON.parse(pm.globals.get(\"userSchema\"));",
-									"    pm.expect(tv4.validate(pm.response.json(), userSchema)).to.be.true;",
-									"});"
+									"const assert = eval(globals.loadAsserts);",
+									"assert.responseTimeLessThan(500);",
+									"assert.responseHasNoSessionToken();",
+									"assert.responseTypeJson();",
+									"assert.responseBodyMatchesSchema(pm.response.json(),\"userSchema\");",
+									"assert.responseStatusCodeIs(200);"
 								],
 								"type": "text/javascript"
 							}
@@ -138,13 +130,12 @@
 							"script": {
 								"id": "3341c83a-bc9a-4043-8c8b-8020bf5c8639",
 								"exec": [
-									"pm.test(\"Status code is 201\", function () {",
-									"    pm.response.to.have.status(201);",
-									"});",
-									"pm.test('response is json and matches expected message added schema', function() {",
-									"    const messageAddedSchema = JSON.parse(pm.globals.get(\"messageAddedSchema\"));",
-									"    pm.expect(tv4.validate(pm.response.json(), messageAddedSchema)).to.be.true;",
-									"});"
+									"const assert = eval(globals.loadAsserts);",
+									"assert.responseTimeLessThan(700);",
+									"assert.responseHasNoSessionToken();",
+									"assert.responseTypeJson();",
+									"assert.responseBodyMatchesSchema(pm.response.json(),\"messageAddedSchema\");",
+									"assert.responseStatusCodeIs(201);"
 								],
 								"type": "text/javascript"
 							}
@@ -188,14 +179,12 @@
 							"script": {
 								"id": "72de232c-c03c-48c1-bc41-017b8aeece31",
 								"exec": [
-									"pm.test(\"Status code is 200\", function () {",
-									"    pm.response.to.have.status(200);",
-									"});",
-									"pm.test('response matches expected messages schema', function() {",
-									"    const messagesSchema = JSON.parse(pm.globals.get(\"messagesSchema\"));",
-									"    var jsonData = pm.response.json();",
-									"    pm.expect(tv4.validate(jsonData.messages, messagesSchema)).to.be.true;",
-									"});"
+									"const assert = eval(globals.loadAsserts);",
+									"assert.responseTimeLessThan(500);",
+									"assert.responseHasNoSessionToken();",
+									"assert.responseTypeJson();",
+									"assert.responseStatusCodeIs(200);",
+									"assert.responseBodyMatchesSchema(pm.response.json(),\"messagesSchema\");"
 								],
 								"type": "text/javascript"
 							}
@@ -251,9 +240,10 @@
 							"script": {
 								"id": "d0b1561e-efe4-496b-89f7-986d2badf171",
 								"exec": [
-									"pm.test(\"Status code is 200\", function () {",
-									"    pm.response.to.have.status(200);",
-									"});"
+									"const assert = eval(globals.loadAsserts);",
+									"assert.responseTimeLessThan(900);",
+									"assert.responseHasNoSessionToken();",
+									"assert.responseStatusCodeIs(200);"
 								],
 								"type": "text/javascript"
 							}
@@ -296,19 +286,18 @@
 							"script": {
 								"id": "1e19b771-d4bf-4f62-815b-066a9cf2a7ff",
 								"exec": [
-									"var jsonData = pm.response.json();",
-									"pm.test(\"Status code is 200\", function () {",
-									"    pm.response.to.have.status(200);",
-									"});",
-									"pm.test(\"one item is returned\", function () {",
-									"    pm.expect(jsonData.length).to.eql(1);",
-									"});",
+									"let jsonData = pm.response.json();",
+									"const assert = eval(globals.loadAsserts);",
+									"assert.responseTimeLessThan(900);",
+									"assert.responseHasNoSessionToken();",
+									"assert.responseTypeJson();",
+									"assert.responseBodyMatchesSchema(jsonData,\"smbgsSchema\");",
+									"assert.responseStatusCodeIs(200);",
 									"pm.test(\"one item is with id of item that was uploaded\", function () {",
 									"    pm.expect(jsonData[0].guid).to.eql(pm.environment.get(\"uploadDeviceDataItemId\"));",
 									"});",
-									"pm.test('response is json and matches expected smbg schema', function() {",
-									"    const smbgsSchema = JSON.parse(pm.globals.get(\"smbgsSchema\"));",
-									"    pm.expect(tv4.validate(jsonData, smbgsSchema)).to.be.true;",
+									"pm.test(\"one item is returned\", function () {",
+									"    pm.expect(jsonData.length).to.eql(1);",
 									"});",
 									""
 								],
@@ -379,9 +368,10 @@
 							"script": {
 								"id": "05a9c738-74ab-403a-9f63-7e963c699683",
 								"exec": [
-									"pm.test(\"Status code is 200\", function () {",
-									"    pm.response.to.have.status(200);",
-									"});"
+									"const assert = eval(globals.loadAsserts);",
+									"assert.responseTimeLessThan(500);",
+									"assert.responseHasNoSessionToken();",
+									"assert.responseStatusCodeIs(200);"
 								],
 								"type": "text/javascript"
 							}
@@ -430,12 +420,7 @@
 						"id": "3c4b721d-fa7b-47fd-9afa-a3e644e52681",
 						"type": "text/javascript",
 						"exec": [
-							"// pm.test(\"Content-Type is json\", function () {",
-							"//     pm.expect(pm.response.headers.get(\"Content-Type\") === \"application/json\").to.be.true;",
-							"// });",
-							"pm.test(\"Response time is reasonable\", function () {",
-							"    pm.expect(pm.response.responseTime).to.be.below(1000);",
-							"});"
+							""
 						]
 					}
 				}
@@ -454,10 +439,47 @@
 					"const messageAddedSchema = {\"required\": [\"id\"],\"properties\":{\"id\": {\"type\": \"string\"}}};",
 					"const messagesSchema = {\"type\": \"array\",\"items\": {\"required\": [\"id\",\"guid\",\"userid\",\"groupid\",\"timestamp\",\"createdtime\",\"messagetext\"],\"properties\": {\"id\": {\"type\": \"string\"},\"guid\": {\"type\": \"string\"},\"userid\": {\"type\": \"string\"},\"groupid\": {\"type\": \"string\"},\"timestamp\":{\"type\": \"string\"},\"createdtime\": {\"type\": \"string\"},\"messagetext\": {\"type\": \"string\"}}}};",
 					"const smbgsSchema = {\"type\":\"array\",\"items\":{\"required\": [\"_active\",\"_groupId\",\"_id\",\"_schemaVersion\", \"_userId\",\"_version\",\"clockDriftOffset\",\"createdTime\",\"deviceId\",\"deviceTime\",\"guid\",\"id\",\"subType\",\"time\",\"type\",\"units\",\"uploadId\",\"value\"],\"properties\": {\"_active\": {\"type\": \"boolean\"},\"_groupId\": {\"type\": \"string\"},\"_id\": {\"type\": \"string\"},\"_schemaVersion\": {\"type\":\"integer\"},\"_userId\": {\"type\": \"string\"},\"_version\": {\"type\":\"integer\"},\"clockDriftOffset\": {\"type\":\"integer\"},\"conversionOffset\": {\"type\":\"integer\"},\"createdTime\": {\"type\": \"string\"},\"deviceId\": {\"type\": \"string\"},\"deviceTime\": {\"type\": \"string\"},\"guid\": {\"type\": \"string\"},\"id\": {\"type\": \"string\"},\"subType\": {\"type\": \"string\"},\"time\": {\"type\": \"string\"},\"type\": {\"type\": \"string\"},\"units\":{\"type\": \"string\"},\"uploadId\": {\"type\": \"string\"},\"value\": {\"type\":\"number\"}}}};",
+					"",
 					"pm.globals.set(\"userSchema\", JSON.stringify(userSchema));",
 					"pm.globals.set(\"messageAddedSchema\", JSON.stringify(messageAddedSchema));",
 					"pm.globals.set(\"messagesSchema\", JSON.stringify(messagesSchema));",
-					"pm.globals.set(\"smbgsSchema\", JSON.stringify(smbgsSchema));"
+					"pm.globals.set(\"smbgsSchema\", JSON.stringify(smbgsSchema));",
+					"",
+					"pm.globals.set('loadAsserts', function loadAsserts() {",
+					"    let asserts = {};",
+					"    asserts.responseTimeLessThan = function responseTimeLessThan(ms) {",
+					"        pm.test(\"Response time is less than \"+ms+\"ms\", function () {",
+					"            pm.expect(pm.response.responseTime).to.be.below(ms);",
+					"        });",
+					"    };",
+					"    asserts.responseTypeJson = function responseTypeJson() {",
+					"        pm.test(\"Response type is application/json\", function () {",
+					"            pm.expect(pm.response.headers.get(\"content-type\")).to.equal('application/json');",
+					"        });",
+					"    };",
+					"    asserts.responseHasSessionToken = function responseHasSessionToken() {",
+					"        pm.test(\"Response has x-tidepool-session-token\", function () {",
+					"            pm.response.to.have.header(\"x-tidepool-session-token\");",
+					"        });",
+					"    };",
+					"    asserts.responseHasNoSessionToken = function responseHasNoSessionToken(){",
+					"         pm.test(\"Response has NO x-tidepool-session-token\", function () {",
+					"            pm.response.to.not.have.header(\"x-tidepool-session-token\");",
+					"        });",
+					"    };",
+					"    asserts.responseBodyMatchesSchema = function responseBodyMatchesSchema(jsonData,schemaName) {",
+					"         pm.test(\"Response body matches \"+schemaName, function () {",
+					"            let schema = JSON.parse(pm.globals.get(schemaName));",
+					"            pm.expect(tv4.validate(jsonData, schema)).to.be.true;",
+					"         });",
+					"    };",
+					"    asserts.responseStatusCodeIs = function responseStatusCodeIs(code){",
+					"        pm.test(\"Status code is \"+code, function () {",
+					"            pm.response.to.have.status(code);",
+					"        });",
+					"    };",
+					"    return asserts;",
+					"} + '; loadAsserts();');"
 				]
 			}
 		},
