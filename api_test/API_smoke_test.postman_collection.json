@@ -22,7 +22,7 @@
 									"pm.environment.set(\"sessionToken\", sessionHeader);",
 									"",
 									"const assert = eval(globals.loadAsserts);",
-									"assert.responseTimeLessThan(500);",
+									"assert.responseTimeLessThan(700);",
 									"assert.responseHasSessionToken();",
 									"assert.responseTypeJson();",
 									"assert.responseBodyMatchesSchema(jsonData,\"userSchema\");",
@@ -288,7 +288,7 @@
 								"exec": [
 									"let jsonData = pm.response.json();",
 									"const assert = eval(globals.loadAsserts);",
-									"assert.responseTimeLessThan(300);",
+									"assert.responseTimeLessThan(500);",
 									"assert.responseHasNoSessionToken();",
 									"assert.responseTypeJson();",
 									"assert.responseBodyMatchesSchema(jsonData,\"smbgsSchema\");",
