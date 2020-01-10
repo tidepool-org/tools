@@ -180,7 +180,7 @@
 								"id": "72de232c-c03c-48c1-bc41-017b8aeece31",
 								"exec": [
 									"const assert = eval(globals.loadAsserts);",
-									"assert.responseTimeLessThan(300);",
+									"assert.responseTimeLessThan(500);",
 									"assert.responseHasNoSessionToken();",
 									"assert.responseTypeJson();",
 									"assert.responseStatusCodeIs(200);",
