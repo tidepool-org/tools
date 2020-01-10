@@ -22,7 +22,7 @@
 									"pm.environment.set(\"sessionToken\", sessionHeader);",
 									"",
 									"const assert = eval(globals.loadAsserts);",
-									"assert.responseTimeLessThan(1500);",
+									"assert.responseTimeLessThan(500);",
 									"assert.responseHasSessionToken();",
 									"assert.responseTypeJson();",
 									"assert.responseBodyMatchesSchema(jsonData,\"userSchema\");",
@@ -86,7 +86,7 @@
 								"id": "03b6dfb3-fa82-4acc-b257-233f476741b5",
 								"exec": [
 									"const assert = eval(globals.loadAsserts);",
-									"assert.responseTimeLessThan(500);",
+									"assert.responseTimeLessThan(300);",
 									"assert.responseHasNoSessionToken();",
 									"assert.responseTypeJson();",
 									"assert.responseBodyMatchesSchema(pm.response.json(),\"userSchema\");",
@@ -131,7 +131,7 @@
 								"id": "3341c83a-bc9a-4043-8c8b-8020bf5c8639",
 								"exec": [
 									"const assert = eval(globals.loadAsserts);",
-									"assert.responseTimeLessThan(700);",
+									"assert.responseTimeLessThan(300);",
 									"assert.responseHasNoSessionToken();",
 									"assert.responseTypeJson();",
 									"assert.responseBodyMatchesSchema(pm.response.json(),\"messageAddedSchema\");",
@@ -180,7 +180,7 @@
 								"id": "72de232c-c03c-48c1-bc41-017b8aeece31",
 								"exec": [
 									"const assert = eval(globals.loadAsserts);",
-									"assert.responseTimeLessThan(900);",
+									"assert.responseTimeLessThan(300);",
 									"assert.responseHasNoSessionToken();",
 									"assert.responseTypeJson();",
 									"assert.responseStatusCodeIs(200);",
@@ -241,7 +241,7 @@
 								"id": "d0b1561e-efe4-496b-89f7-986d2badf171",
 								"exec": [
 									"const assert = eval(globals.loadAsserts);",
-									"assert.responseTimeLessThan(900);",
+									"assert.responseTimeLessThan(500);",
 									"assert.responseHasNoSessionToken();",
 									"assert.responseStatusCodeIs(200);"
 								],
@@ -288,7 +288,7 @@
 								"exec": [
 									"let jsonData = pm.response.json();",
 									"const assert = eval(globals.loadAsserts);",
-									"assert.responseTimeLessThan(900);",
+									"assert.responseTimeLessThan(300);",
 									"assert.responseHasNoSessionToken();",
 									"assert.responseTypeJson();",
 									"assert.responseBodyMatchesSchema(jsonData,\"smbgsSchema\");",
@@ -369,7 +369,7 @@
 								"id": "05a9c738-74ab-403a-9f63-7e963c699683",
 								"exec": [
 									"const assert = eval(globals.loadAsserts);",
-									"assert.responseTimeLessThan(500);",
+									"assert.responseTimeLessThan(300);",
 									"assert.responseHasNoSessionToken();",
 									"assert.responseStatusCodeIs(200);"
 								],
