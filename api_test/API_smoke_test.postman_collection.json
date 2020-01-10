@@ -180,11 +180,11 @@
 								"id": "72de232c-c03c-48c1-bc41-017b8aeece31",
 								"exec": [
 									"const assert = eval(globals.loadAsserts);",
-									"assert.responseTimeLessThan(500);",
+									"assert.responseTimeLessThan(900);",
 									"assert.responseHasNoSessionToken();",
 									"assert.responseTypeJson();",
 									"assert.responseStatusCodeIs(200);",
-									"assert.responseBodyMatchesSchema(pm.response.json(),\"messagesSchema\");"
+									"assert.responseBodyMatchesSchema(pm.response.json().messages,\"messagesSchema\");"
 								],
 								"type": "text/javascript"
 							}
@@ -435,10 +435,10 @@
 				"id": "85b478fc-ac96-4614-bacc-c1e101204a8b",
 				"type": "text/javascript",
 				"exec": [
-					"const userSchema = {\"required\": [\"userid\", \"username\",\"emails\",\"emailVerified\",\"termsAccepted\"],\"properties\": {\"emailVerified\": {\"type\": \"boolean\"},\"emails\": {\"type\": \"array\"},\"userid\": {\"type\":\"string\"},\"username\": {\"type\": \"string\"},\"termsAccepted\": {\"type\": \"string\"}}};",
-					"const messageAddedSchema = {\"required\": [\"id\"],\"properties\":{\"id\": {\"type\": \"string\"}}};",
-					"const messagesSchema = {\"type\": \"array\",\"items\": {\"required\": [\"id\",\"guid\",\"userid\",\"groupid\",\"timestamp\",\"createdtime\",\"messagetext\"],\"properties\": {\"id\": {\"type\": \"string\"},\"guid\": {\"type\": \"string\"},\"userid\": {\"type\": \"string\"},\"groupid\": {\"type\": \"string\"},\"timestamp\":{\"type\": \"string\"},\"createdtime\": {\"type\": \"string\"},\"messagetext\": {\"type\": \"string\"}}}};",
-					"const smbgsSchema = {\"type\":\"array\",\"items\":{\"required\": [\"_active\",\"_groupId\",\"_id\",\"_schemaVersion\", \"_userId\",\"_version\",\"clockDriftOffset\",\"createdTime\",\"deviceId\",\"deviceTime\",\"guid\",\"id\",\"subType\",\"time\",\"type\",\"units\",\"uploadId\",\"value\"],\"properties\": {\"_active\": {\"type\": \"boolean\"},\"_groupId\": {\"type\": \"string\"},\"_id\": {\"type\": \"string\"},\"_schemaVersion\": {\"type\":\"integer\"},\"_userId\": {\"type\": \"string\"},\"_version\": {\"type\":\"integer\"},\"clockDriftOffset\": {\"type\":\"integer\"},\"conversionOffset\": {\"type\":\"integer\"},\"createdTime\": {\"type\": \"string\"},\"deviceId\": {\"type\": \"string\"},\"deviceTime\": {\"type\": \"string\"},\"guid\": {\"type\": \"string\"},\"id\": {\"type\": \"string\"},\"subType\": {\"type\": \"string\"},\"time\": {\"type\": \"string\"},\"type\": {\"type\": \"string\"},\"units\":{\"type\": \"string\"},\"uploadId\": {\"type\": \"string\"},\"value\": {\"type\":\"number\"}}}};",
+					"const userSchema = { \"required\": [\"userid\", \"username\", \"emails\", \"emailVerified\", \"termsAccepted\"], \"properties\": { \"emailVerified\": { \"type\": \"boolean\" }, \"emails\": { \"type\": \"array\" }, \"userid\": { \"type\": \"string\" }, \"username\": { \"type\": \"string\" }, \"termsAccepted\": { \"type\": \"string\" } } };",
+					"const messageAddedSchema = { \"required\": [\"id\"], \"properties\": { \"id\": { \"type\": \"string\" } } };",
+					"const messagesSchema = { \"type\": \"array\", \"items\": { \"required\": [\"id\", \"guid\", \"parentmessage\", \"userid\", \"groupid\", \"timestamp\", \"createdtime\", \"messagetext\", \"user\"], \"properties\": { \"id\": { \"type\": \"string\" }, \"guid\": { \"type\": \"string\" }, \"userid\": { \"type\": \"string\" }, \"groupid\": { \"type\": \"string\" }, \"timestamp\": { \"type\": \"string\" }, \"createdtime\": { \"type\": \"string\" }, \"messagetext\": { \"type\": \"string\" }, \"user\": { \"type\": \"object\" } } } };",
+					"const smbgsSchema = { \"type\": \"array\", \"items\": { \"required\": [\"_active\", \"_groupId\", \"_id\", \"_schemaVersion\", \"_userId\", \"_version\", \"clockDriftOffset\", \"createdTime\", \"deviceId\", \"deviceTime\", \"guid\", \"id\", \"subType\", \"time\", \"type\", \"units\", \"uploadId\", \"value\"], \"properties\": { \"_active\": { \"type\": \"boolean\" }, \"_groupId\": { \"type\": \"string\" }, \"_id\": { \"type\": \"string\" }, \"_schemaVersion\": { \"type\": \"integer\" }, \"_userId\": { \"type\": \"string\" }, \"_version\": { \"type\": \"integer\" }, \"clockDriftOffset\": { \"type\": \"integer\" }, \"conversionOffset\": { \"type\": \"integer\" }, \"createdTime\": { \"type\": \"string\" }, \"deviceId\": { \"type\": \"string\" }, \"deviceTime\": { \"type\": \"string\" }, \"guid\": { \"type\": \"string\" }, \"id\": { \"type\": \"string\" }, \"subType\": { \"type\": \"string\" }, \"time\": { \"type\": \"string\" }, \"type\": { \"type\": \"string\" }, \"units\": { \"type\": \"string\" }, \"uploadId\": { \"type\": \"string\" }, \"value\": { \"type\": \"number\" } } } };",
 					"",
 					"pm.globals.set(\"userSchema\", JSON.stringify(userSchema));",
 					"pm.globals.set(\"messageAddedSchema\", JSON.stringify(messageAddedSchema));",
