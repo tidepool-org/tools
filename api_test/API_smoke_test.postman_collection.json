@@ -6,7 +6,7 @@
 	},
 	"item": [
 		{
-			"name": "client smoke test",
+			"name": "clients smoke test",
 			"item": [
 				{
 					"name": "login to tidepool",
@@ -78,18 +78,18 @@
 					"response": []
 				},
 				{
-					"name": "get the logged in users detail",
+					"name": "get the logged in users profile",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
-								"id": "03b6dfb3-fa82-4acc-b257-233f476741b5",
+								"id": "c3848609-36dc-4ef7-86d6-9a21656afffa",
 								"exec": [
 									"const assert = eval(globals.loadAsserts);",
 									"assert.responseTimeLessThan(300);",
 									"assert.responseHasNoSessionToken();",
 									"assert.responseTypeJson();",
-									"assert.responseBodyMatchesSchema(pm.response.json(),\"userSchema\");",
+									"assert.responseBodyMatchesSchema(pm.response.json(),\"userProfileSchema\");",
 									"assert.responseStatusCodeIs(200);"
 								],
 								"type": "text/javascript"
@@ -109,13 +109,75 @@
 							}
 						],
 						"url": {
-							"raw": "{{api}}/auth/user/{{userId}}",
+							"raw": "{{api}}/metadata/{{userId}}/profile",
 							"host": [
 								"{{api}}"
 							],
 							"path": [
-								"auth",
-								"user",
+								"metadata",
+								"{{userId}}",
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "invite another user see data",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "99a4bf66-ae97-4a85-8484-6f5cd07752dd",
+								"exec": [
+									"const assert = eval(globals.loadAsserts);",
+									"assert.responseTimeLessThan(1500);",
+									"assert.responseHasNoSessionToken();",
+									"assert.responseTypeJson();",
+									"assert.responseBodyMatchesSchema(pm.response.json(),\"careteamInviteSchema\");",
+									"assert.responseStatusCodeIs(200);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "046412cf-93d9-4a0f-bfb8-92d537d10a26",
+								"exec": [
+									"const emailName = pm.environment.get(\"sharingEmailName\");",
+									"let emailAddress = emailName+ \"+sharing_\" + Date.now() + \"@tidepool.org\"",
+									"pm.variables.set(\"sharingEmailAddress\", emailAddress);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "x-tidepool-session-token",
+								"value": "{{sessionToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"{{sharingEmailAddress}}\",\n  \"permissions\": {\n    \"view\": {}\n  }\n}"
+						},
+						"url": {
+							"raw": "{{api}}/confirm/send/invite/{{userId}}",
+							"host": [
+								"{{api}}"
+							],
+							"path": [
+								"confirm",
+								"send",
+								"invite",
 								"{{userId}}"
 							]
 						}
@@ -403,6 +465,7 @@
 					"response": []
 				}
 			],
+			"description": "Non-specific usage of the tidepool API with the goal of giving it a quick smoke test so see that its is working as many clients would execpt it too. We are looking at\n\n - response code\n - response timing \n - headers, specificcally the x-tidepool-session and content type\n - response json data to make sure it matches our schema expectations at a high level",
 			"event": [
 				{
 					"listen": "prerequest",
@@ -439,11 +502,16 @@
 					"const messageAddedSchema = { \"required\": [\"id\"], \"properties\": { \"id\": { \"type\": \"string\" } } };",
 					"const messagesSchema = { \"type\": \"array\", \"items\": { \"required\": [\"id\", \"guid\", \"parentmessage\", \"userid\", \"groupid\", \"timestamp\", \"createdtime\", \"messagetext\", \"user\"], \"properties\": { \"id\": { \"type\": \"string\" }, \"guid\": { \"type\": \"string\" }, \"userid\": { \"type\": \"string\" }, \"groupid\": { \"type\": \"string\" }, \"timestamp\": { \"type\": \"string\" }, \"createdtime\": { \"type\": \"string\" }, \"messagetext\": { \"type\": \"string\" }, \"user\": { \"type\": \"object\" } } } };",
 					"const smbgsSchema = { \"type\": \"array\", \"items\": { \"required\": [\"_active\", \"_groupId\", \"_id\", \"_schemaVersion\", \"_userId\", \"_version\", \"clockDriftOffset\", \"createdTime\", \"deviceId\", \"deviceTime\", \"guid\", \"id\", \"subType\", \"time\", \"type\", \"units\", \"uploadId\", \"value\"], \"properties\": { \"_active\": { \"type\": \"boolean\" }, \"_groupId\": { \"type\": \"string\" }, \"_id\": { \"type\": \"string\" }, \"_schemaVersion\": { \"type\": \"integer\" }, \"_userId\": { \"type\": \"string\" }, \"_version\": { \"type\": \"integer\" }, \"clockDriftOffset\": { \"type\": \"integer\" }, \"conversionOffset\": { \"type\": \"integer\" }, \"createdTime\": { \"type\": \"string\" }, \"deviceId\": { \"type\": \"string\" }, \"deviceTime\": { \"type\": \"string\" }, \"guid\": { \"type\": \"string\" }, \"id\": { \"type\": \"string\" }, \"subType\": { \"type\": \"string\" }, \"time\": { \"type\": \"string\" }, \"type\": { \"type\": \"string\" }, \"units\": { \"type\": \"string\" }, \"uploadId\": { \"type\": \"string\" }, \"value\": { \"type\": \"number\" } } } };",
+					"const userProfileSchema = {\"required\": [\"fullName\"], \"properties\": { \"fullName\": { \"type\": \"string\" },",
+					"\"patient\": { \"type\": \"object\" }}};",
+					"const careteamInviteSchema = { \"required\": [\"key\", \"type\", \"email\", \"creatorId\", \"creator\", \"context\", \"created\"], \"properties\": { \"key\": { \"type\": \"string\" }, \"type\": { \"type\": \"string\" }, \"email\": { \"type\": \"string\" }, \"creatorId\": { \"type\": \"string\" }, \"creator\": { \"type\": \"object\" }, \"context\": { \"type\": \"object\" }, \"created\": { \"type\": \"string\" } } };",
 					"",
 					"pm.globals.set(\"userSchema\", JSON.stringify(userSchema));",
+					"pm.globals.set(\"userProfileSchema\", JSON.stringify(userProfileSchema));",
 					"pm.globals.set(\"messageAddedSchema\", JSON.stringify(messageAddedSchema));",
 					"pm.globals.set(\"messagesSchema\", JSON.stringify(messagesSchema));",
 					"pm.globals.set(\"smbgsSchema\", JSON.stringify(smbgsSchema));",
+					"pm.globals.set(\"careteamInviteSchema\", JSON.stringify(careteamInviteSchema));",
 					"",
 					"pm.globals.set('loadAsserts', function loadAsserts() {",
 					"    let asserts = {};",
