@@ -22,7 +22,7 @@
 									"pm.environment.set(\"sessionToken\", sessionHeader);",
 									"",
 									"const assert = eval(globals.loadAsserts);",
-									"assert.responseTimeLessThan(700);",
+									"assert.responseTimeLessThan(1000);",
 									"assert.responseHasSessionToken();",
 									"assert.responseTypeJson();",
 									"assert.responseBodyMatchesSchema(jsonData,\"userSchema\");",
@@ -131,7 +131,7 @@
 								"id": "99a4bf66-ae97-4a85-8484-6f5cd07752dd",
 								"exec": [
 									"const assert = eval(globals.loadAsserts);",
-									"assert.responseTimeLessThan(1500);",
+									"assert.responseTimeLessThan(1900);",
 									"assert.responseHasNoSessionToken();",
 									"assert.responseTypeJson();",
 									"assert.responseBodyMatchesSchema(pm.response.json(),\"careteamInviteSchema\");",
@@ -193,7 +193,7 @@
 								"id": "3341c83a-bc9a-4043-8c8b-8020bf5c8639",
 								"exec": [
 									"const assert = eval(globals.loadAsserts);",
-									"assert.responseTimeLessThan(300);",
+									"assert.responseTimeLessThan(500);",
 									"assert.responseHasNoSessionToken();",
 									"assert.responseTypeJson();",
 									"assert.responseBodyMatchesSchema(pm.response.json(),\"messageAddedSchema\");",
