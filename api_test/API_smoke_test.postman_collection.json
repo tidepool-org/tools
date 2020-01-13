@@ -22,11 +22,12 @@
 									"pm.environment.set(\"sessionToken\", sessionHeader);",
 									"",
 									"const assert = eval(globals.loadAsserts);",
-									"assert.responseTimeLessThan(1000);",
+									"assert.responseStatusCodeIs(200);",
+									"assert.responseTimeMsLessThan(1000);",
 									"assert.responseHasSessionToken();",
 									"assert.responseTypeJson();",
 									"assert.responseBodyMatchesSchema(jsonData,\"userSchema\");",
-									"assert.responseStatusCodeIs(200);"
+									""
 								],
 								"type": "text/javascript"
 							}
@@ -87,10 +88,11 @@
 								"exec": [
 									"const assert = eval(globals.loadAsserts);",
 									"assert.responseTimeLessThan(300);",
+									"assert.responseTimeMsLessThan(200);",
 									"assert.responseHasNoSessionToken();",
 									"assert.responseTypeJson();",
 									"assert.responseBodyMatchesSchema(pm.response.json(),\"userProfileSchema\");",
-									"assert.responseStatusCodeIs(200);"
+									""
 								],
 								"type": "text/javascript"
 							}
@@ -131,11 +133,11 @@
 								"id": "99a4bf66-ae97-4a85-8484-6f5cd07752dd",
 								"exec": [
 									"const assert = eval(globals.loadAsserts);",
-									"assert.responseTimeLessThan(1900);",
+									"assert.responseStatusCodeIs(200);",
+									"assert.responseTimeMsLessThan(1900);",
 									"assert.responseHasNoSessionToken();",
 									"assert.responseTypeJson();",
-									"assert.responseBodyMatchesSchema(pm.response.json(),\"careteamInviteSchema\");",
-									"assert.responseStatusCodeIs(200);"
+									"assert.responseBodyMatchesSchema(pm.response.json(),\"careteamInviteSchema\");"
 								],
 								"type": "text/javascript"
 							}
@@ -193,11 +195,11 @@
 								"id": "3341c83a-bc9a-4043-8c8b-8020bf5c8639",
 								"exec": [
 									"const assert = eval(globals.loadAsserts);",
-									"assert.responseTimeLessThan(500);",
+									"assert.responseStatusCodeIs(201);",
+									"assert.responseTimeMsLessThan(500);",
 									"assert.responseHasNoSessionToken();",
 									"assert.responseTypeJson();",
-									"assert.responseBodyMatchesSchema(pm.response.json(),\"messageAddedSchema\");",
-									"assert.responseStatusCodeIs(201);"
+									"assert.responseBodyMatchesSchema(pm.response.json(),\"messageAddedSchema\");"
 								],
 								"type": "text/javascript"
 							}
@@ -242,10 +244,10 @@
 								"id": "72de232c-c03c-48c1-bc41-017b8aeece31",
 								"exec": [
 									"const assert = eval(globals.loadAsserts);",
-									"assert.responseTimeLessThan(500);",
+									"assert.responseStatusCodeIs(200);",
+									"assert.responseTimeMsLessThan(500);",
 									"assert.responseHasNoSessionToken();",
 									"assert.responseTypeJson();",
-									"assert.responseStatusCodeIs(200);",
 									"assert.responseBodyMatchesSchema(pm.response.json().messages,\"messagesSchema\");"
 								],
 								"type": "text/javascript"
@@ -303,9 +305,9 @@
 								"id": "d0b1561e-efe4-496b-89f7-986d2badf171",
 								"exec": [
 									"const assert = eval(globals.loadAsserts);",
-									"assert.responseTimeLessThan(500);",
-									"assert.responseHasNoSessionToken();",
-									"assert.responseStatusCodeIs(200);"
+									"assert.responseStatusCodeIs(200);",
+									"assert.responseTimeMsLessThan(500);",
+									"assert.responseHasNoSessionToken();"
 								],
 								"type": "text/javascript"
 							}
@@ -350,17 +352,19 @@
 								"exec": [
 									"let jsonData = pm.response.json();",
 									"const assert = eval(globals.loadAsserts);",
-									"assert.responseTimeLessThan(500);",
+									"assert.responseStatusCodeIs(200);",
+									"assert.responseTimeMsLessThan(500);",
 									"assert.responseHasNoSessionToken();",
 									"assert.responseTypeJson();",
-									"assert.responseBodyMatchesSchema(jsonData,\"smbgsSchema\");",
-									"assert.responseStatusCodeIs(200);",
-									"pm.test(\"one item is with id of item that was uploaded\", function () {",
-									"    pm.expect(jsonData[0].guid).to.eql(pm.environment.get(\"uploadDeviceDataItemId\"));",
-									"});",
 									"pm.test(\"one item is returned\", function () {",
 									"    pm.expect(jsonData.length).to.eql(1);",
 									"});",
+									"pm.test(\"the returned item is the same that we uploaded\", function () {",
+									"    pm.expect(jsonData[0].guid).to.eql(pm.environment.get(\"uploadDeviceDataItemId\"));",
+									"});",
+									"assert.responseBodyMatchesSchema(jsonData,\"smbgsSchema\");",
+									"",
+									"",
 									""
 								],
 								"type": "text/javascript"
@@ -431,9 +435,9 @@
 								"id": "05a9c738-74ab-403a-9f63-7e963c699683",
 								"exec": [
 									"const assert = eval(globals.loadAsserts);",
-									"assert.responseTimeLessThan(300);",
-									"assert.responseHasNoSessionToken();",
-									"assert.responseStatusCodeIs(200);"
+									"assert.responseStatusCodeIs(200);",
+									"assert.responseTimeMsLessThan(300);",
+									"assert.responseHasNoSessionToken();"
 								],
 								"type": "text/javascript"
 							}
@@ -515,7 +519,7 @@
 					"",
 					"pm.globals.set('loadAsserts', function loadAsserts() {",
 					"    let asserts = {};",
-					"    asserts.responseTimeLessThan = function responseTimeLessThan(ms) {",
+					"    asserts.responseTimeMsLessThan = function responseTimeMsLessThan(ms) {",
 					"        pm.test(\"Response time is less than \"+ms+\"ms\", function () {",
 					"            pm.expect(pm.response.responseTime).to.be.below(ms);",
 					"        });",
