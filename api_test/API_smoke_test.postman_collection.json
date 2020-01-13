@@ -286,7 +286,7 @@
 								"id": "d0b1561e-efe4-496b-89f7-986d2badf171",
 								"exec": [
 									"const assert = eval(globals.loadAsserts);",
-									"assert.common(200, 500, false);"
+									"assert.common(200, 500, false, null, \"\");"
 								],
 								"type": "text/javascript"
 							}
@@ -410,7 +410,7 @@
 								"id": "05a9c738-74ab-403a-9f63-7e963c699683",
 								"exec": [
 									"const assert = eval(globals.loadAsserts);",
-									"assert.common(200, 300, false);"
+									"assert.common(200, 300, false, null, \"\");"
 								],
 								"type": "text/javascript"
 							}
