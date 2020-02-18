@@ -70,7 +70,7 @@ publish_to_dockerhub() {
         echo "${DOCKER_PASSWORD}" | docker login --username "${DOCKER_USERNAME}" --password-stdin
 
         if [ "${TRAVIS_REPO_SLUG:-}" == "blip" ]; then
-            docker build --tag "${DOCKER_REPO}" --build-arg ROLLBAR_POST_SERVER_TOKEN="${ROLLBAR_POST_SERVER_TOKEN:-}" .
+            DOCKER_BUILDKIT=1 docker build --tag "${DOCKER_REPO}" --build-arg ROLLBAR_POST_SERVER_TOKEN="${ROLLBAR_POST_SERVER_TOKEN:-}" .
         else
             docker build --tag "${DOCKER_REPO}" .
         fi
