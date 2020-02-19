@@ -69,7 +69,7 @@ publish_to_dockerhub() {
         DOCKER_REPO="tidepool/${TRAVIS_REPO_SLUG#*/}"
         echo "${DOCKER_PASSWORD}" | docker login --username "${DOCKER_USERNAME}" --password-stdin
 
-        if [ "${TRAVIS_REPO_SLUG:-}" == "blip" ]; then
+        if [ "${TRAVIS_REPO_SLUG:-}" == "tidepool-org/blip" ]; then
             DOCKER_BUILDKIT=1 docker build --tag "${DOCKER_REPO}" --build-arg ROLLBAR_POST_SERVER_TOKEN="${ROLLBAR_POST_SERVER_TOKEN:-}" .
         else
             docker build --tag "${DOCKER_REPO}" .
