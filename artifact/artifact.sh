@@ -91,6 +91,9 @@ publish_to_dockerhub() {
             fi
             docker tag "${DOCKER_REPO}" "${DOCKER_REPO}:${BRANCH}-${TRAVIS_COMMIT}"
             docker push "${DOCKER_REPO}:${BRANCH}-${TRAVIS_COMMIT}"
+
+            docker tag "${DOCKER_REPO}" "${DOCKER_REPO}:${BRANCH}-latest"
+            docker push "${DOCKER_REPO}:${BRANCH}-latest"
         fi
     else
         echo "Missing DOCKER_USERNAME or DOCKER_PASSWORD."
