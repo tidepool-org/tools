@@ -6,7 +6,12 @@ publish_to_dockerhub() {
     if [ -n "${DOCKER_USERNAME:-}" ] && [ -n "${DOCKER_PASSWORD:-}"  ]; then
         DOCKER_REPO="tidepool/${TRAVIS_REPO_SLUG#*/}"
         echo "${DOCKER_PASSWORD}" | docker login --username "${DOCKER_USERNAME}" --password-stdin
-        docker build --tag "${DOCKER_REPO}" .
+
+	if [ "${TRAVIS_REPO_SLUG:-}" == "tidepool-org/blip" ]; then
+            DOCKER_BUILDKIT=1 docker build --tag "${DOCKER_REPO}" --build-arg ROLLBAR_POST_SERVER_TOKEN="${ROLLBAR_POST_SERVER_TOKEN:-}" --build-arg TRAVIS_COMMIT="${TRAVIS_COMMIT:-}" .
+        else
+            docker build --tag "${DOCKER_REPO}" .
+        fi
         
         if [ "${TRAVIS_BRANCH:-}" == "master" ] && [ "${TRAVIS_PULL_REQUEST_BRANCH:-}" == "" ]; then
             docker push "${DOCKER_REPO}"
