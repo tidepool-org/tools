@@ -8,7 +8,15 @@ publish_to_dockerhub() {
         echo "${DOCKER_PASSWORD}" | docker login --username "${DOCKER_USERNAME}" --password-stdin
 
         if [ "${TRAVIS_REPO_SLUG:-}" == "tidepool-org/blip" ]; then
-            DOCKER_BUILDKIT=1 docker build --tag "${DOCKER_REPO}" --build-arg ROLLBAR_POST_SERVER_TOKEN="${ROLLBAR_POST_SERVER_TOKEN:-}" --build-arg RX_ENABLED="${RX_ENABLED:-}" --build-arg TRAVIS_COMMIT="${TRAVIS_COMMIT:-}" .
+            if [ -n "${TRAVIS_PULL_REQUEST_BRANCH}" ]
+            then
+                RX_ENABLED=true
+                CLINICS_ENABLED=true
+            else
+                RX_ENABLED=false
+                CLINICS_ENABLED=false
+            fi
+            DOCKER_BUILDKIT=1 docker build --tag "${DOCKER_REPO}" --build-arg ROLLBAR_POST_SERVER_TOKEN="${ROLLBAR_POST_SERVER_TOKEN:-}" --build-arg RX_ENABLED="${RX_ENABLED:-}" --build-arg CLINICS_ENABLED="${CLINICS_ENABLED:-}" --build-arg TRAVIS_COMMIT="${TRAVIS_COMMIT:-}" .
         else
             docker build --tag "${DOCKER_REPO}" .
         fi
@@ -22,9 +30,9 @@ publish_to_dockerhub() {
         fi
         if [ -n "${TRAVIS_BRANCH:-}" ] && [ -n "${TRAVIS_COMMIT:-}"  ]; then
             if [ -n "${TRAVIS_PULL_REQUEST_BRANCH}" ]
-	    then
+            then
                 BRANCH=$(echo -n ${TRAVIS_PULL_REQUEST_BRANCH} | tr / -)
-	    else
+            else
                 BRANCH=$(echo -n ${TRAVIS_BRANCH} | tr / -)
             fi
             docker tag "${DOCKER_REPO}" "${DOCKER_REPO}:${BRANCH}-${TRAVIS_COMMIT}"
