@@ -10,8 +10,8 @@ publish_to_dockerhub() {
         if [ "${TRAVIS_REPO_SLUG:-}" == "tidepool-org/blip" ]; then
             if [ -n "${TRAVIS_PULL_REQUEST_BRANCH}" ]
             then
-                RX_ENABLED=true
-                CLINICS_ENABLED=true
+                RX_ENABLED="${RX_ENABLED:-true}"
+                CLINICS_ENABLED="${CLINICS_ENABLED:-true}"
             else
                 RX_ENABLED=false
                 CLINICS_ENABLED=false
