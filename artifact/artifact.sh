@@ -12,7 +12,7 @@ publish_to_dockerhub() {
             RX_ENABLED=${RX_ENABLED-false}
             if [[ ",${CLINICS_ENABLED_BRANCHES:-}," = *",${TRAVIS_PULL_REQUEST_BRANCH:-$TRAVIS_BRANCH},"* ]]; then CLINICS_ENABLED=true; fi
             if [[ ",${RX_ENABLED_BRANCHES:-}," = *",${TRAVIS_PULL_REQUEST_BRANCH:-$TRAVIS_BRANCH},"* ]]; then RX_ENABLED=true; fi
-            DOCKER_BUILDKIT=1 docker build --tag "${DOCKER_REPO}" --build-arg ROLLBAR_POST_SERVER_TOKEN="${ROLLBAR_POST_SERVER_TOKEN:-}" --build-arg RX_ENABLED="${RX_ENABLED:-}" --build-arg CLINICS_ENABLED="${CLINICS_ENABLED:-}" --build-arg TRAVIS_COMMIT="${TRAVIS_COMMIT:-}" .
+            DOCKER_BUILDKIT=1 docker build --tag "${DOCKER_REPO}" --build-arg ROLLBAR_POST_SERVER_TOKEN="${ROLLBAR_POST_SERVER_TOKEN:-}" --build-arg RX_ENABLED="${RX_ENABLED:-}" --build-arg CLINICS_ENABLED="${CLINICS_ENABLED:-}" --build-arg KEYCLOAK_URL="${KEYCLOAK_URL:-}" --build-arg KEYCLOAK_REALM="${KEYCLOAK_REALM:-}" --build-arg KEYCLOAK_CLIENTID="${KEYCLOAK_CLIENTID:-}" --build-arg TRAVIS_COMMIT="${TRAVIS_COMMIT:-}" .
         else
             docker build --tag "${DOCKER_REPO}" .
         fi
