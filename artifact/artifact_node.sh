@@ -32,7 +32,7 @@ publish_to_dockerhub() {
 
             TIMESTAMP=$(date +%s)
             docker tag "${DOCKER_REPO}" "${DOCKER_REPO}:${BRANCH}-${TRAVIS_COMMIT}-${TIMESTAMP}"
-            docker push "${DOCKER_REPO}:${BRANCH}-${TRAVIS_COMMIT}-${TIMESTAMP}
+            docker push "${DOCKER_REPO}:${BRANCH}-${TRAVIS_COMMIT}-${TIMESTAMP}"
 
             docker tag "${DOCKER_REPO}" "${DOCKER_REPO}:${BRANCH}-latest"
             docker push "${DOCKER_REPO}:${BRANCH}-latest"
