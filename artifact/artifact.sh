@@ -8,13 +8,9 @@ publish_to_dockerhub() {
         echo "${DOCKER_PASSWORD}" | docker login --username "${DOCKER_USERNAME}" --password-stdin
 
         if [ "${TRAVIS_REPO_SLUG:-}" == "tidepool-org/blip" ]; then
-            CLINICS_ENABLED=${CLINICS_ENABLED-false}
             RX_ENABLED=${RX_ENABLED-false}
-            PATIENT_SUMMARIES_ENABLED=${PATIENT_SUMMARIES_ENABLED-false}
-            if [[ ",${CLINICS_ENABLED_BRANCHES:-}," = *",${TRAVIS_PULL_REQUEST_BRANCH:-$TRAVIS_BRANCH},"* ]]; then CLINICS_ENABLED=true; fi
             if [[ ",${RX_ENABLED_BRANCHES:-}," = *",${TRAVIS_PULL_REQUEST_BRANCH:-$TRAVIS_BRANCH},"* ]]; then RX_ENABLED=true; fi
-            if [[ ",${PATIENT_SUMMARIES_ENABLED_BRANCHES:-}," = *",${TRAVIS_PULL_REQUEST_BRANCH:-$TRAVIS_BRANCH},"* ]]; then PATIENT_SUMMARIES_ENABLED=true; fi
-            DOCKER_BUILDKIT=1 docker build --tag "${DOCKER_REPO}" --build-arg ROLLBAR_POST_SERVER_TOKEN="${ROLLBAR_POST_SERVER_TOKEN:-}" --build-arg RX_ENABLED="${RX_ENABLED:-}" --build-arg CLINICS_ENABLED="${CLINICS_ENABLED:-}" --build-arg PATIENT_SUMMARIES_ENABLED="${PATIENT_SUMMARIES_ENABLED:-}" --build-arg TRAVIS_COMMIT="${TRAVIS_COMMIT:-}" .
+            DOCKER_BUILDKIT=1 docker build --tag "${DOCKER_REPO}" --build-arg ROLLBAR_POST_SERVER_TOKEN="${ROLLBAR_POST_SERVER_TOKEN:-}" --build-arg REACT_APP_GAID="${REACT_APP_GAID:-}" --build-arg RX_ENABLED="${RX_ENABLED:-}" --build-arg TRAVIS_COMMIT="${TRAVIS_COMMIT:-}" .
         else
             docker build --tag "${DOCKER_REPO}" .
         fi
