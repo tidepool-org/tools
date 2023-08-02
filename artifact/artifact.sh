@@ -10,7 +10,7 @@ publish_to_dockerhub() {
         if [ "${TRAVIS_REPO_SLUG:-}" == "tidepool-org/blip" ]; then
             RX_ENABLED=${RX_ENABLED-false}
             if [[ ",${RX_ENABLED_BRANCHES:-}," = *",${TRAVIS_PULL_REQUEST_BRANCH:-$TRAVIS_BRANCH},"* ]]; then RX_ENABLED=true; fi
-            DOCKER_BUILDKIT=1 docker build --tag "${DOCKER_REPO}" --build-arg ROLLBAR_POST_SERVER_TOKEN="${ROLLBAR_POST_SERVER_TOKEN:-}" --build-arg REACT_APP_GAID="${REACT_APP_GAID:-}" --build-arg RX_ENABLED="${RX_ENABLED:-}" --build-arg TRAVIS_COMMIT="${TRAVIS_COMMIT:-}" .
+            DOCKER_BUILDKIT=1 docker build --tag "${DOCKER_REPO}" --build-arg ROLLBAR_POST_SERVER_TOKEN="${ROLLBAR_POST_SERVER_TOKEN:-}" --build-arg LAUNCHDARKLY_CLIENT_TOKEN="${LAUNCHDARKLY_CLIENT_TOKEN:-}" --build-arg REACT_APP_GAID="${REACT_APP_GAID:-}" --build-arg RX_ENABLED="${RX_ENABLED:-}" --build-arg TRAVIS_COMMIT="${TRAVIS_COMMIT:-}" .
         else
             docker build --tag "${DOCKER_REPO}" .
         fi
