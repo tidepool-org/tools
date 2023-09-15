@@ -19,15 +19,15 @@ publish_to_dockerhub() {
         if [ "$CI_PROVIDER" = "travis" ]; then
             REPO_SLUG=$TRAVIS_REPO_SLUG
             COMMIT=$TRAVIS_COMMIT
-            TAG=$TRAVIS_TAG
-            BRANCH=$TRAVIS_BRANCH
-            PR_BRANCH=$TRAVIS_PULL_REQUEST_BRANCH
+            TAG=${TRAVIS_TAG:-}
+            BRANCH=${TRAVIS_BRANCH:-}
+            PR_BRANCH=${TRAVIS_PULL_REQUEST_BRANCH:-}
         elif [ "$CI_PROVIDER" = "circle" ]; then
             REPO_SLUG="${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}"
             COMMIT=$CIRCLE_SHA1
-            TAG=$CIRCLE_TAG
-            BRANCH=$CIRCLE_BRANCH
-            PR_BRANCH=$CIRCLE_PR_NUMBER
+            TAG=${CIRCLE_TAG:-}
+            BRANCH=${CIRCLE_BRANCH:-}
+            PR_BRANCH=${CIRCLE_PR_NUMBER:-}
         fi
 
         if [ -z "$PR_BRANCH" ]; then
