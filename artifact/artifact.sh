@@ -21,16 +21,16 @@ publish_to_dockerhub() {
             COMMIT=$TRAVIS_COMMIT
             TAG=${TRAVIS_TAG:-}
             BRANCH=${TRAVIS_BRANCH:-}
-            PR_BRANCH=${TRAVIS_PULL_REQUEST_BRANCH:-}
+            PR_NUMBER=${TRAVIS_PULL_REQUEST:-}
         elif [ "$CI_PROVIDER" = "circle" ]; then
             REPO_SLUG="${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}"
             COMMIT=$CIRCLE_SHA1
             TAG=${CIRCLE_TAG:-}
             BRANCH=${CIRCLE_BRANCH:-}
-            PR_BRANCH=${CIRCLE_PR_NUMBER:-}
+            PR_NUMBER=${CIRCLE_PR_NUMBER:-}
         fi
 
-        if [ -z "$PR_BRANCH" ]; then
+        if [ -z "$PR_NUMBER" ]; then
             IS_PULL_REQUEST=false
         else
             IS_PULL_REQUEST=true
@@ -42,7 +42,7 @@ publish_to_dockerhub() {
         if [ "${REPO_SLUG:-}" == "tidepool-org/blip" ] || [ "${REPO_SLUG:-}" == "tidepool-org/uploader" ]; then
             # Build blip image
             RX_ENABLED=${RX_ENABLED-false}
-            if [[ ",${RX_ENABLED_BRANCHES:-}," = *",${PR_BRANCH:-$BRANCH},"* ]]; then RX_ENABLED=true; fi
+            if [[ ",${RX_ENABLED_BRANCHES:-}," = *",${BRANCH},"* ]]; then RX_ENABLED=true; fi
             DOCKER_BUILDKIT=1 docker build --tag "${DOCKER_REPO}" --build-arg ROLLBAR_POST_SERVER_TOKEN="${ROLLBAR_POST_SERVER_TOKEN:-}" --build-arg LAUNCHDARKLY_CLIENT_TOKEN="${LAUNCHDARKLY_CLIENT_TOKEN:-}" --build-arg REACT_APP_GAID="${REACT_APP_GAID:-}" --build-arg RX_ENABLED="${RX_ENABLED:-}" --build-arg TRAVIS_COMMIT="${COMMIT:-}" .
         else
             # Build other images
@@ -61,23 +61,23 @@ publish_to_dockerhub() {
         fi
 
         if [ -n "$BRANCH" ] && [ -n "$COMMIT" ]; then
-            if [ $IS_PULL_REQUEST == true && "$CI_PROVIDER" = "travis" ]
+            if [ $IS_PULL_REQUEST == true ]
             then
-                BRANCH=$(echo -n ${PR_BRANCH} | tr / -)
+                TAG="PR-${PR_NUMBER}-${COMMIT}"
             else
-                BRANCH=$(echo -n ${BRANCH} | tr / -)
+                TAG=$(echo -n ${BRANCH} | tr / -)-${COMMIT}
             fi
             # Push commit and timestamp images
-            docker tag "${DOCKER_REPO}" "${DOCKER_REPO}:${BRANCH}-${COMMIT}"
-            docker push "${DOCKER_REPO}:${BRANCH}-${COMMIT}"
+            docker tag "${DOCKER_REPO}" "${DOCKER_REPO}:${TAG}"
+            docker push "${DOCKER_REPO}:${TAG}"
 
             TIMESTAMP=$(date +%s)
-            docker tag "${DOCKER_REPO}" "${DOCKER_REPO}:${BRANCH}-${COMMIT}-${TIMESTAMP}"
-            docker push "${DOCKER_REPO}:${BRANCH}-${COMMIT}-${TIMESTAMP}"
+            docker tag "${DOCKER_REPO}" "${DOCKER_REPO}:${TAG}-${TIMESTAMP}"
+            docker push "${DOCKER_REPO}:${TAG}-${TIMESTAMP}"
 
             # Push branch latest image
-            docker tag "${DOCKER_REPO}" "${DOCKER_REPO}:${BRANCH}-latest"
-            docker push "${DOCKER_REPO}:${BRANCH}-latest"
+            docker tag "${DOCKER_REPO}" "${DOCKER_REPO}:$(echo -n ${BRANCH} | tr / -)-latest"
+            docker push "${DOCKER_REPO}:$(echo -n ${BRANCH} | tr / -)-latest"
         fi
 
     else
