@@ -3,7 +3,7 @@
 # This code is meant to be executed within a CI build.
 
 publish_to_dockerhub() {
-    if [ -n "${DOCKER_USERNAME:-}" ] && [ -n "${DOCKER_PASSWORD:-}"  ]; then
+    if [ -n "${DOCKER_USERNAME:-}" ] && [ -n "${DOCKER_PASSWORD:-}" ]; then
 
         # Determine CI provider
         if [ -n "${TRAVIS:-}" ]; then
@@ -30,7 +30,7 @@ publish_to_dockerhub() {
             PR_NUMBER=${CIRCLE_PR_NUMBER:-}
         fi
 
-        if [ -z "$PR_NUMBER" ]; then
+        if [ -z "${PR_NUMBER}" ]; then
             IS_PULL_REQUEST=false
         else
             IS_PULL_REQUEST=true
@@ -40,7 +40,7 @@ publish_to_dockerhub() {
 
         echo "${DOCKER_PASSWORD}" | docker login --username "${DOCKER_USERNAME}" --password-stdin
         if [ "${REPO_SLUG:-}" == "tidepool-org/blip" ] || [ "${REPO_SLUG:-}" == "tidepool-org/uploader" ]; then
-            # Build blip image
+            # Build blip or uploader image
             RX_ENABLED=${RX_ENABLED-false}
             if [[ ",${RX_ENABLED_BRANCHES:-}," = *",${BRANCH},"* ]]; then RX_ENABLED=true; fi
             DOCKER_BUILDKIT=1 docker build --tag "${DOCKER_REPO}" --build-arg ROLLBAR_POST_SERVER_TOKEN="${ROLLBAR_POST_SERVER_TOKEN:-}" --build-arg LAUNCHDARKLY_CLIENT_TOKEN="${LAUNCHDARKLY_CLIENT_TOKEN:-}" --build-arg REACT_APP_GAID="${REACT_APP_GAID:-}" --build-arg RX_ENABLED="${RX_ENABLED:-}" --build-arg TRAVIS_COMMIT="${COMMIT:-}" .
@@ -49,7 +49,7 @@ publish_to_dockerhub() {
             docker build --tag "${DOCKER_REPO}" .
         fi
 
-        if [ "${BRANCH:-}" == "master" ] && [ $IS_PULL_REQUEST == false ]; then
+        if [ "${BRANCH:-}" == "master" ] && [ ${IS_PULL_REQUEST} == false ]; then
             # Push master branch image
             docker push "${DOCKER_REPO}"
         fi
@@ -60,24 +60,24 @@ publish_to_dockerhub() {
             docker push "${DOCKER_REPO}:${TAG}"
         fi
 
-        if [ -n "$BRANCH" ] && [ -n "$COMMIT" ]; then
-            if [ $IS_PULL_REQUEST == true ]
-            then
-                TAG="PR-${PR_NUMBER}-${COMMIT}"
+        if [ -n "${BRANCH}" ] && [ -n "$COMMIT" ]; then
+            if [ ${IS_PULL_REQUEST} == true ]; then
+                TAG="PR-${PR_NUMBER}"
             else
-                TAG=$(echo -n ${BRANCH} | tr / -)-${COMMIT}
+                TAG=$(echo -n ${BRANCH} | tr / -)
             fi
             # Push commit and timestamp images
-            docker tag "${DOCKER_REPO}" "${DOCKER_REPO}:${TAG}"
-            docker push "${DOCKER_REPO}:${TAG}"
+            docker tag "${DOCKER_REPO}" "${DOCKER_REPO}:${TAG}-${COMMIT}"
+            docker push "${DOCKER_REPO}:${TAG}-${COMMIT}"
 
             TIMESTAMP=$(date +%s)
             docker tag "${DOCKER_REPO}" "${DOCKER_REPO}:${TAG}-${TIMESTAMP}"
             docker push "${DOCKER_REPO}:${TAG}-${TIMESTAMP}"
 
-            # Push branch latest image
-            docker tag "${DOCKER_REPO}" "${DOCKER_REPO}:$(echo -n ${BRANCH} | tr / -)-latest"
-            docker push "${DOCKER_REPO}:$(echo -n ${BRANCH} | tr / -)-latest"
+            # Push PR latest image
+            docker tag "${DOCKER_REPO}" "${DOCKER_REPO}:${TAG}-latest"
+            docker push "${DOCKER_REPO}:${TAG}-latest"
+
         fi
 
     else
