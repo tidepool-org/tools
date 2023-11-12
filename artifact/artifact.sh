@@ -71,8 +71,8 @@ publish_to_dockerhub() {
             docker push "${DOCKER_REPO}:${TAG}-${COMMIT}"
 
             TIMESTAMP=$(date +%s)
-            docker tag "${DOCKER_REPO}" "${DOCKER_REPO}:${TAG}-${TIMESTAMP}"
-            docker push "${DOCKER_REPO}:${TAG}-${TIMESTAMP}"
+            docker tag "${DOCKER_REPO}" "${DOCKER_REPO}:${TAG}-${COMMIT}-${TIMESTAMP}"
+            docker push "${DOCKER_REPO}:${TAG}-${COMMIT}-${TIMESTAMP}"
 
             # Push PR latest image
             docker tag "${DOCKER_REPO}" "${DOCKER_REPO}:${TAG}-latest"
