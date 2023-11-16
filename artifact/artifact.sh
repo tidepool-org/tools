@@ -75,7 +75,7 @@ publish_to_dockerhub() {
         docker push "${DOCKER_REPO}:${DOCKER_BRANCH_LABEL}-${COMMIT}-${TIMESTAMP}"
 
         # Push PR latest image
-        docker tag "${DOCKER_REPO}" "${DOCKER_REPO}:${TDOCKER_BRANCH_LABEL}-latest"
+        docker tag "${DOCKER_REPO}" "${DOCKER_REPO}:${DOCKER_BRANCH_LABEL}-latest"
         docker push "${DOCKER_REPO}:${DOCKER_BRANCH_LABEL}-latest"
 
     fi
